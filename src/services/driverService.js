@@ -25,10 +25,23 @@ export const driverService = {
     return response.data;
   },
 
-  // Get pending drivers
+  // Get pending drivers (includes pending, documents-uploaded, otp-verified)
   getPendingDrivers: async () => {
-    const response = await api.get('/admins/drivers', { params: { verificationStatus: 'pending' } });
-    return response.data;
+    // Get all drivers and filter on frontend, or use a query that gets all non-verified/rejected
+    const response = await api.get('/admins/drivers');
+    const allDrivers = response.data?.drivers || [];
+    const pendingDrivers = allDrivers.filter(d => 
+      d.verificationStatus === 'pending' || 
+      d.verificationStatus === 'documents-uploaded' || 
+      d.verificationStatus === 'otp-verified'
+    );
+    return {
+      ...response.data,
+      data: {
+        ...response.data.data,
+        drivers: pendingDrivers,
+      },
+    };
   },
 
   // Get verified drivers
@@ -40,6 +53,15 @@ export const driverService = {
   // Get rejected drivers
   getRejectedDrivers: async () => {
     const response = await api.get('/admins/drivers', { params: { verificationStatus: 'rejected' } });
+    return response.data;
+  },
+
+  // Suspend/Unsuspend driver - Admin endpoint
+  suspendDriver: async (driverId, isSuspended, reason) => {
+    const response = await api.put(`/admins/drivers/${driverId}/suspend`, {
+      isSuspended,
+      reason,
+    });
     return response.data;
   },
 };

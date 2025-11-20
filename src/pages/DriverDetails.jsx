@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import Layout from '../components/Layout/Layout';
 import { driverService } from '../services/driverService';
+import api from '../config/api';
 
 const DriverDetails = () => {
   const { id } = useParams();
@@ -9,6 +10,10 @@ const DriverDetails = () => {
   const [driver, setDriver] = useState(null);
   const [loading, setLoading] = useState(true);
   const [actionLoading, setActionLoading] = useState(false);
+  const [showRejectModal, setShowRejectModal] = useState(false);
+  const [rejectionReason, setRejectionReason] = useState('');
+  const [error, setError] = useState('');
+  const [success, setSuccess] = useState('');
 
   useEffect(() => {
     fetchDriverDetails();
@@ -16,44 +21,122 @@ const DriverDetails = () => {
 
   const fetchDriverDetails = async () => {
     setLoading(true);
+    setError('');
+    setSuccess('');
     try {
       const response = await driverService.getDriverById(id);
       setDriver(response.data?.driver);
     } catch (error) {
       console.error('Error fetching driver details:', error);
+      setError('Failed to load driver details');
     } finally {
       setLoading(false);
     }
   };
 
   const handleVerify = async () => {
-    if (!window.confirm('Are you sure you want to verify this driver?')) return;
+    if (!window.confirm('Are you sure you want to verify this driver? Once verified, the driver will be able to login and accept trips.')) return;
 
     setActionLoading(true);
+    setError('');
+    setSuccess('');
     try {
-      await driverService.verifyDriver(id);
-      alert('Driver verified successfully!');
-      fetchDriverDetails();
-      navigate('/drivers');
+      const response = await driverService.verifyDriver(id);
+      setSuccess(response.message || 'Driver verified successfully!');
+      await fetchDriverDetails();
+      setTimeout(() => {
+        navigate('/drivers/pending');
+      }, 2000);
     } catch (error) {
-      alert(error.response?.data?.message || 'Failed to verify driver');
+      setError(error.response?.data?.message || 'Failed to verify driver');
     } finally {
       setActionLoading(false);
     }
   };
 
-  const handleReject = async () => {
-    const reason = window.prompt('Please provide a reason for rejection:');
-    if (!reason) return;
+  const handleRejectClick = () => {
+    setShowRejectModal(true);
+    setRejectionReason('');
+    setError('');
+  };
+
+  const handleRejectConfirm = async () => {
+    if (!rejectionReason.trim()) {
+      setError('Please provide a reason for rejection');
+      return;
+    }
 
     setActionLoading(true);
+    setError('');
+    setSuccess('');
     try {
-      await driverService.rejectDriver(id, reason);
-      alert('Driver rejected successfully!');
-      fetchDriverDetails();
-      navigate('/drivers');
+      const response = await driverService.rejectDriver(id, rejectionReason);
+      setSuccess(response.message || 'Driver rejected successfully!');
+      setShowRejectModal(false);
+      await fetchDriverDetails();
+      setTimeout(() => {
+        navigate('/drivers/pending');
+      }, 2000);
     } catch (error) {
-      alert(error.response?.data?.message || 'Failed to reject driver');
+      setError(error.response?.data?.message || 'Failed to reject driver');
+    } finally {
+      setActionLoading(false);
+    }
+  };
+
+  const canVerify = () => {
+    if (!driver) return false;
+    return driver.verificationStatus === 'otp-verified' || driver.verificationStatus === 'documents-uploaded';
+  };
+
+  const canReject = () => {
+    if (!driver) return false;
+    return driver.verificationStatus !== 'verified' && driver.verificationStatus !== 'rejected';
+  };
+
+  const handleSuspend = async () => {
+    if (!window.confirm(`Are you sure you want to ${driver.isSuspended ? 'unsuspend' : 'suspend'} this driver?`)) return;
+
+    setActionLoading(true);
+    setError('');
+    setSuccess('');
+    try {
+      const response = await driverService.suspendDriver(
+        id,
+        !driver.isSuspended,
+        driver.isSuspended ? null : 'Suspended by admin'
+      );
+      if (response.success) {
+        setSuccess(response.message || `Driver ${driver.isSuspended ? 'unsuspended' : 'suspended'} successfully!`);
+        await fetchDriverDetails();
+      } else {
+        setError(response.message || 'Failed to update driver status');
+      }
+    } catch (error) {
+      setError(error.response?.data?.message || 'Failed to update driver status');
+    } finally {
+      setActionLoading(false);
+    }
+  };
+
+  const handleDelete = async () => {
+    if (!window.confirm('Are you sure you want to delete this driver? This action cannot be undone.')) return;
+
+    setActionLoading(true);
+    setError('');
+    setSuccess('');
+    try {
+      const response = await api.delete(`/admins/drivers/${id}`);
+      if (response.data.success) {
+        setSuccess('Driver deleted successfully!');
+        setTimeout(() => {
+          navigate('/drivers');
+        }, 1500);
+      } else {
+        setError(response.data.message || 'Failed to delete driver');
+      }
+    } catch (error) {
+      setError(error.response?.data?.message || 'Failed to delete driver');
     } finally {
       setActionLoading(false);
     }
@@ -99,7 +182,7 @@ const DriverDetails = () => {
                   alt={driver.name}
                 />
               ) : (
-                              <div className="h-20 w-20 rounded-full bg-primary-100 flex items-center justify-center mr-4">
+                <div className="h-20 w-20 rounded-full bg-primary-100 flex items-center justify-center mr-4">
                   <span className="text-primary-600 font-bold text-2xl">
                     {driver.name?.charAt(0).toUpperCase()}
                   </span>
@@ -116,6 +199,10 @@ const DriverDetails = () => {
                 className={`px-4 py-2 inline-flex text-sm leading-5 font-semibold rounded-full ${
                   driver.verificationStatus === 'pending'
                     ? 'bg-yellow-100 text-yellow-800'
+                    : driver.verificationStatus === 'documents-uploaded'
+                    ? 'bg-blue-100 text-blue-800'
+                    : driver.verificationStatus === 'otp-verified'
+                    ? 'bg-purple-100 text-purple-800'
                     : driver.verificationStatus === 'verified'
                     ? 'bg-green-100 text-green-800'
                     : 'bg-red-100 text-red-800'
@@ -126,7 +213,19 @@ const DriverDetails = () => {
             </div>
           </div>
 
-          {driver.verificationStatus === 'pending' && (
+          {error && (
+            <div className="mb-4 bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg">
+              {error}
+            </div>
+          )}
+
+          {success && (
+            <div className="mb-4 bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-lg">
+              {success}
+            </div>
+          )}
+
+          {canVerify() && (
             <div className="flex gap-4 mb-6">
               <button
                 onClick={handleVerify}
@@ -135,16 +234,127 @@ const DriverDetails = () => {
               >
                 {actionLoading ? 'Processing...' : '✅ Verify Driver'}
               </button>
-              <button
-                onClick={handleReject}
-                disabled={actionLoading}
-                className="btn-danger"
-              >
-                {actionLoading ? 'Processing...' : '❌ Reject Driver'}
-              </button>
+              {canReject() && (
+                <button
+                  onClick={handleRejectClick}
+                  disabled={actionLoading}
+                  className="btn-danger"
+                >
+                  {actionLoading ? 'Processing...' : '❌ Reject Driver'}
+                </button>
+              )}
+            </div>
+          )}
+
+          {driver.verificationStatus === 'verified' && (
+            <div className="mb-4 space-y-3">
+              {driver.isSuspended ? (
+                <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg">
+                  ⚠️ This driver has been suspended and will not receive trip notifications.
+                  {driver.suspensionReason && (
+                    <p className="mt-2 text-sm">Reason: {driver.suspensionReason}</p>
+                  )}
+                </div>
+              ) : (
+                <div className="bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-lg">
+                  ✅ This driver has been verified and can now login to accept trips.
+                </div>
+              )}
+              <div className="flex gap-4">
+                <button
+                  onClick={handleSuspend}
+                  disabled={actionLoading}
+                  className={`px-6 py-3 rounded-xl font-semibold transition-all duration-200 shadow-lg flex items-center space-x-2 ${
+                    driver.isSuspended
+                      ? 'bg-gradient-to-r from-green-600 to-emerald-600 text-white hover:from-green-700 hover:to-emerald-700'
+                      : 'bg-gradient-to-r from-red-600 to-red-700 text-white hover:from-red-700 hover:to-red-800'
+                  }`}
+                >
+                  {actionLoading ? (
+                    <>
+                      <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                      <span>Processing...</span>
+                    </>
+                  ) : (
+                    <>
+                      <span className="material-icons-outlined">
+                        {driver.isSuspended ? 'check_circle' : 'block'}
+                      </span>
+                      <span>{driver.isSuspended ? 'Unsuspend Driver' : 'Suspend Driver'}</span>
+                    </>
+                  )}
+                </button>
+                <button
+                  onClick={handleDelete}
+                  disabled={actionLoading}
+                  className="px-6 py-3 bg-gradient-to-r from-red-600 to-red-700 text-white rounded-xl hover:from-red-700 hover:to-red-800 transition-all duration-200 shadow-lg font-semibold flex items-center space-x-2"
+                >
+                  {actionLoading ? (
+                    <>
+                      <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                      <span>Deleting...</span>
+                    </>
+                  ) : (
+                    <>
+                      <span className="material-icons-outlined">delete</span>
+                      <span>Delete Driver</span>
+                    </>
+                  )}
+                </button>
+              </div>
+            </div>
+          )}
+
+          {driver.verificationStatus === 'rejected' && (
+            <div className="mb-4 bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg">
+              ❌ This driver has been rejected and cannot login.
             </div>
           )}
         </div>
+
+        {/* Reject Modal */}
+        {showRejectModal && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+            <div className="bg-white rounded-lg p-6 max-w-md w-full mx-4">
+              <h2 className="text-xl font-semibold mb-4">Reject Driver</h2>
+              <p className="text-gray-600 mb-4">
+                Please provide a reason for rejecting this driver. This will prevent them from logging in.
+              </p>
+              <textarea
+                value={rejectionReason}
+                onChange={(e) => setRejectionReason(e.target.value)}
+                className="input-field mb-4"
+                rows="4"
+                placeholder="Enter rejection reason..."
+              />
+              {error && (
+                <div className="mb-4 bg-red-50 border border-red-200 text-red-700 px-4 py-2 rounded-lg text-sm">
+                  {error}
+                </div>
+              )}
+              <div className="flex gap-4">
+                <button
+                  onClick={handleRejectConfirm}
+                  disabled={actionLoading || !rejectionReason.trim()}
+                  className="btn-danger flex-1"
+                >
+                  {actionLoading ? 'Processing...' : 'Confirm Rejection'}
+                </button>
+                <button
+                  onClick={() => {
+                    setShowRejectModal(false);
+                    setRejectionReason('');
+                    setError('');
+                  }}
+                  disabled={actionLoading}
+                  className="btn-secondary flex-1"
+                >
+                  Cancel
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div className="card">
@@ -166,6 +376,10 @@ const DriverDetails = () => {
                 <label className="text-sm text-gray-500">Phone Verified</label>
                 <p className="font-medium">{driver.isPhoneVerified ? '✅ Yes' : '❌ No'}</p>
               </div>
+              <div>
+                <label className="text-sm text-gray-500">Account Status</label>
+                <p className="font-medium">{driver.isActive ? '✅ Active' : '❌ Inactive'}</p>
+              </div>
             </div>
           </div>
 
@@ -175,14 +389,23 @@ const DriverDetails = () => {
               <div>
                 <label className="text-sm text-gray-500">Aadhar Number</label>
                 <p className="font-medium">{driver.aadharNumber || 'Not provided'}</p>
+                <p className="text-xs text-gray-400">
+                  {driver.aadharVerified ? '✅ Verified' : '⏳ Pending'}
+                </p>
               </div>
               <div>
                 <label className="text-sm text-gray-500">PAN Number</label>
                 <p className="font-medium">{driver.panNumber || 'Not provided'}</p>
+                <p className="text-xs text-gray-400">
+                  {driver.panVerified ? '✅ Verified' : '⏳ Pending'}
+                </p>
               </div>
               <div>
                 <label className="text-sm text-gray-500">License Number</label>
                 <p className="font-medium">{driver.licenseNumber || 'Not provided'}</p>
+                <p className="text-xs text-gray-400">
+                  {driver.licenseVerified ? '✅ Verified' : '⏳ Pending'}
+                </p>
               </div>
             </div>
           </div>
@@ -196,7 +419,8 @@ const DriverDetails = () => {
                   <img
                     src={driver.verificationDocuments.aadharFront}
                     alt="Aadhar Front"
-                    className="w-full h-48 object-cover rounded-lg border"
+                    className="w-full h-48 object-cover rounded-lg border cursor-pointer hover:opacity-80"
+                    onClick={() => window.open(driver.verificationDocuments.aadharFront, '_blank')}
                   />
                 </div>
               )}
@@ -206,7 +430,8 @@ const DriverDetails = () => {
                   <img
                     src={driver.verificationDocuments.aadharBack}
                     alt="Aadhar Back"
-                    className="w-full h-48 object-cover rounded-lg border"
+                    className="w-full h-48 object-cover rounded-lg border cursor-pointer hover:opacity-80"
+                    onClick={() => window.open(driver.verificationDocuments.aadharBack, '_blank')}
                   />
                 </div>
               )}
@@ -216,7 +441,8 @@ const DriverDetails = () => {
                   <img
                     src={driver.verificationDocuments.panFront}
                     alt="PAN Front"
-                    className="w-full h-48 object-cover rounded-lg border"
+                    className="w-full h-48 object-cover rounded-lg border cursor-pointer hover:opacity-80"
+                    onClick={() => window.open(driver.verificationDocuments.panFront, '_blank')}
                   />
                 </div>
               )}
@@ -226,7 +452,8 @@ const DriverDetails = () => {
                   <img
                     src={driver.verificationDocuments.licenseFront}
                     alt="License Front"
-                    className="w-full h-48 object-cover rounded-lg border"
+                    className="w-full h-48 object-cover rounded-lg border cursor-pointer hover:opacity-80"
+                    onClick={() => window.open(driver.verificationDocuments.licenseFront, '_blank')}
                   />
                 </div>
               )}
@@ -236,11 +463,15 @@ const DriverDetails = () => {
                   <img
                     src={driver.verificationDocuments.licenseBack}
                     alt="License Back"
-                    className="w-full h-48 object-cover rounded-lg border"
+                    className="w-full h-48 object-cover rounded-lg border cursor-pointer hover:opacity-80"
+                    onClick={() => window.open(driver.verificationDocuments.licenseBack, '_blank')}
                   />
                 </div>
               )}
             </div>
+            {!driver.verificationDocuments?.aadharFront && !driver.verificationDocuments?.panFront && !driver.verificationDocuments?.licenseFront && (
+              <p className="text-gray-500 text-center py-8">No documents uploaded yet</p>
+            )}
           </div>
 
           {driver.vehicleDetails && (
@@ -266,6 +497,24 @@ const DriverDetails = () => {
               </div>
             </div>
           )}
+
+          <div className="card md:col-span-2">
+            <h2 className="text-xl font-semibold mb-4">Registration Timeline</h2>
+            <div className="space-y-2">
+              <div className="flex items-center justify-between">
+                <span className="text-sm text-gray-600">Account Created</span>
+                <span className="text-sm font-medium">
+                  {new Date(driver.createdAt).toLocaleString()}
+                </span>
+              </div>
+              <div className="flex items-center justify-between">
+                <span className="text-sm text-gray-600">Last Updated</span>
+                <span className="text-sm font-medium">
+                  {new Date(driver.updatedAt).toLocaleString()}
+                </span>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </Layout>
@@ -273,4 +522,3 @@ const DriverDetails = () => {
 };
 
 export default DriverDetails;
-
