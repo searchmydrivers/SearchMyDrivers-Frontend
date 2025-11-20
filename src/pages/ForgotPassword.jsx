@@ -31,35 +31,35 @@ const ForgotPassword = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 p-4">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 p-4 sm:p-6 lg:p-8">
       <div className="w-full max-w-md animate-fade-in">
-        <div className="bg-white rounded-2xl shadow-2xl border border-gray-200/50 overflow-hidden">
+        <div className="bg-white rounded-xl sm:rounded-2xl shadow-2xl border border-gray-200/50 overflow-hidden">
           {/* Header */}
-          <div className="bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 p-8 text-center">
-            <div className="w-20 h-20 bg-white/20 backdrop-blur-sm rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg">
-              <span className="material-icons-outlined text-white text-4xl">lock_reset</span>
+          <div className="bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 p-6 sm:p-8 text-center">
+            <div className="w-16 h-16 sm:w-20 sm:h-20 bg-white/20 backdrop-blur-sm rounded-xl sm:rounded-2xl flex items-center justify-center mx-auto mb-3 sm:mb-4 shadow-lg">
+              <span className="material-icons-outlined text-white text-3xl sm:text-4xl">lock_reset</span>
             </div>
-            <h1 className="text-3xl font-bold text-white mb-2 tracking-tight">Forgot Password</h1>
-            <p className="text-blue-100 font-medium">Enter your email to reset password</p>
+            <h1 className="text-2xl sm:text-3xl font-bold text-white mb-1 sm:mb-2 tracking-tight">Forgot Password</h1>
+            <p className="text-blue-100 font-medium text-sm sm:text-base">Enter your email to reset password</p>
           </div>
 
           {/* Form */}
-          <div className="p-8">
+          <div className="p-6 sm:p-8">
             {success ? (
               <div className="text-center space-y-4">
-                <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto">
-                  <span className="material-icons-outlined text-green-600 text-4xl">check_circle</span>
+                <div className="w-14 h-14 sm:w-16 sm:h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto">
+                  <span className="material-icons-outlined text-green-600 text-3xl sm:text-4xl">check_circle</span>
                 </div>
-                <h2 className="text-2xl font-bold text-gray-900">Email Sent!</h2>
-                <p className="text-gray-600">
+                <h2 className="text-xl sm:text-2xl font-bold text-gray-900 mb-2">Email Sent!</h2>
+                <p className="text-sm sm:text-base text-gray-600 mb-2">
                   If an account with that email exists, a password reset link has been sent to your email.
                 </p>
-                <p className="text-sm text-gray-500">
+                <p className="text-xs sm:text-sm text-gray-500 mb-4 sm:mb-6">
                   Please check your inbox and click on the reset link to set a new password.
                 </p>
                 <Link
                   to="/login"
-                  className="inline-block mt-6 px-6 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-xl hover:from-blue-700 hover:to-indigo-700 transition-all duration-300 shadow-lg font-semibold"
+                  className="inline-block mt-4 sm:mt-6 px-4 sm:px-6 py-2.5 sm:py-3 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-lg sm:rounded-xl hover:from-blue-700 hover:to-indigo-700 transition-all duration-300 shadow-lg font-semibold text-sm sm:text-base"
                 >
                   Back to Login
                 </Link>

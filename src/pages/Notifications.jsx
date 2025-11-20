@@ -50,10 +50,10 @@ const Notifications = () => {
   return (
     <Layout>
       <div className="animate-fade-in">
-        <div className="flex justify-between items-center mb-6">
+        <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 mb-4 sm:mb-6">
           <div>
-            <h1 className="text-3xl font-bold text-gray-800">Notifications</h1>
-            <p className="text-gray-500 mt-1">Send push notifications to users and drivers</p>
+            <h1 className="text-2xl sm:text-3xl font-bold text-gray-800 mb-1 sm:mb-2">Notifications</h1>
+            <p className="text-sm sm:text-base text-gray-500">Send push notifications to users and drivers</p>
           </div>
           <button
             onClick={() => {
@@ -61,9 +61,9 @@ const Notifications = () => {
               setError('');
               setSuccess('');
             }}
-            className="px-6 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-xl hover:from-blue-700 hover:to-indigo-700 transition-all duration-200 shadow-lg font-semibold flex items-center space-x-2"
+            className="px-4 sm:px-6 py-2.5 sm:py-3 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-lg sm:rounded-xl hover:from-blue-700 hover:to-indigo-700 transition-all duration-200 shadow-lg font-semibold flex items-center justify-center space-x-2 text-sm sm:text-base"
           >
-            <span className="material-icons-outlined">send</span>
+            <span className="material-icons-outlined text-lg sm:text-xl">send</span>
             <span>Send Notification</span>
           </button>
         </div>
@@ -89,12 +89,12 @@ const Notifications = () => {
           </div>
         )}
 
-        <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-8 text-center">
-          <div className="w-20 h-20 bg-gradient-to-br from-blue-100 to-indigo-100 rounded-full flex items-center justify-center mx-auto mb-4">
-            <span className="material-icons-outlined text-blue-600 text-4xl">notifications</span>
+        <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-4 sm:p-6 lg:p-8 text-center">
+          <div className="w-16 h-16 sm:w-20 sm:h-20 bg-gradient-to-br from-blue-100 to-indigo-100 rounded-full flex items-center justify-center mx-auto mb-3 sm:mb-4">
+            <span className="material-icons-outlined text-blue-600 text-3xl sm:text-4xl">notifications</span>
           </div>
-          <h2 className="text-2xl font-bold text-gray-800 mb-2">Send Push Notifications</h2>
-          <p className="text-gray-600 mb-6">
+          <h2 className="text-xl sm:text-2xl font-bold text-gray-800 mb-2">Send Push Notifications</h2>
+          <p className="text-sm sm:text-base text-gray-600 mb-4 sm:mb-6 px-2">
             Send notifications to all users, all drivers, or both. Only users/drivers with FCM tokens will receive notifications.
           </p>
           <button
@@ -103,18 +103,18 @@ const Notifications = () => {
               setError('');
               setSuccess('');
             }}
-            className="px-6 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-xl hover:from-blue-700 hover:to-indigo-700 transition-all duration-200 shadow-lg font-semibold flex items-center space-x-2 mx-auto"
+            className="px-4 sm:px-6 py-2.5 sm:py-3 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-lg sm:rounded-xl hover:from-blue-700 hover:to-indigo-700 transition-all duration-200 shadow-lg font-semibold flex items-center justify-center space-x-2 mx-auto text-sm sm:text-base"
           >
-            <span className="material-icons-outlined">send</span>
+            <span className="material-icons-outlined text-lg sm:text-xl">send</span>
             <span>Send Notification</span>
           </button>
         </div>
 
         {/* Modal */}
         {showModal && (
-          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-            <div className="bg-white rounded-xl shadow-2xl p-6 w-full max-w-md">
-              <h2 className="text-2xl font-bold text-gray-800 mb-4">Send Notification</h2>
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4 sm:p-6">
+            <div className="bg-white rounded-xl shadow-2xl p-4 sm:p-6 w-full max-w-md max-h-[90vh] overflow-y-auto">
+              <h2 className="text-xl sm:text-2xl font-bold text-gray-800 mb-3 sm:mb-4">Send Notification</h2>
               <form onSubmit={handleSubmit}>
                 <div className="mb-4">
                   <label className="label">Target Audience</label>

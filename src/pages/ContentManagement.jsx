@@ -109,12 +109,12 @@ const ContentManagement = () => {
   return (
     <Layout>
       <div>
-        <div className="flex justify-between items-center mb-6">
-          <h1 className="text-3xl font-bold text-gray-800">Content Management</h1>
+        <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 mb-4 sm:mb-6">
+          <h1 className="text-2xl sm:text-3xl font-bold text-gray-800">Content Management</h1>
           {!editingContent && (
             <button
               onClick={() => setEditingContent({ type: '', title: '', content: '' })}
-              className="btn-primary"
+              className="btn-primary text-sm sm:text-base px-4 sm:px-6 py-2 sm:py-2.5"
             >
               + Add New Content
             </button>

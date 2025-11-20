@@ -167,31 +167,32 @@ const DriverDetails = () => {
       <div>
         <button
           onClick={() => navigate('/drivers')}
-          className="mb-4 text-primary-600 hover:text-primary-800 flex items-center"
+          className="mb-3 sm:mb-4 text-primary-600 hover:text-primary-800 flex items-center text-sm sm:text-base"
         >
-          ← Back to Drivers
+          <span className="material-icons-outlined text-lg sm:text-xl mr-1">arrow_back</span>
+          <span>Back to Drivers</span>
         </button>
 
-        <div className="card mb-6">
-          <div className="flex justify-between items-start mb-6">
-            <div className="flex items-center">
+        <div className="card mb-4 sm:mb-6">
+          <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-4 mb-4 sm:mb-6">
+            <div className="flex items-center flex-1 min-w-0">
               {driver.profilePicture ? (
                 <img
-                  className="h-20 w-20 rounded-full mr-4"
+                  className="h-16 w-16 sm:h-20 sm:w-20 rounded-full mr-3 sm:mr-4 flex-shrink-0"
                   src={driver.profilePicture}
                   alt={driver.name}
                 />
               ) : (
-                <div className="h-20 w-20 rounded-full bg-primary-100 flex items-center justify-center mr-4">
-                  <span className="text-primary-600 font-bold text-2xl">
+                <div className="h-16 w-16 sm:h-20 sm:w-20 rounded-full bg-primary-100 flex items-center justify-center mr-3 sm:mr-4 flex-shrink-0">
+                  <span className="text-primary-600 font-bold text-xl sm:text-2xl">
                     {driver.name?.charAt(0).toUpperCase()}
                   </span>
                 </div>
               )}
-              <div>
-                <h1 className="text-3xl font-bold text-gray-800">{driver.name}</h1>
-                <p className="text-gray-600">{driver.email}</p>
-                <p className="text-gray-600">{driver.phone}</p>
+              <div className="flex-1 min-w-0">
+                <h1 className="text-2xl sm:text-3xl font-bold text-gray-800 truncate">{driver.name}</h1>
+                <p className="text-sm sm:text-base text-gray-600 truncate">{driver.email}</p>
+                <p className="text-sm sm:text-base text-gray-600">{driver.phone}</p>
               </div>
             </div>
             <div>
@@ -226,11 +227,11 @@ const DriverDetails = () => {
           )}
 
           {canVerify() && (
-            <div className="flex gap-4 mb-6">
+            <div className="flex flex-col sm:flex-row gap-2 sm:gap-4 mb-4 sm:mb-6">
               <button
                 onClick={handleVerify}
                 disabled={actionLoading}
-                className="btn-success"
+                className="btn-success text-sm sm:text-base px-4 sm:px-6 py-2 sm:py-2.5"
               >
                 {actionLoading ? 'Processing...' : '✅ Verify Driver'}
               </button>
@@ -238,7 +239,7 @@ const DriverDetails = () => {
                 <button
                   onClick={handleRejectClick}
                   disabled={actionLoading}
-                  className="btn-danger"
+                  className="btn-danger text-sm sm:text-base px-4 sm:px-6 py-2 sm:py-2.5"
                 >
                   {actionLoading ? 'Processing...' : '❌ Reject Driver'}
                 </button>
@@ -260,11 +261,11 @@ const DriverDetails = () => {
                   ✅ This driver has been verified and can now login to accept trips.
                 </div>
               )}
-              <div className="flex gap-4">
+              <div className="flex flex-col sm:flex-row gap-2 sm:gap-4">
                 <button
                   onClick={handleSuspend}
                   disabled={actionLoading}
-                  className={`px-6 py-3 rounded-xl font-semibold transition-all duration-200 shadow-lg flex items-center space-x-2 ${
+                  className={`px-4 sm:px-6 py-2.5 sm:py-3 rounded-lg sm:rounded-xl font-semibold transition-all duration-200 shadow-lg flex items-center justify-center space-x-2 text-sm sm:text-base ${
                     driver.isSuspended
                       ? 'bg-gradient-to-r from-green-600 to-emerald-600 text-white hover:from-green-700 hover:to-emerald-700'
                       : 'bg-gradient-to-r from-red-600 to-red-700 text-white hover:from-red-700 hover:to-red-800'
@@ -287,7 +288,7 @@ const DriverDetails = () => {
                 <button
                   onClick={handleDelete}
                   disabled={actionLoading}
-                  className="px-6 py-3 bg-gradient-to-r from-red-600 to-red-700 text-white rounded-xl hover:from-red-700 hover:to-red-800 transition-all duration-200 shadow-lg font-semibold flex items-center space-x-2"
+                  className="px-4 sm:px-6 py-2.5 sm:py-3 bg-gradient-to-r from-red-600 to-red-700 text-white rounded-lg sm:rounded-xl hover:from-red-700 hover:to-red-800 transition-all duration-200 shadow-lg font-semibold flex items-center justify-center space-x-2 text-sm sm:text-base"
                 >
                   {actionLoading ? (
                     <>
@@ -314,9 +315,9 @@ const DriverDetails = () => {
 
         {/* Reject Modal */}
         {showRejectModal && (
-          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-            <div className="bg-white rounded-lg p-6 max-w-md w-full mx-4">
-              <h2 className="text-xl font-semibold mb-4">Reject Driver</h2>
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+            <div className="bg-white rounded-lg sm:rounded-xl p-4 sm:p-6 max-w-md w-full max-h-[90vh] overflow-y-auto">
+              <h2 className="text-lg sm:text-xl font-semibold mb-3 sm:mb-4">Reject Driver</h2>
               <p className="text-gray-600 mb-4">
                 Please provide a reason for rejecting this driver. This will prevent them from logging in.
               </p>
@@ -356,9 +357,9 @@ const DriverDetails = () => {
           </div>
         )}
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
           <div className="card">
-            <h2 className="text-xl font-semibold mb-4">Personal Information</h2>
+            <h2 className="text-lg sm:text-xl font-semibold mb-3 sm:mb-4">Personal Information</h2>
             <div className="space-y-3">
               <div>
                 <label className="text-sm text-gray-500">Name</label>
@@ -384,7 +385,7 @@ const DriverDetails = () => {
           </div>
 
           <div className="card">
-            <h2 className="text-xl font-semibold mb-4">Document Numbers</h2>
+            <h2 className="text-lg sm:text-xl font-semibold mb-3 sm:mb-4">Document Numbers</h2>
             <div className="space-y-3">
               <div>
                 <label className="text-sm text-gray-500">Aadhar Number</label>
@@ -411,8 +412,8 @@ const DriverDetails = () => {
           </div>
 
           <div className="card md:col-span-2">
-            <h2 className="text-xl font-semibold mb-4">Verification Documents</h2>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <h2 className="text-lg sm:text-xl font-semibold mb-3 sm:mb-4">Verification Documents</h2>
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 sm:gap-4">
               {driver.verificationDocuments?.aadharFront && (
                 <div>
                   <label className="text-sm text-gray-500 block mb-2">Aadhar Front</label>
@@ -476,8 +477,8 @@ const DriverDetails = () => {
 
           {driver.vehicleDetails && (
             <div className="card md:col-span-2">
-              <h2 className="text-xl font-semibold mb-4">Vehicle Details</h2>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <h2 className="text-lg sm:text-xl font-semibold mb-3 sm:mb-4">Vehicle Details</h2>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
                 <div>
                   <label className="text-sm text-gray-500">Vehicle Number</label>
                   <p className="font-medium">{driver.vehicleDetails.vehicleNumber || 'N/A'}</p>
@@ -499,7 +500,7 @@ const DriverDetails = () => {
           )}
 
           <div className="card md:col-span-2">
-            <h2 className="text-xl font-semibold mb-4">Registration Timeline</h2>
+            <h2 className="text-lg sm:text-xl font-semibold mb-3 sm:mb-4">Registration Timeline</h2>
             <div className="space-y-2">
               <div className="flex items-center justify-between">
                 <span className="text-sm text-gray-600">Account Created</span>

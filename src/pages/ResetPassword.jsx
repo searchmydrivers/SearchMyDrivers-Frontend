@@ -63,15 +63,15 @@ const ResetPassword = () => {
 
   if (success) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 p-4">
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 p-4 sm:p-6 lg:p-8">
         <div className="w-full max-w-md animate-fade-in">
-          <div className="bg-white rounded-2xl shadow-2xl border border-gray-200/50 p-8 text-center">
-            <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
-              <span className="material-icons-outlined text-green-600 text-4xl">check_circle</span>
+          <div className="bg-white rounded-xl sm:rounded-2xl shadow-2xl border border-gray-200/50 p-6 sm:p-8 text-center">
+            <div className="w-14 h-14 sm:w-16 sm:h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-3 sm:mb-4">
+              <span className="material-icons-outlined text-green-600 text-3xl sm:text-4xl">check_circle</span>
             </div>
-            <h2 className="text-2xl font-bold text-gray-900 mb-2">Password Reset Successful!</h2>
-            <p className="text-gray-600 mb-6">Your password has been reset successfully.</p>
-            <p className="text-sm text-gray-500">Redirecting to login page...</p>
+            <h2 className="text-xl sm:text-2xl font-bold text-gray-900 mb-2">Password Reset Successful!</h2>
+            <p className="text-sm sm:text-base text-gray-600 mb-4 sm:mb-6">Your password has been reset successfully.</p>
+            <p className="text-xs sm:text-sm text-gray-500">Redirecting to login page...</p>
           </div>
         </div>
       </div>
@@ -79,20 +79,20 @@ const ResetPassword = () => {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 p-4">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 p-4 sm:p-6 lg:p-8">
       <div className="w-full max-w-md animate-fade-in">
-        <div className="bg-white rounded-2xl shadow-2xl border border-gray-200/50 overflow-hidden">
+        <div className="bg-white rounded-xl sm:rounded-2xl shadow-2xl border border-gray-200/50 overflow-hidden">
           {/* Header */}
-          <div className="bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 p-8 text-center">
-            <div className="w-20 h-20 bg-white/20 backdrop-blur-sm rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg">
-              <span className="material-icons-outlined text-white text-4xl">lock</span>
+          <div className="bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 p-6 sm:p-8 text-center">
+            <div className="w-16 h-16 sm:w-20 sm:h-20 bg-white/20 backdrop-blur-sm rounded-xl sm:rounded-2xl flex items-center justify-center mx-auto mb-3 sm:mb-4 shadow-lg">
+              <span className="material-icons-outlined text-white text-3xl sm:text-4xl">lock</span>
             </div>
-            <h1 className="text-3xl font-bold text-white mb-2 tracking-tight">Reset Password</h1>
-            <p className="text-blue-100 font-medium">Enter your new password</p>
+            <h1 className="text-2xl sm:text-3xl font-bold text-white mb-1 sm:mb-2 tracking-tight">Reset Password</h1>
+            <p className="text-blue-100 font-medium text-sm sm:text-base">Enter your new password</p>
           </div>
 
           {/* Form */}
-          <div className="p-8">
+          <div className="p-6 sm:p-8">
             <form onSubmit={handleSubmit} className="space-y-6">
               {error && (
                 <div className="bg-red-50 border-l-4 border-red-500 text-red-700 px-4 py-3 rounded-lg flex items-center animate-slide-in">

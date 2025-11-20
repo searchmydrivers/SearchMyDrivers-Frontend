@@ -3,6 +3,7 @@ import Layout from '../components/Layout/Layout';
 import { getFareSettings, updateFareSettings } from '../services/fareService';
 
 const Fare = () => {
+  const [activeModule, setActiveModule] = useState('onstation'); // 'onstation' or 'outstation'
   const [fareSettings, setFareSettings] = useState({
     basePrice: 300,
     perKmRate: 10,
@@ -12,6 +13,9 @@ const Fare = () => {
     adminCommissionPercentage: 10,
     nightStartHour: 22,
     nightEndHour: 6,
+    // Outstation specific
+    outstationBasePrice24Hrs: 1400,
+    outstationNightCharge: 500,
   });
 
   const [editing, setEditing] = useState(false);
@@ -20,16 +24,16 @@ const Fare = () => {
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
 
-  // Fetch fare settings on component mount
+  // Fetch fare settings when module changes
   useEffect(() => {
     fetchFareSettings();
-  }, []);
+  }, [activeModule]);
 
   const fetchFareSettings = async () => {
     try {
       setLoading(true);
       setError('');
-      const response = await getFareSettings('onstation');
+      const response = await getFareSettings(activeModule);
       if (response.success && response.data.fare) {
         const fare = response.data.fare;
         setFareSettings({
@@ -41,6 +45,8 @@ const Fare = () => {
           adminCommissionPercentage: fare.adminCommissionPercentage || 10,
           nightStartHour: fare.nightStartHour || 22,
           nightEndHour: fare.nightEndHour || 6,
+          outstationBasePrice24Hrs: fare.outstationBasePrice24Hrs || 1400,
+          outstationNightCharge: fare.outstationNightCharge || 500,
         });
       }
     } catch (error) {
@@ -58,7 +64,7 @@ const Fare = () => {
     setSuccess('');
 
     try {
-      const response = await updateFareSettings('onstation', {
+      const updateData = {
         basePrice: fareSettings.basePrice,
         perKmRate: fareSettings.perKmRate,
         perMinuteRate: fareSettings.perMinuteRate,
@@ -67,12 +73,19 @@ const Fare = () => {
         nightStartHour: fareSettings.nightStartHour,
         nightEndHour: fareSettings.nightEndHour,
         adminCommissionPercentage: fareSettings.adminCommissionPercentage,
-      });
+      };
+
+      // Add outstation-specific fields if module is outstation
+      if (activeModule === 'outstation') {
+        updateData.outstationBasePrice24Hrs = fareSettings.outstationBasePrice24Hrs;
+        updateData.outstationNightCharge = fareSettings.outstationNightCharge;
+      }
+
+      const response = await updateFareSettings(activeModule, updateData);
 
       if (response.success) {
         setSuccess('Fare settings updated successfully!');
         setEditing(false);
-        // Refresh fare settings
         await fetchFareSettings();
       } else {
         setError(response.message || 'Failed to update fare settings');
@@ -90,11 +103,6 @@ const Fare = () => {
     return `${hour.toString().padStart(2, '0')}:00`;
   };
 
-  // Convert time string (HH:MM) to hour (0-23)
-  const timeStringToHour = (timeString) => {
-    return parseInt(timeString.split(':')[0], 10);
-  };
-
   if (loading) {
     return (
       <Layout>
@@ -108,10 +116,10 @@ const Fare = () => {
   return (
     <Layout>
       <div className="animate-fade-in">
-        <div className="flex justify-between items-center mb-6">
+        <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 mb-4 sm:mb-6">
           <div>
-            <h1 className="text-3xl font-bold text-gray-800">Manage Fare - Onstation</h1>
-            <p className="text-gray-500 mt-1">Configure trip fare and commission settings for Onstation module</p>
+            <h1 className="text-2xl sm:text-3xl font-bold text-gray-800 mb-1 sm:mb-2">Manage Fare</h1>
+            <p className="text-sm sm:text-base text-gray-500">Configure trip fare and commission settings</p>
           </div>
           {!editing && (
             <button
@@ -120,12 +128,48 @@ const Fare = () => {
                 setError('');
                 setSuccess('');
               }}
-              className="px-6 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-xl hover:from-blue-700 hover:to-indigo-700 transition-all duration-200 shadow-lg font-semibold flex items-center space-x-2"
+              className="px-4 sm:px-6 py-2.5 sm:py-3 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-lg sm:rounded-xl hover:from-blue-700 hover:to-indigo-700 transition-all duration-200 shadow-lg font-semibold flex items-center justify-center space-x-2 text-sm sm:text-base"
             >
-              <span className="material-icons-outlined">edit</span>
+              <span className="material-icons-outlined text-lg sm:text-xl">edit</span>
               <span>Edit Settings</span>
             </button>
           )}
+        </div>
+
+        {/* Module Tabs */}
+        <div className="flex flex-wrap items-center gap-2 sm:gap-3 mb-6">
+          <button
+            onClick={() => {
+              setActiveModule('onstation');
+              setEditing(false);
+              setError('');
+              setSuccess('');
+            }}
+            className={`px-4 sm:px-6 py-2 sm:py-2.5 rounded-lg sm:rounded-xl font-semibold transition-all duration-300 text-sm sm:text-base flex items-center space-x-2 ${
+              activeModule === 'onstation'
+                ? 'bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-lg'
+                : 'bg-white text-gray-700 hover:bg-gray-50 border border-gray-300'
+            }`}
+          >
+            <span className="material-icons-outlined text-lg">location_on</span>
+            <span>Onstation</span>
+          </button>
+          <button
+            onClick={() => {
+              setActiveModule('outstation');
+              setEditing(false);
+              setError('');
+              setSuccess('');
+            }}
+            className={`px-4 sm:px-6 py-2 sm:py-2.5 rounded-lg sm:rounded-xl font-semibold transition-all duration-300 text-sm sm:text-base flex items-center space-x-2 ${
+              activeModule === 'outstation'
+                ? 'bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-lg'
+                : 'bg-white text-gray-700 hover:bg-gray-50 border border-gray-300'
+            }`}
+          >
+            <span className="material-icons-outlined text-lg">flight_takeoff</span>
+            <span>Outstation</span>
+          </button>
         </div>
 
         {error && (
@@ -142,41 +186,91 @@ const Fare = () => {
           </div>
         )}
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
           {/* Fare Settings */}
-          <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-            <h2 className="text-xl font-bold text-gray-800 mb-6">Fare Settings</h2>
+          <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-4 sm:p-6">
+            <h2 className="text-lg sm:text-xl font-bold text-gray-800 mb-4 sm:mb-6">
+              Fare Settings - {activeModule === 'onstation' ? 'Onstation' : 'Outstation'}
+            </h2>
             {editing ? (
               <form onSubmit={handleSubmit} className="space-y-4">
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Base Price (₹)
-                  </label>
-                  <input
-                    type="number"
-                    value={fareSettings.basePrice}
-                    onChange={(e) =>
-                      setFareSettings({ ...fareSettings, basePrice: parseFloat(e.target.value) })
-                    }
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                    required
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Per Kilometer Rate (₹)
-                  </label>
-                  <input
-                    type="number"
-                    step="0.1"
-                    value={fareSettings.perKmRate}
-                    onChange={(e) =>
-                      setFareSettings({ ...fareSettings, perKmRate: parseFloat(e.target.value) })
-                    }
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                    required
-                  />
-                </div>
+                {activeModule === 'onstation' ? (
+                  <>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Base Price (₹)
+                      </label>
+                      <input
+                        type="number"
+                        value={fareSettings.basePrice}
+                        onChange={(e) =>
+                          setFareSettings({ ...fareSettings, basePrice: parseFloat(e.target.value) })
+                        }
+                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                        required
+                      />
+                      <p className="text-xs text-gray-500 mt-1">
+                        Base price for trips &lt; 2 hours
+                      </p>
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Per Kilometer Rate (₹)
+                      </label>
+                      <input
+                        type="number"
+                        step="0.1"
+                        value={fareSettings.perKmRate}
+                        onChange={(e) =>
+                          setFareSettings({ ...fareSettings, perKmRate: parseFloat(e.target.value) })
+                        }
+                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                        required
+                      />
+                      <p className="text-xs text-gray-500 mt-1">
+                        Convenience amount for driver
+                      </p>
+                    </div>
+                  </>
+                ) : (
+                  <>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Base Price for 24 Hours (₹)
+                      </label>
+                      <input
+                        type="number"
+                        value={fareSettings.outstationBasePrice24Hrs}
+                        onChange={(e) =>
+                          setFareSettings({ ...fareSettings, outstationBasePrice24Hrs: parseFloat(e.target.value) })
+                        }
+                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                        required
+                      />
+                      <p className="text-xs text-gray-500 mt-1">
+                        Base price for outstation trips &lt;= 24 hours
+                      </p>
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Per Kilometer Rate (₹)
+                      </label>
+                      <input
+                        type="number"
+                        step="0.1"
+                        value={fareSettings.perKmRate}
+                        onChange={(e) =>
+                          setFareSettings({ ...fareSettings, perKmRate: parseFloat(e.target.value) })
+                        }
+                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                        required
+                      />
+                      <p className="text-xs text-gray-500 mt-1">
+                        Convenience amount for driver
+                      </p>
+                    </div>
+                  </>
+                )}
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
                     Per Minute Rate (₹)
@@ -191,6 +285,9 @@ const Fare = () => {
                     className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                     required
                   />
+                  <p className="text-xs text-gray-500 mt-1">
+                    Rate per minute for trip time calculation
+                  </p>
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -217,9 +314,12 @@ const Fare = () => {
                   </label>
                   <input
                     type="number"
-                    value={fareSettings.nightCharge}
+                    value={activeModule === 'onstation' ? fareSettings.nightCharge : fareSettings.outstationNightCharge}
                     onChange={(e) =>
-                      setFareSettings({ ...fareSettings, nightCharge: parseFloat(e.target.value) })
+                      setFareSettings({
+                        ...fareSettings,
+                        [activeModule === 'onstation' ? 'nightCharge' : 'outstationNightCharge']: parseFloat(e.target.value),
+                      })
                     }
                     className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                     required
@@ -229,7 +329,7 @@ const Fare = () => {
                     Fixed charge applied during night hours
                   </p>
                 </div>
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">
                       Night Start Hour (0-23)
@@ -293,7 +393,7 @@ const Fare = () => {
                       setEditing(false);
                       setError('');
                       setSuccess('');
-                      fetchFareSettings(); // Reset to original values
+                      fetchFareSettings();
                     }}
                     disabled={saving}
                     className="flex-1 px-4 py-2 bg-gray-200 text-gray-800 rounded-lg hover:bg-gray-300 transition-colors font-medium disabled:opacity-50"
@@ -304,39 +404,96 @@ const Fare = () => {
               </form>
             ) : (
               <div className="space-y-4">
-                <div className="flex justify-between items-center py-3 border-b border-gray-200">
-                  <span className="text-gray-600">Base Price</span>
-                  <span className="font-semibold text-gray-800">₹{fareSettings.basePrice}</span>
+                {activeModule === 'onstation' ? (
+                  <>
+                    <div className="py-3 border-b border-gray-200">
+                      <div className="flex justify-between items-center">
+                        <span className="text-gray-600">Base Price</span>
+                        <span className="font-semibold text-gray-800">₹{fareSettings.basePrice}</span>
+                      </div>
+                      <p className="text-xs text-gray-500 mt-1">
+                        Base price for trips &lt; 2 hours
+                      </p>
+                    </div>
+                    <div className="py-3 border-b border-gray-200">
+                      <div className="flex justify-between items-center">
+                        <span className="text-gray-600">Per Kilometer Rate</span>
+                        <span className="font-semibold text-gray-800">₹{fareSettings.perKmRate}</span>
+                      </div>
+                      <p className="text-xs text-gray-500 mt-1">
+                        Convenience amount for driver
+                      </p>
+                    </div>
+                  </>
+                ) : (
+                  <>
+                    <div className="py-3 border-b border-gray-200">
+                      <div className="flex justify-between items-center">
+                        <span className="text-gray-600">Base Price (24 Hours)</span>
+                        <span className="font-semibold text-gray-800">₹{fareSettings.outstationBasePrice24Hrs}</span>
+                      </div>
+                      <p className="text-xs text-gray-500 mt-1">
+                        Base price for outstation trips &lt;= 24 hours
+                      </p>
+                    </div>
+                    <div className="py-3 border-b border-gray-200">
+                      <div className="flex justify-between items-center">
+                        <span className="text-gray-600">Per Kilometer Rate</span>
+                        <span className="font-semibold text-gray-800">₹{fareSettings.perKmRate}</span>
+                      </div>
+                      <p className="text-xs text-gray-500 mt-1">
+                        Convenience amount for driver
+                      </p>
+                    </div>
+                  </>
+                )}
+                <div className="py-3 border-b border-gray-200">
+                  <div className="flex justify-between items-center">
+                    <span className="text-gray-600">Per Minute Rate</span>
+                    <span className="font-semibold text-gray-800">₹{fareSettings.perMinuteRate}</span>
+                  </div>
+                  <p className="text-xs text-gray-500 mt-1">
+                    Rate per minute for trip time calculation
+                  </p>
                 </div>
-                <div className="flex justify-between items-center py-3 border-b border-gray-200">
-                  <span className="text-gray-600">Per Kilometer Rate</span>
-                  <span className="font-semibold text-gray-800">₹{fareSettings.perKmRate}</span>
+                <div className="py-3 border-b border-gray-200">
+                  <div className="flex justify-between items-center">
+                    <span className="text-gray-600">Waiting Time Rate</span>
+                    <span className="font-semibold text-gray-800">₹{fareSettings.waitingTimePerMinute}/min</span>
+                  </div>
+                  <p className="text-xs text-gray-500 mt-1">
+                    Rate charged per minute for waiting time
+                  </p>
                 </div>
-                <div className="flex justify-between items-center py-3 border-b border-gray-200">
-                  <span className="text-gray-600">Per Minute Rate</span>
-                  <span className="font-semibold text-gray-800">₹{fareSettings.perMinuteRate}</span>
+                <div className="py-3 border-b border-gray-200">
+                  <div className="flex justify-between items-center">
+                    <span className="text-gray-600">Night Charges</span>
+                    <span className="font-semibold text-gray-800">
+                      ₹{activeModule === 'onstation' ? fareSettings.nightCharge : fareSettings.outstationNightCharge}
+                    </span>
+                  </div>
+                  <p className="text-xs text-gray-500 mt-1">
+                    Fixed charge applied during night hours
+                  </p>
                 </div>
-                <div className="flex justify-between items-center py-3 border-b border-gray-200">
-                  <span className="text-gray-600">Waiting Time Rate</span>
-                  <span className="font-semibold text-gray-800">₹{fareSettings.waitingTimePerMinute}/min</span>
-                </div>
-                <div className="flex justify-between items-center py-3 border-b border-gray-200">
-                  <span className="text-gray-600">Night Charges</span>
-                  <span className="font-semibold text-gray-800">₹{fareSettings.nightCharge}</span>
-                </div>
-                <div className="flex justify-between items-center py-3 border-b border-gray-200">
-                  <span className="text-gray-600">Night Time</span>
-                  <span className="font-semibold text-gray-800">
-                    {hourToTimeString(fareSettings.nightStartHour)} - {hourToTimeString(fareSettings.nightEndHour)}
-                  </span>
+                <div className="py-3 border-b border-gray-200">
+                  <div className="flex justify-between items-center">
+                    <span className="text-gray-600">Night Time</span>
+                    <span className="font-semibold text-gray-800">
+                      {hourToTimeString(fareSettings.nightStartHour)} - {hourToTimeString(fareSettings.nightEndHour)}
+                    </span>
+                  </div>
+                  <p className="text-xs text-gray-500 mt-1">
+                    Night hours when additional charges apply
+                  </p>
                 </div>
               </div>
             )}
           </div>
 
           {/* Commission Settings */}
-          <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-            <h2 className="text-xl font-bold text-gray-800 mb-6">Commission Settings</h2>
+          <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-4 sm:p-6">
+            <h2 className="text-lg sm:text-xl font-bold text-gray-800 mb-4 sm:mb-6">Commission Settings</h2>
             {editing ? (
               <form onSubmit={handleSubmit} className="space-y-4">
                 <div>
@@ -376,9 +533,14 @@ const Fare = () => {
               </form>
             ) : (
               <div className="space-y-4">
-                <div className="flex justify-between items-center py-3 border-b border-gray-200">
-                  <span className="text-gray-600">Admin Commission</span>
-                  <span className="font-semibold text-gray-800">{fareSettings.adminCommissionPercentage}%</span>
+                <div className="py-3 border-b border-gray-200">
+                  <div className="flex justify-between items-center">
+                    <span className="text-gray-600">Admin Commission</span>
+                    <span className="font-semibold text-gray-800">{fareSettings.adminCommissionPercentage}%</span>
+                  </div>
+                  <p className="text-xs text-gray-500 mt-1">
+                    Commission percentage deducted from each trip
+                  </p>
                 </div>
                 <div className="mt-6 p-4 bg-blue-50 rounded-lg">
                   <p className="text-sm text-gray-600 mb-2">
@@ -399,4 +561,3 @@ const Fare = () => {
 };
 
 export default Fare;
-

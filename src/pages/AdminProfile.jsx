@@ -90,21 +90,21 @@ const AdminProfile = () => {
   return (
     <Layout>
       <div>
-        <div className="mb-6">
-          <h1 className="text-3xl font-bold text-gray-800">Admin Profile</h1>
-          <p className="text-gray-500 mt-1">Manage your admin account settings</p>
+        <div className="mb-4 sm:mb-6">
+          <h1 className="text-2xl sm:text-3xl font-bold text-gray-800 mb-1 sm:mb-2">Admin Profile</h1>
+          <p className="text-sm sm:text-base text-gray-500">Manage your admin account settings</p>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6">
           {/* Profile Card */}
           <div className="lg:col-span-1">
-            <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+            <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-4 sm:p-6">
               <div className="text-center">
-                <div className="w-24 h-24 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-full flex items-center justify-center text-white text-3xl font-bold mx-auto mb-4 shadow-lg">
+                <div className="w-20 h-20 sm:w-24 sm:h-24 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-full flex items-center justify-center text-white text-2xl sm:text-3xl font-bold mx-auto mb-3 sm:mb-4 shadow-lg">
                   {admin?.name?.charAt(0)?.toUpperCase() || 'A'}
                 </div>
-                <h2 className="text-xl font-bold text-gray-800">{admin?.name || 'Admin'}</h2>
-                <p className="text-gray-500 mt-1">{admin?.email || 'admin@example.com'}</p>
+                <h2 className="text-lg sm:text-xl font-bold text-gray-800">{admin?.name || 'Admin'}</h2>
+                <p className="text-sm sm:text-base text-gray-500 mt-1 break-words">{admin?.email || 'admin@example.com'}</p>
                 <div className="mt-4">
                   <span className="px-3 py-1 bg-green-100 text-green-800 text-xs font-semibold rounded-full">
                     Active

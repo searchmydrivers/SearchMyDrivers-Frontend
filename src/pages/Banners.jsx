@@ -148,16 +148,16 @@ const Banners = () => {
   return (
     <Layout>
       <div className="animate-fade-in">
-        <div className="flex justify-between items-center mb-6">
+        <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 mb-4 sm:mb-6">
           <div>
-            <h1 className="text-3xl font-bold text-gray-800">Manage Banners</h1>
-            <p className="text-gray-500 mt-1">Upload and manage promotional banners for users and drivers</p>
+            <h1 className="text-2xl sm:text-3xl font-bold text-gray-800 mb-1 sm:mb-2">Manage Banners</h1>
+            <p className="text-sm sm:text-base text-gray-500">Upload and manage promotional banners for users and drivers</p>
           </div>
           <button
             onClick={handleCreate}
-            className="px-6 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-xl hover:from-blue-700 hover:to-indigo-700 transition-all duration-200 shadow-lg font-semibold flex items-center space-x-2"
+            className="px-4 sm:px-6 py-2.5 sm:py-3 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-lg sm:rounded-xl hover:from-blue-700 hover:to-indigo-700 transition-all duration-200 shadow-lg font-semibold flex items-center justify-center space-x-2 text-sm sm:text-base"
           >
-            <span className="material-icons-outlined">add</span>
+            <span className="material-icons-outlined text-lg sm:text-xl">add</span>
             <span>Add New Banner</span>
           </button>
         </div>
@@ -177,10 +177,10 @@ const Banners = () => {
         )}
 
         {/* Filter Buttons */}
-        <div className="flex items-center space-x-2 mb-6">
+        <div className="flex flex-wrap items-center gap-2 sm:gap-2 mb-4 sm:mb-6">
           <button
             onClick={() => setFilterType('all')}
-            className={`px-4 py-2 rounded-lg font-medium transition-all duration-200 ${
+            className={`px-3 sm:px-4 py-2 rounded-lg font-medium transition-all duration-200 text-xs sm:text-sm ${
               filterType === 'all'
                 ? 'bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-lg'
                 : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
@@ -190,7 +190,7 @@ const Banners = () => {
           </button>
           <button
             onClick={() => setFilterType('user')}
-            className={`px-4 py-2 rounded-lg font-medium transition-all duration-200 ${
+            className={`px-3 sm:px-4 py-2 rounded-lg font-medium transition-all duration-200 text-xs sm:text-sm ${
               filterType === 'user'
                 ? 'bg-gradient-to-r from-green-600 to-emerald-600 text-white shadow-lg'
                 : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
@@ -200,7 +200,7 @@ const Banners = () => {
           </button>
           <button
             onClick={() => setFilterType('driver')}
-            className={`px-4 py-2 rounded-lg font-medium transition-all duration-200 ${
+            className={`px-3 sm:px-4 py-2 rounded-lg font-medium transition-all duration-200 text-xs sm:text-sm ${
               filterType === 'driver'
                 ? 'bg-gradient-to-r from-purple-600 to-indigo-600 text-white shadow-lg'
                 : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
@@ -217,7 +217,7 @@ const Banners = () => {
             <p className="text-gray-400 text-sm mt-2">Create your first banner to get started</p>
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
             {filteredBanners.map((banner) => (
               <div key={banner._id} className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden hover:shadow-lg transition-shadow">
                 <div className="h-48 bg-gradient-to-br from-gray-100 to-gray-200 flex items-center justify-center relative">
@@ -276,8 +276,8 @@ const Banners = () => {
 
         {/* Modal */}
         {showModal && (
-          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-            <div className="bg-white rounded-xl shadow-2xl p-6 w-full max-w-md max-h-[90vh] overflow-y-auto">
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4 sm:p-6">
+            <div className="bg-white rounded-xl shadow-2xl p-4 sm:p-6 w-full max-w-md max-h-[90vh] overflow-y-auto">
               <h2 className="text-2xl font-bold text-gray-800 mb-4">
                 {editingBanner ? 'Edit Banner' : 'Create New Banner'}
               </h2>
