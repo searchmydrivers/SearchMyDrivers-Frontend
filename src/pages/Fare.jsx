@@ -3,7 +3,7 @@ import Layout from '../components/Layout/Layout';
 import { getFareSettings, updateFareSettings } from '../services/fareService';
 
 const Fare = () => {
-  const [activeModule, setActiveModule] = useState('onstation'); // 'onstation' or 'outstation'
+  const [activeModule, setActiveModule] = useState('incity'); // 'incity' or 'outstation'
   const [fareSettings, setFareSettings] = useState({
     basePrice: 300,
     perKmRate: 10,
@@ -140,19 +140,19 @@ const Fare = () => {
         <div className="flex flex-wrap items-center gap-2 sm:gap-3 mb-6">
           <button
             onClick={() => {
-              setActiveModule('onstation');
+              setActiveModule('incity');
               setEditing(false);
               setError('');
               setSuccess('');
             }}
             className={`px-4 sm:px-6 py-2 sm:py-2.5 rounded-lg sm:rounded-xl font-semibold transition-all duration-300 text-sm sm:text-base flex items-center space-x-2 ${
-              activeModule === 'onstation'
+              activeModule === 'incity'
                 ? 'bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-lg'
                 : 'bg-white text-gray-700 hover:bg-gray-50 border border-gray-300'
             }`}
           >
             <span className="material-icons-outlined text-lg">location_on</span>
-            <span>Onstation</span>
+            <span>InCity</span>
           </button>
           <button
             onClick={() => {
@@ -190,11 +190,11 @@ const Fare = () => {
           {/* Fare Settings */}
           <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-4 sm:p-6">
             <h2 className="text-lg sm:text-xl font-bold text-gray-800 mb-4 sm:mb-6">
-              Fare Settings - {activeModule === 'onstation' ? 'Onstation' : 'Outstation'}
+              Fare Settings - {activeModule === 'incity' ? 'InCity' : 'Outstation'}
             </h2>
             {editing ? (
               <form onSubmit={handleSubmit} className="space-y-4">
-                {activeModule === 'onstation' ? (
+                {activeModule === 'incity' ? (
                   <>
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -314,11 +314,11 @@ const Fare = () => {
                   </label>
                   <input
                     type="number"
-                    value={activeModule === 'onstation' ? fareSettings.nightCharge : fareSettings.outstationNightCharge}
+                    value={activeModule === 'incity' ? fareSettings.nightCharge : fareSettings.outstationNightCharge}
                     onChange={(e) =>
                       setFareSettings({
                         ...fareSettings,
-                        [activeModule === 'onstation' ? 'nightCharge' : 'outstationNightCharge']: parseFloat(e.target.value),
+                        [activeModule === 'incity' ? 'nightCharge' : 'outstationNightCharge']: parseFloat(e.target.value),
                       })
                     }
                     className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
@@ -404,7 +404,7 @@ const Fare = () => {
               </form>
             ) : (
               <div className="space-y-4">
-                {activeModule === 'onstation' ? (
+                {activeModule === 'incity' ? (
                   <>
                     <div className="py-3 border-b border-gray-200">
                       <div className="flex justify-between items-center">
@@ -469,7 +469,7 @@ const Fare = () => {
                   <div className="flex justify-between items-center">
                     <span className="text-gray-600">Night Charges</span>
                     <span className="font-semibold text-gray-800">
-                      ₹{activeModule === 'onstation' ? fareSettings.nightCharge : fareSettings.outstationNightCharge}
+                      ₹{activeModule === 'incity' ? fareSettings.nightCharge : fareSettings.outstationNightCharge}
                     </span>
                   </div>
                   <p className="text-xs text-gray-500 mt-1">

@@ -22,7 +22,7 @@ const Login = () => {
       
       if (response.success) {
         localStorage.setItem('adminToken', response.data.token);
-        // Store admin data for quick access
+        // Store admin data for quick access (including adminType and workLocation)
         if (response.data.admin) {
           localStorage.setItem('adminData', JSON.stringify(response.data.admin));
         }

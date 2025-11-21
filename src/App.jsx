@@ -13,6 +13,7 @@ import Banners from './pages/Banners';
 import AdminProfile from './pages/AdminProfile';
 import Notifications from './pages/Notifications';
 import Fare from './pages/Fare';
+import SubAdmins from './pages/SubAdmins';
 import ProtectedRoute from './components/ProtectedRoute';
 
 function App() {
@@ -131,6 +132,14 @@ function App() {
           element={
             <ProtectedRoute>
               <Fare />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/subadmins"
+          element={
+            <ProtectedRoute>
+              <SubAdmins />
             </ProtectedRoute>
           }
         />

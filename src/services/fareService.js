@@ -1,7 +1,7 @@
 import api from '../config/api';
 
 // Get fare settings for a module
-export const getFareSettings = async (module = 'onstation') => {
+export const getFareSettings = async (module = 'incity') => {
   const response = await api.get(`/fares/${module}`);
   return response.data;
 };

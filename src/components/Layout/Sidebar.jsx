@@ -3,6 +3,10 @@ import { authService } from '../../services/authService';
 
 const Sidebar = ({ isOpen, onClose }) => {
   const location = useLocation();
+  
+  // Get admin data from localStorage
+  const adminData = JSON.parse(localStorage.getItem('adminData') || '{}');
+  const isSubAdmin = adminData.adminType === 'subadmin';
 
   const menuItems = [
     { path: '/dashboard', label: 'Dashboard', icon: 'dashboard', iconType: 'outlined' },
@@ -10,11 +14,13 @@ const Sidebar = ({ isOpen, onClose }) => {
     { path: '/drivers', label: 'Drivers', icon: 'local_taxi', iconType: 'outlined' },
     { path: '/trip-bookings', label: 'Manage Trip Bookings', icon: 'route', iconType: 'outlined' },
     { path: '/content', label: 'Content Management', icon: 'description', iconType: 'outlined' },
-
     { path: '/banners', label: 'Manage Banners', icon: 'image', iconType: 'outlined' },
     { path: '/admin-profile', label: 'Admin Profile', icon: 'account_circle', iconType: 'outlined' },
     { path: '/notifications', label: 'Notification', icon: 'notifications', iconType: 'outlined' },
-    { path: '/fare', label: 'Manage Fare', icon: 'payments', iconType: 'outlined' },
+    // Only show Manage Fare for main admins
+    ...(isSubAdmin ? [] : [{ path: '/fare', label: 'Manage Fare', icon: 'payments', iconType: 'outlined' }]),
+    // Only show Sub-Admins management for main admins
+    ...(isSubAdmin ? [] : [{ path: '/subadmins', label: 'Sub-Admins', icon: 'admin_panel_settings', iconType: 'outlined' }]),
   ];
 
   const isActive = (path) => {

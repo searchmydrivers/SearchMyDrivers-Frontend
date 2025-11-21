@@ -469,35 +469,52 @@ const DriverDetails = () => {
                   />
                 </div>
               )}
+              {driver.verificationDocuments?.electricityBill && (
+                <div>
+                  <label className="text-sm text-gray-500 block mb-2">Electricity Bill</label>
+                  <img
+                    src={driver.verificationDocuments.electricityBill}
+                    alt="Electricity Bill"
+                    className="w-full h-48 object-cover rounded-lg border cursor-pointer hover:opacity-80"
+                    onClick={() => window.open(driver.verificationDocuments.electricityBill, '_blank')}
+                  />
+                </div>
+              )}
+              {driver.verificationDocuments?.rentAgreement && (
+                <div>
+                  <label className="text-sm text-gray-500 block mb-2">Rent Agreement</label>
+                  <img
+                    src={driver.verificationDocuments.rentAgreement}
+                    alt="Rent Agreement"
+                    className="w-full h-48 object-cover rounded-lg border cursor-pointer hover:opacity-80"
+                    onClick={() => window.open(driver.verificationDocuments.rentAgreement, '_blank')}
+                  />
+                </div>
+              )}
             </div>
             {!driver.verificationDocuments?.aadharFront && !driver.verificationDocuments?.panFront && !driver.verificationDocuments?.licenseFront && (
               <p className="text-gray-500 text-center py-8">No documents uploaded yet</p>
             )}
           </div>
 
-          {driver.vehicleDetails && (
-            <div className="card md:col-span-2">
-              <h2 className="text-lg sm:text-xl font-semibold mb-3 sm:mb-4">Vehicle Details</h2>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
-                <div>
-                  <label className="text-sm text-gray-500">Vehicle Number</label>
-                  <p className="font-medium">{driver.vehicleDetails.vehicleNumber || 'N/A'}</p>
-                </div>
-                <div>
-                  <label className="text-sm text-gray-500">Vehicle Type</label>
-                  <p className="font-medium">{driver.vehicleDetails.vehicleType || 'N/A'}</p>
-                </div>
-                <div>
-                  <label className="text-sm text-gray-500">Vehicle Model</label>
-                  <p className="font-medium">{driver.vehicleDetails.vehicleModel || 'N/A'}</p>
-                </div>
-                <div>
-                  <label className="text-sm text-gray-500">Vehicle Color</label>
-                  <p className="font-medium">{driver.vehicleDetails.vehicleColor || 'N/A'}</p>
-                </div>
+          <div className="card md:col-span-2">
+            <h2 className="text-lg sm:text-xl font-semibold mb-3 sm:mb-4">Work Location</h2>
+            <div className="space-y-3">
+              <div>
+                <label className="text-sm text-gray-500">Work Location</label>
+                <p className="font-medium">
+                  {driver.workLocation ? (
+                    <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-semibold bg-blue-100 text-blue-800">
+                      <span className="material-icons-outlined text-base mr-1">location_on</span>
+                      {driver.workLocation}
+                    </span>
+                  ) : (
+                    <span className="text-gray-400">Not set</span>
+                  )}
+                </p>
               </div>
             </div>
-          )}
+          </div>
 
           <div className="card md:col-span-2">
             <h2 className="text-lg sm:text-xl font-semibold mb-3 sm:mb-4">Registration Timeline</h2>

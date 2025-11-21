@@ -193,6 +193,9 @@ const Drivers = () => {
                     Contact
                   </th>
                   <th className="px-6 py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">
+                    Work Location
+                  </th>
+                  <th className="px-6 py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">
                     Documents
                   </th>
                   <th className="px-6 py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">
@@ -209,7 +212,7 @@ const Drivers = () => {
               <tbody className="bg-white divide-y divide-gray-200">
                 {drivers.length === 0 ? (
                   <tr>
-                    <td colSpan="6" className="px-6 py-12 text-center">
+                    <td colSpan="7" className="px-6 py-12 text-center">
                       <div className="flex flex-col items-center space-y-3">
                         <span className="material-icons-outlined text-6xl text-gray-300">inbox</span>
                         <p className="text-gray-500 font-medium">No drivers found</p>
@@ -243,6 +246,16 @@ const Drivers = () => {
                           </div>
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap">
+                          {driver.workLocation ? (
+                            <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-blue-100 text-blue-800">
+                              <span className="material-icons-outlined text-sm mr-1">location_on</span>
+                              {driver.workLocation}
+                            </span>
+                          ) : (
+                            <span className="text-sm text-gray-400">Not set</span>
+                          )}
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap">
                           <div className="flex items-center space-x-2">
                             {driver.verificationDocuments?.licenseFront && (
                               <span className="material-icons-outlined text-green-500 text-xl" title="License">check_circle</span>
@@ -252,6 +265,12 @@ const Drivers = () => {
                             )}
                             {driver.verificationDocuments?.panFront && (
                               <span className="material-icons-outlined text-green-500 text-xl" title="PAN">check_circle</span>
+                            )}
+                            {driver.verificationDocuments?.electricityBill && (
+                              <span className="material-icons-outlined text-blue-500 text-xl" title="Electricity Bill">receipt</span>
+                            )}
+                            {driver.verificationDocuments?.rentAgreement && (
+                              <span className="material-icons-outlined text-purple-500 text-xl" title="Rent Agreement">description</span>
                             )}
                           </div>
                         </td>
@@ -320,6 +339,12 @@ const Drivers = () => {
                           <span className="material-icons-outlined text-gray-400 mr-1 text-base">phone</span>
                           {driver.phone || 'N/A'}
                         </div>
+                        {driver.workLocation && (
+                          <div className="flex items-center text-xs sm:text-sm text-gray-600 mt-1">
+                            <span className="material-icons-outlined text-gray-400 mr-1 text-base">location_on</span>
+                            <span className="font-medium">{driver.workLocation}</span>
+                          </div>
+                        )}
                       </div>
                     </div>
                   </div>
@@ -343,6 +368,12 @@ const Drivers = () => {
                       )}
                       {driver.verificationDocuments?.panFront && (
                         <span className="material-icons-outlined text-green-500 text-base sm:text-lg" title="PAN">check_circle</span>
+                      )}
+                      {driver.verificationDocuments?.electricityBill && (
+                        <span className="material-icons-outlined text-blue-500 text-base sm:text-lg" title="Electricity Bill">receipt</span>
+                      )}
+                      {driver.verificationDocuments?.rentAgreement && (
+                        <span className="material-icons-outlined text-purple-500 text-base sm:text-lg" title="Rent Agreement">description</span>
                       )}
                     </div>
                   </div>
