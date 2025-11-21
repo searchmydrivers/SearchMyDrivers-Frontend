@@ -330,6 +330,8 @@ const SubAdmins = () => {
                     <option value="Bangalore">Bangalore</option>
                     <option value="Delhi">Delhi</option>
                     <option value="Hyderabad">Hyderabad</option>
+                    <option value="Indore">Indore</option>
+                    <option value="Chennai">Chennai</option>
                   </select>
                 </div>
                 {error && <div className="text-red-600 text-sm">{error}</div>}
@@ -399,6 +401,8 @@ const SubAdmins = () => {
                     <option value="Bangalore">Bangalore</option>
                     <option value="Delhi">Delhi</option>
                     <option value="Hyderabad">Hyderabad</option>
+                    <option value="Indore">Indore</option>
+                    <option value="Chennai">Chennai</option>
                   </select>
                 </div>
                 {error && <div className="text-red-600 text-sm">{error}</div>}
