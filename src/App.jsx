@@ -8,6 +8,8 @@ import UserDetails from './pages/UserDetails';
 import Drivers from './pages/Drivers';
 import DriverDetails from './pages/DriverDetails';
 import TripBookings from './pages/TripBookings';
+import TripDetails from './pages/TripDetails';
+import TransactionHistory from './pages/TransactionHistory';
 import ContentManagement from './pages/ContentManagement';
 import Banners from './pages/Banners';
 import AdminProfile from './pages/AdminProfile';
@@ -92,6 +94,22 @@ function App() {
           element={
             <ProtectedRoute>
               <TripBookings />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/trip-bookings/:tripId"
+          element={
+            <ProtectedRoute>
+              <TripDetails />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/transactions"
+          element={
+            <ProtectedRoute>
+              <TransactionHistory />
             </ProtectedRoute>
           }
         />

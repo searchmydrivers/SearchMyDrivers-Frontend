@@ -13,6 +13,7 @@ const Sidebar = ({ isOpen, onClose }) => {
     { path: '/users', label: 'Users', icon: 'people', iconType: 'outlined' },
     { path: '/drivers', label: 'Drivers', icon: 'local_taxi', iconType: 'outlined' },
     { path: '/trip-bookings', label: 'Manage Trip Bookings', icon: 'route', iconType: 'outlined' },
+    { path: '/transactions', label: 'Transaction History', icon: 'history', iconType: 'outlined' },
     { path: '/content', label: 'Content Management', icon: 'description', iconType: 'outlined' },
     { path: '/banners', label: 'Manage Banners', icon: 'image', iconType: 'outlined' },
     { path: '/admin-profile', label: 'Admin Profile', icon: 'account_circle', iconType: 'outlined' },

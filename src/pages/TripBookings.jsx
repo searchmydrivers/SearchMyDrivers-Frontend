@@ -12,6 +12,9 @@ const TripBookings = () => {
     total: 0,
     limit: 10,
   });
+  const [cancelling, setCancelling] = useState(false);
+  const [error, setError] = useState('');
+  const [success, setSuccess] = useState('');
 
   useEffect(() => {
     fetchTrips();
@@ -30,13 +33,14 @@ const TripBookings = () => {
       }
 
       const response = await tripService.getAllTrips(params);
-      const data = response.data?.data || {};
-      setTrips(data.trips || []);
+      // Response structure: { success: true, data: { trips: [], count, page, limit, totalPages } }
+      const responseData = response?.data || {};
+      setTrips(responseData.trips || []);
       setPagination({
-        page: data.page || 1,
-        totalPages: data.totalPages || 1,
-        total: data.total || 0,
-        limit: data.limit || 10,
+        page: responseData.page || 1,
+        totalPages: responseData.totalPages || 1,
+        total: responseData.total || 0,
+        limit: responseData.limit || 10,
       });
     } catch (error) {
       console.error('Error fetching trips:', error);
@@ -60,17 +64,52 @@ const TripBookings = () => {
   const getStatusBadge = (status) => {
     const statusConfig = {
       pending: { bg: 'bg-yellow-100', text: 'text-yellow-800', label: 'Pending' },
-      accepted: { bg: 'bg-blue-100', text: 'text-blue-800', label: 'Accepted' },
+      'driver-assigned': { bg: 'bg-blue-100', text: 'text-blue-800', label: 'Driver Assigned' },
+      'pin-verified': { bg: 'bg-indigo-100', text: 'text-indigo-800', label: 'PIN Verified' },
       'in-progress': { bg: 'bg-purple-100', text: 'text-purple-800', label: 'In Progress' },
       completed: { bg: 'bg-green-100', text: 'text-green-800', label: 'Completed' },
       cancelled: { bg: 'bg-red-100', text: 'text-red-800', label: 'Cancelled' },
+      'payment-pending': { bg: 'bg-orange-100', text: 'text-orange-800', label: 'Payment Pending' },
+      'payment-completed': { bg: 'bg-green-100', text: 'text-green-800', label: 'Payment Completed' },
     };
-    const config = statusConfig[status] || statusConfig.pending;
+    const config = statusConfig[status] || { bg: 'bg-gray-100', text: 'text-gray-800', label: status || 'Unknown' };
     return (
       <span className={`px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${config.bg} ${config.text}`}>
         {config.label}
       </span>
     );
+  };
+
+  const handleViewTrip = (tripId) => {
+    // Navigate to trip details page
+    window.location.href = `/trip-bookings/${tripId}`;
+  };
+
+  const handleCancelTrip = async (tripId) => {
+    if (!window.confirm('Are you sure you want to cancel this trip? This action cannot be undone.')) {
+      return;
+    }
+
+    try {
+      setCancelling(true);
+      setError('');
+      setSuccess('');
+      const response = await tripService.cancelTripByAdmin(tripId);
+      if (response.success) {
+        setSuccess('Trip cancelled successfully');
+        // Refresh trips list
+        await fetchTrips();
+        // Clear success message after 3 seconds
+        setTimeout(() => setSuccess(''), 3000);
+      } else {
+        setError(response.message || 'Failed to cancel trip');
+      }
+    } catch (error) {
+      console.error('Error cancelling trip:', error);
+      setError(error.response?.data?.message || 'Failed to cancel trip');
+    } finally {
+      setCancelling(false);
+    }
   };
 
   if (loading && trips.length === 0) {
@@ -89,6 +128,25 @@ const TripBookings = () => {
   return (
     <Layout>
       <div className="space-y-4 sm:space-y-6">
+        {error && (
+          <div className="bg-red-50 border-l-4 border-red-500 text-red-700 px-4 py-3 rounded-lg flex items-center animate-slide-in">
+            <span className="material-icons-outlined mr-2 text-red-500">error</span>
+            <span className="font-medium">{error}</span>
+            <button onClick={() => setError('')} className="ml-auto text-red-500 hover:text-red-700">
+              <span className="material-icons-outlined">close</span>
+            </button>
+          </div>
+        )}
+
+        {success && (
+          <div className="bg-green-50 border-l-4 border-green-500 text-green-700 px-4 py-3 rounded-lg flex items-center animate-slide-in">
+            <span className="material-icons-outlined mr-2 text-green-500">check_circle</span>
+            <span className="font-medium">{success}</span>
+            <button onClick={() => setSuccess('')} className="ml-auto text-green-500 hover:text-green-700">
+              <span className="material-icons-outlined">close</span>
+            </button>
+          </div>
+        )}
         <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 mb-4 sm:mb-6">
           <div>
             <h1 className="text-2xl sm:text-3xl font-bold text-gray-800 mb-1 sm:mb-2">Manage Trip Bookings</h1>
@@ -116,14 +174,14 @@ const TripBookings = () => {
               Pending
             </button>
             <button
-              onClick={() => handleFilterChange('accepted')}
+              onClick={() => handleFilterChange('driver-assigned')}
               className={`px-3 sm:px-4 py-2 sm:py-2.5 rounded-lg sm:rounded-xl font-semibold transition-all duration-300 text-xs sm:text-sm ${
-                filter === 'accepted'
+                filter === 'driver-assigned'
                   ? 'bg-gradient-to-r from-blue-500 to-blue-600 text-white shadow-lg'
                   : 'bg-white text-gray-700 hover:bg-gray-50 border border-gray-300'
               }`}
             >
-              Accepted
+              Driver Assigned
             </button>
             <button
               onClick={() => handleFilterChange('in-progress')}
@@ -177,6 +235,9 @@ const TripBookings = () => {
                     Route
                   </th>
                   <th className="px-6 py-4 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
+                    Module/Type
+                  </th>
+                  <th className="px-6 py-4 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
                     Amount
                   </th>
                   <th className="px-6 py-4 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
@@ -193,7 +254,7 @@ const TripBookings = () => {
               <tbody className="bg-white divide-y divide-gray-200">
                 {trips.length === 0 ? (
                   <tr>
-                    <td colSpan="8" className="px-6 py-12 text-center text-gray-500">
+                    <td colSpan="9" className="px-6 py-12 text-center text-gray-500">
                       <div className="flex flex-col items-center space-y-3">
                         <span className="material-icons-outlined text-6xl text-gray-300">inbox</span>
                         <p className="text-gray-500 font-medium">No trips found</p>
@@ -218,8 +279,37 @@ const TripBookings = () => {
                           <div className="text-gray-500">→ {trip.dropLocation?.address || 'N/A'}</div>
                         </div>
                       </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                        <div>
+                          <span className="font-medium">{trip.module === 'incity' ? 'InCity' : 'OutStation'}</span>
+                        </div>
+                        <div className="text-xs text-gray-500">
+                          {trip.tripType === 'one-way' ? 'One-Way' : 'Round-Trip'}
+                        </div>
+                        {trip.cancellationPenalty?.penaltyApplied && (
+                          <div className="text-xs text-red-600 mt-1">
+                            Penalty: ₹{trip.cancellationPenalty.userPenaltyAmount > 0 
+                              ? trip.cancellationPenalty.userPenaltyAmount.toFixed(2)
+                              : trip.cancellationPenalty.driverPenaltyAmount > 0
+                                ? trip.cancellationPenalty.driverPenaltyAmount.toFixed(2)
+                                : '0.00'}
+                          </div>
+                        )}
+                      </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm font-semibold text-gray-900">
-                        ₹{trip.fare?.totalAmount || '0.00'}
+                        <div>
+                          ₹{trip.fareDetails?.totalAmount > 0 
+                            ? trip.fareDetails.totalAmount.toFixed(2) 
+                            : trip.totalEstimatedFare 
+                              ? trip.totalEstimatedFare.toFixed(2) 
+                              : '0.00'}
+                        </div>
+                        {trip.fareDetails?.totalAmount > 0 && (
+                          <div className="text-xs text-gray-500 font-normal">Final</div>
+                        )}
+                        {trip.fareDetails?.totalAmount === 0 && trip.totalEstimatedFare && (
+                          <div className="text-xs text-gray-500 font-normal">Estimated</div>
+                        )}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
                         {getStatusBadge(trip.status)}
@@ -228,8 +318,21 @@ const TripBookings = () => {
                         {trip.createdAt ? new Date(trip.createdAt).toLocaleDateString() : 'N/A'}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                        <button className="text-blue-600 hover:text-blue-900 mr-3">View</button>
-                        <button className="text-red-600 hover:text-red-900">Cancel</button>
+                        <button
+                          onClick={() => handleViewTrip(trip._id)}
+                          className="text-blue-600 hover:text-blue-900 mr-3 font-semibold"
+                        >
+                          View
+                        </button>
+                        {!['completed', 'payment-completed', 'cancelled'].includes(trip.status) && (
+                          <button
+                            onClick={() => handleCancelTrip(trip._id)}
+                            disabled={cancelling}
+                            className="text-red-600 hover:text-red-900 font-semibold disabled:opacity-50 disabled:cursor-not-allowed"
+                          >
+                            {cancelling ? 'Cancelling...' : 'Cancel'}
+                          </button>
+                        )}
                       </td>
                     </tr>
                   ))
@@ -283,13 +386,57 @@ const TripBookings = () => {
                     <span className="text-gray-900">{trip.dropLocation?.address || 'N/A'}</span>
                   </div>
                   <div>
-                    <span className="font-medium text-gray-700">Amount: </span>
-                    <span className="text-gray-900 font-semibold">₹{trip.fare?.totalAmount || '0.00'}</span>
+                    <span className="font-medium text-gray-700">Module: </span>
+                    <span className="text-gray-900">{trip.module === 'incity' ? 'InCity' : 'OutStation'} • {trip.tripType === 'one-way' ? 'One-Way' : 'Round-Trip'}</span>
                   </div>
+                  <div>
+                    <span className="font-medium text-gray-700">Amount: </span>
+                    <span className="text-gray-900 font-semibold">
+                      ₹{trip.fareDetails?.totalAmount > 0 
+                        ? trip.fareDetails.totalAmount.toFixed(2) 
+                        : trip.totalEstimatedFare 
+                          ? trip.totalEstimatedFare.toFixed(2) 
+                          : '0.00'}
+                    </span>
+                    {trip.fareDetails?.totalAmount > 0 && (
+                      <span className="text-xs text-gray-500 ml-1">(Final)</span>
+                    )}
+                    {trip.fareDetails?.totalAmount === 0 && trip.totalEstimatedFare && (
+                      <span className="text-xs text-gray-500 ml-1">(Estimated)</span>
+                    )}
+                  </div>
+                  {trip.cancellationPenalty?.penaltyApplied && (
+                    <div>
+                      <span className="font-medium text-red-700">Penalty: </span>
+                      <span className="text-red-900 font-semibold">
+                        ₹{trip.cancellationPenalty.userPenaltyAmount > 0 
+                          ? trip.cancellationPenalty.userPenaltyAmount.toFixed(2)
+                          : trip.cancellationPenalty.driverPenaltyAmount > 0
+                            ? trip.cancellationPenalty.driverPenaltyAmount.toFixed(2)
+                            : '0.00'}
+                      </span>
+                      <span className="text-xs text-gray-500 ml-1">
+                        ({trip.cancellationPenalty.cancelledBy === 'user' ? 'User' : 'Driver'} cancelled)
+                      </span>
+                    </div>
+                  )}
                 </div>
                 <div className="flex items-center justify-between pt-3 border-t border-gray-100">
-                  <button className="text-blue-600 hover:text-blue-900 font-semibold text-xs sm:text-sm">View</button>
-                  <button className="text-red-600 hover:text-red-900 font-semibold text-xs sm:text-sm">Cancel</button>
+                  <button
+                    onClick={() => handleViewTrip(trip._id)}
+                    className="text-blue-600 hover:text-blue-900 font-semibold text-xs sm:text-sm"
+                  >
+                    View
+                  </button>
+                  {!['completed', 'payment-completed', 'cancelled'].includes(trip.status) && (
+                    <button
+                      onClick={() => handleCancelTrip(trip._id)}
+                      disabled={cancelling}
+                      className="text-red-600 hover:text-red-900 font-semibold text-xs sm:text-sm disabled:opacity-50 disabled:cursor-not-allowed"
+                    >
+                      {cancelling ? 'Cancelling...' : 'Cancel'}
+                    </button>
+                  )}
                 </div>
               </div>
             ))

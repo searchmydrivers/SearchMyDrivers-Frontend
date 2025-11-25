@@ -13,6 +13,7 @@ const Fare = () => {
     adminCommissionPercentage: 10,
     nightStartHour: 22,
     nightEndHour: 6,
+    cancellationPenaltyAmount: 50,
     // Outstation specific
     outstationBasePrice24Hrs: 1400,
     outstationNightCharge: 500,
@@ -45,6 +46,7 @@ const Fare = () => {
           adminCommissionPercentage: fare.adminCommissionPercentage || 10,
           nightStartHour: fare.nightStartHour || 22,
           nightEndHour: fare.nightEndHour || 6,
+          cancellationPenaltyAmount: fare.cancellationPenaltyAmount || 50,
           outstationBasePrice24Hrs: fare.outstationBasePrice24Hrs || 1400,
           outstationNightCharge: fare.outstationNightCharge || 500,
         });
@@ -73,6 +75,7 @@ const Fare = () => {
         nightStartHour: fareSettings.nightStartHour,
         nightEndHour: fareSettings.nightEndHour,
         adminCommissionPercentage: fareSettings.adminCommissionPercentage,
+        cancellationPenaltyAmount: fareSettings.cancellationPenaltyAmount,
       };
 
       // Add outstation-specific fields if module is outstation
@@ -369,6 +372,24 @@ const Fare = () => {
                     </p>
                   </div>
                 </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Cancellation Penalty Amount (₹)
+                  </label>
+                  <input
+                    type="number"
+                    value={fareSettings.cancellationPenaltyAmount}
+                    onChange={(e) =>
+                      setFareSettings({ ...fareSettings, cancellationPenaltyAmount: parseFloat(e.target.value) })
+                    }
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    required
+                    min="0"
+                  />
+                  <p className="text-xs text-gray-500 mt-1">
+                    Penalty amount charged when user or driver cancels trip less than 30 minutes before scheduled time
+                  </p>
+                </div>
                 <div className="flex space-x-3 pt-4">
                   <button
                     type="submit"
@@ -485,6 +506,15 @@ const Fare = () => {
                   </div>
                   <p className="text-xs text-gray-500 mt-1">
                     Night hours when additional charges apply
+                  </p>
+                </div>
+                <div className="py-3 border-b border-gray-200">
+                  <div className="flex justify-between items-center">
+                    <span className="text-gray-600">Cancellation Penalty</span>
+                    <span className="font-semibold text-gray-800">₹{fareSettings.cancellationPenaltyAmount}</span>
+                  </div>
+                  <p className="text-xs text-gray-500 mt-1">
+                    Penalty charged when trip is cancelled less than 30 minutes before scheduled time
                   </p>
                 </div>
               </div>

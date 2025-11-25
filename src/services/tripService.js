@@ -7,9 +7,21 @@ export const tripService = {
     return response.data;
   },
 
-  // Get trip by ID
+  // Get trip by ID (Admin endpoint)
   getTripById: async (tripId) => {
-    const response = await api.get(`/trips/${tripId}`);
+    const response = await api.get(`/admins/trips/${tripId}`);
+    return response.data;
+  },
+
+  // Cancel trip (Admin endpoint)
+  cancelTripByAdmin: async (tripId) => {
+    const response = await api.post(`/admins/trips/${tripId}/cancel`);
+    return response.data;
+  },
+
+  // Request driver location (Admin endpoint)
+  requestDriverLocation: async (tripId) => {
+    const response = await api.post(`/admins/trips/${tripId}/request-driver-location`);
     return response.data;
   },
 };
