@@ -19,7 +19,7 @@ const TransactionHistory = () => {
   const [summary, setSummary] = useState({
     totalCredits: 0,
     totalDebits: 0,
-    netAmount: 0,
+    totalAdminCommission: 0,
   });
   const [adminInfo, setAdminInfo] = useState(null);
 
@@ -51,7 +51,7 @@ const TransactionHistory = () => {
         setSummary({
           totalCredits: response.data.summary?.totalCredits || 0,
           totalDebits: response.data.summary?.totalDebits || 0,
-          netAmount: response.data.summary?.netAmount || 0,
+          totalAdminCommission: response.data.summary?.totalAdminCommission || 0,
         });
         setAdminInfo(response.data.filters || null);
       }
@@ -121,15 +121,15 @@ const TransactionHistory = () => {
               <span className="material-icons-outlined text-red-600 text-3xl sm:text-4xl">trending_down</span>
             </div>
           </div>
-          <div className="bg-gradient-to-br from-blue-50 to-blue-100 rounded-xl shadow-sm border border-blue-200 p-4 sm:p-6">
+          <div className="bg-gradient-to-br from-purple-50 to-purple-100 rounded-xl shadow-sm border border-purple-200 p-4 sm:p-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-blue-700 mb-1">Net Amount</p>
-                <p className={`text-2xl sm:text-3xl font-bold ${summary.netAmount >= 0 ? 'text-blue-800' : 'text-red-800'}`}>
-                  {formatAmount(summary.netAmount)}
+                <p className="text-sm font-medium text-purple-700 mb-1">Admin Wallet</p>
+                <p className="text-2xl sm:text-3xl font-bold text-purple-800">
+                  {formatAmount(summary.totalAdminCommission)}
                 </p>
               </div>
-              <span className="material-icons-outlined text-blue-600 text-3xl sm:text-4xl">account_balance</span>
+              <span className="material-icons-outlined text-purple-600 text-3xl sm:text-4xl">account_balance_wallet</span>
             </div>
           </div>
         </div>
@@ -201,7 +201,8 @@ const TransactionHistory = () => {
                       <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">User</th>
                       <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Description</th>
                       <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Trip</th>
-                      <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Amount</th>
+                      <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Driver Amount</th>
+                      <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Admin Commission</th>
                       <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
                     </tr>
                   </thead>
@@ -243,10 +244,22 @@ const TransactionHistory = () => {
                           )}
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-semibold">
-                          <span className={transaction.type === 'credit' ? 'text-green-600' : 'text-red-600'}>
-                            {transaction.type === 'credit' ? '+' : '-'}
-                            {formatAmount(transaction.amount)}
-                          </span>
+                          {transaction.driverAmount > 0 ? (
+                            <span className="text-blue-600">
+                              {formatAmount(transaction.driverAmount)}
+                            </span>
+                          ) : (
+                            <span className="text-gray-400">-</span>
+                          )}
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-semibold">
+                          {transaction.adminCommission > 0 ? (
+                            <span className="text-purple-600">
+                              {formatAmount(transaction.adminCommission)}
+                            </span>
+                          ) : (
+                            <span className="text-gray-400">-</span>
+                          )}
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap">
                           <span
@@ -300,10 +313,22 @@ const TransactionHistory = () => {
                         <p className="text-xs text-gray-400 mt-1">{transaction.userType}</p>
                       </div>
                       <div className="text-right">
-                        <p className={`text-sm font-semibold ${transaction.type === 'credit' ? 'text-green-600' : 'text-red-600'}`}>
-                          {transaction.type === 'credit' ? '+' : '-'}
-                          {formatAmount(transaction.amount)}
-                        </p>
+                        {transaction.driverAmount > 0 && (
+                          <p className="text-sm font-semibold text-blue-600 mb-1">
+                            Driver: {formatAmount(transaction.driverAmount)}
+                          </p>
+                        )}
+                        {transaction.adminCommission > 0 && (
+                          <p className="text-sm font-semibold text-purple-600">
+                            Admin: {formatAmount(transaction.adminCommission)}
+                          </p>
+                        )}
+                        {transaction.driverAmount === 0 && transaction.adminCommission === 0 && (
+                          <p className={`text-sm font-semibold ${transaction.type === 'credit' ? 'text-green-600' : 'text-red-600'}`}>
+                            {transaction.type === 'credit' ? '+' : '-'}
+                            {formatAmount(transaction.amount)}
+                          </p>
+                        )}
                       </div>
                     </div>
                     <div className="mt-2 pt-2 border-t border-gray-100">
