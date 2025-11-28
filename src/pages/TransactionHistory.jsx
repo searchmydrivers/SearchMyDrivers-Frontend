@@ -106,8 +106,9 @@ const TransactionHistory = () => {
           <div className="bg-gradient-to-br from-green-50 to-green-100 rounded-xl shadow-sm border border-green-200 p-4 sm:p-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-green-700 mb-1">Total Credits</p>
+                <p className="text-sm font-medium text-green-700 mb-1">Total Final Fare</p>
                 <p className="text-2xl sm:text-3xl font-bold text-green-800">{formatAmount(summary.totalCredits)}</p>
+                <p className="text-xs text-green-600 mt-1">From payment-completed trips</p>
               </div>
               <span className="material-icons-outlined text-green-600 text-3xl sm:text-4xl">trending_up</span>
             </div>
