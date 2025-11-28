@@ -196,6 +196,9 @@ const Drivers = () => {
                     Work Location
                   </th>
                   <th className="px-6 py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">
+                    Rating
+                  </th>
+                  <th className="px-6 py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">
                     Documents
                   </th>
                   <th className="px-6 py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">
@@ -212,7 +215,7 @@ const Drivers = () => {
               <tbody className="bg-white divide-y divide-gray-200">
                 {drivers.length === 0 ? (
                   <tr>
-                    <td colSpan="7" className="px-6 py-12 text-center">
+                    <td colSpan="8" className="px-6 py-12 text-center">
                       <div className="flex flex-col items-center space-y-3">
                         <span className="material-icons-outlined text-6xl text-gray-300">inbox</span>
                         <p className="text-gray-500 font-medium">No drivers found</p>
@@ -254,6 +257,15 @@ const Drivers = () => {
                           ) : (
                             <span className="text-sm text-gray-400">Not set</span>
                           )}
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap">
+                          <div className="flex items-center">
+                            <span className="material-icons-outlined text-yellow-500 text-lg mr-1">star</span>
+                            <span className="text-sm font-semibold text-gray-900">
+                              {driver.rating ? driver.rating.toFixed(1) : '3.0'}
+                            </span>
+                            <span className="text-xs text-gray-500 ml-1">({driver.totalRides || 0} rides)</span>
+                          </div>
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap">
                           <div className="flex items-center space-x-2">
@@ -345,6 +357,11 @@ const Drivers = () => {
                             <span className="font-medium">{driver.workLocation}</span>
                           </div>
                         )}
+                        <div className="flex items-center text-xs sm:text-sm text-gray-600 mt-1">
+                          <span className="material-icons-outlined text-yellow-500 text-base mr-1">star</span>
+                          <span className="font-semibold">{driver.rating ? driver.rating.toFixed(1) : '3.0'}</span>
+                          <span className="text-gray-500 ml-1">({driver.totalRides || 0} rides)</span>
+                        </div>
                       </div>
                     </div>
                   </div>

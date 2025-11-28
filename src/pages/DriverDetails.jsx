@@ -193,6 +193,15 @@ const DriverDetails = () => {
                 <h1 className="text-2xl sm:text-3xl font-bold text-gray-800 truncate">{driver.name}</h1>
                 <p className="text-sm sm:text-base text-gray-600 truncate">{driver.email}</p>
                 <p className="text-sm sm:text-base text-gray-600">{driver.phone}</p>
+                <div className="flex items-center mt-2">
+                  <span className="material-icons-outlined text-yellow-500 text-lg sm:text-xl mr-1">star</span>
+                  <span className="text-sm sm:text-base font-semibold text-gray-900">
+                    {driver.rating ? driver.rating.toFixed(1) : '3.0'}
+                  </span>
+                  <span className="text-xs sm:text-sm text-gray-500 ml-2">
+                    ({driver.totalRides || 0} total rides)
+                  </span>
+                </div>
               </div>
             </div>
             <div>
@@ -372,6 +381,18 @@ const DriverDetails = () => {
               <div>
                 <label className="text-sm text-gray-500">Phone</label>
                 <p className="font-medium">{driver.phone}</p>
+              </div>
+              <div>
+                <label className="text-sm text-gray-500">Rating</label>
+                <div className="flex items-center">
+                  <span className="material-icons-outlined text-yellow-500 text-xl mr-1">star</span>
+                  <p className="font-medium text-lg">{driver.rating ? driver.rating.toFixed(1) : '3.0'}</p>
+                  <span className="text-sm text-gray-500 ml-2">out of 5.0</span>
+                </div>
+              </div>
+              <div>
+                <label className="text-sm text-gray-500">Total Rides</label>
+                <p className="font-medium">{driver.totalRides || 0}</p>
               </div>
               <div>
                 <label className="text-sm text-gray-500">Phone Verified</label>
