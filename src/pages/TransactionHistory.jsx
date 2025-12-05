@@ -21,7 +21,6 @@ const TransactionHistory = () => {
     totalDebits: 0,
     totalAdminCommission: 0,
   });
-  const [adminInfo, setAdminInfo] = useState(null);
 
   useEffect(() => {
     fetchTransactions();
@@ -53,7 +52,6 @@ const TransactionHistory = () => {
           totalDebits: response.data.summary?.totalDebits || 0,
           totalAdminCommission: response.data.summary?.totalAdminCommission || 0,
         });
-        setAdminInfo(response.data.filters || null);
       }
     } catch (error) {
       console.error('Error fetching transactions:', error);

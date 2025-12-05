@@ -1,10 +1,8 @@
 import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import Layout from '../components/Layout/Layout';
 import { contentService } from '../services/contentService';
 
 const ContentManagement = () => {
-  const navigate = useNavigate();
   const [contents, setContents] = useState([]);
   const [loading, setLoading] = useState(true);
   const [editingContent, setEditingContent] = useState(null);
