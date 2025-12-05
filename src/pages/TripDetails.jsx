@@ -220,16 +220,15 @@ const TripDetails = () => {
   if (!trip) {
     return (
       <Layout>
-        <div className="flex items-center justify-center h-64">
-          <div className="text-center">
-            <p className="text-gray-500 font-medium">Trip not found</p>
-            <button
-              onClick={() => navigate('/trip-bookings')}
-              className="mt-4 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
-            >
-              Back to Trips
-            </button>
-          </div>
+        <div className="bg-white rounded-xl shadow-sm border border-gray-200 text-center py-12">
+          <span className="material-icons-outlined text-6xl text-gray-300 mb-4 block">route</span>
+          <p className="text-gray-500 text-lg font-medium mb-4">Trip not found</p>
+          <button
+            onClick={() => navigate('/trip-bookings')}
+            className="px-6 py-2.5 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-lg hover:from-blue-700 hover:to-indigo-700 transition-all duration-200 shadow-lg font-semibold"
+          >
+            Back to Trips
+          </button>
         </div>
       </Layout>
     );
@@ -237,25 +236,25 @@ const TripDetails = () => {
 
   return (
     <Layout>
-      <div className="space-y-4 sm:space-y-6">
+      <div className="space-y-4 sm:space-y-6 animate-fade-in">
         {/* Header */}
-        <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 mb-4 sm:mb-6">
+        <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4">
           <div>
             <button
               onClick={() => navigate('/trip-bookings')}
-              className="mb-4 flex items-center space-x-2 text-gray-600 hover:text-gray-800 transition-colors"
+              className="text-blue-600 hover:text-blue-900 font-semibold flex items-center space-x-2 transition-colors group mb-2"
             >
-              <span className="material-icons-outlined">arrow_back</span>
+              <span className="material-icons-outlined text-lg group-hover:-translate-x-1 transition-transform">arrow_back</span>
               <span>Back to Trips</span>
             </button>
-            <h1 className="text-2xl sm:text-3xl font-bold text-gray-800 mb-1 sm:mb-2">Trip Details</h1>
-            <p className="text-sm sm:text-base text-gray-500">Trip ID: #{trip._id?.slice(-8)}</p>
+            <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 tracking-tight mb-1 sm:mb-2">Trip Details</h1>
+            <p className="text-sm sm:text-base text-gray-600 font-medium">Trip ID: #{trip._id?.slice(-8)} • View complete trip information</p>
           </div>
           {!['completed', 'payment-completed', 'cancelled'].includes(trip.status) && (
             <button
               onClick={handleCancelTrip}
               disabled={cancelling}
-              className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors font-medium disabled:opacity-50 disabled:cursor-not-allowed flex items-center space-x-2"
+              className="px-4 sm:px-6 py-2.5 sm:py-3 bg-gradient-to-r from-red-600 to-red-700 text-white rounded-lg sm:rounded-xl hover:from-red-700 hover:to-red-800 transition-all duration-200 shadow-lg font-semibold disabled:opacity-50 disabled:cursor-not-allowed flex items-center space-x-2 text-sm sm:text-base"
             >
               {cancelling ? (
                 <>
@@ -273,20 +272,20 @@ const TripDetails = () => {
         </div>
 
         {error && (
-          <div className="bg-red-50 border-l-4 border-red-500 text-red-700 px-4 py-3 rounded-lg flex items-center animate-slide-in">
-            <span className="material-icons-outlined mr-2 text-red-500">error</span>
-            <span className="font-medium">{error}</span>
-            <button onClick={() => setError('')} className="ml-auto text-red-500 hover:text-red-700">
+          <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg flex items-center animate-fade-in">
+            <span className="material-icons-outlined mr-2">error_outline</span>
+            <span className="flex-1">{error}</span>
+            <button onClick={() => setError('')} className="text-red-500 hover:text-red-700">
               <span className="material-icons-outlined">close</span>
             </button>
           </div>
         )}
 
         {success && (
-          <div className="bg-green-50 border-l-4 border-green-500 text-green-700 px-4 py-3 rounded-lg flex items-center animate-slide-in">
-            <span className="material-icons-outlined mr-2 text-green-500">check_circle</span>
-            <span className="font-medium">{success}</span>
-            <button onClick={() => setSuccess('')} className="ml-auto text-green-500 hover:text-green-700">
+          <div className="bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-lg flex items-center animate-fade-in">
+            <span className="material-icons-outlined mr-2">check_circle</span>
+            <span className="flex-1">{success}</span>
+            <button onClick={() => setSuccess('')} className="text-green-500 hover:text-green-700">
               <span className="material-icons-outlined">close</span>
             </button>
           </div>
@@ -294,8 +293,9 @@ const TripDetails = () => {
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
           {/* Trip Information */}
-          <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-4 sm:p-6">
-            <h2 className="text-lg sm:text-xl font-bold text-gray-800 mb-4 sm:mb-6 border-b pb-2">
+          <div className="bg-white rounded-xl sm:rounded-2xl shadow-sm border border-gray-200 p-4 sm:p-6 animate-fade-in" style={{ animationDelay: '100ms' }}>
+            <h2 className="text-lg sm:text-xl font-bold text-gray-900 mb-4 sm:mb-6 flex items-center border-b border-gray-200 pb-3">
+              <span className="material-icons-outlined text-xl mr-2 text-blue-600">info</span>
               Trip Information
             </h2>
             <div className="space-y-4">
@@ -339,8 +339,9 @@ const TripDetails = () => {
           </div>
 
           {/* User & Driver Information */}
-          <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-4 sm:p-6">
-            <h2 className="text-lg sm:text-xl font-bold text-gray-800 mb-4 sm:mb-6 border-b pb-2">
+          <div className="bg-white rounded-xl sm:rounded-2xl shadow-sm border border-gray-200 p-4 sm:p-6 animate-fade-in" style={{ animationDelay: '150ms' }}>
+            <h2 className="text-lg sm:text-xl font-bold text-gray-900 mb-4 sm:mb-6 flex items-center border-b border-gray-200 pb-3">
+              <span className="material-icons-outlined text-xl mr-2 text-indigo-600">people</span>
               User & Driver
             </h2>
             <div className="space-y-4">
@@ -386,8 +387,9 @@ const TripDetails = () => {
           </div>
 
           {/* Pickup Location */}
-          <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-4 sm:p-6">
-            <h2 className="text-lg sm:text-xl font-bold text-gray-800 mb-4 sm:mb-6 border-b pb-2">
+          <div className="bg-white rounded-xl sm:rounded-2xl shadow-sm border border-gray-200 p-4 sm:p-6 animate-fade-in" style={{ animationDelay: '200ms' }}>
+            <h2 className="text-lg sm:text-xl font-bold text-gray-900 mb-4 sm:mb-6 flex items-center border-b border-gray-200 pb-3">
+              <span className="material-icons-outlined text-xl mr-2 text-green-600">location_on</span>
               Pickup Location
             </h2>
             <div>
@@ -406,8 +408,9 @@ const TripDetails = () => {
           </div>
 
           {/* Drop Location */}
-          <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-4 sm:p-6">
-            <h2 className="text-lg sm:text-xl font-bold text-gray-800 mb-4 sm:mb-6 border-b pb-2">
+          <div className="bg-white rounded-xl sm:rounded-2xl shadow-sm border border-gray-200 p-4 sm:p-6 animate-fade-in" style={{ animationDelay: '250ms' }}>
+            <h2 className="text-lg sm:text-xl font-bold text-gray-900 mb-4 sm:mb-6 flex items-center border-b border-gray-200 pb-3">
+              <span className="material-icons-outlined text-xl mr-2 text-red-600">place</span>
               Drop Location
             </h2>
             <div>
@@ -427,8 +430,9 @@ const TripDetails = () => {
 
           {/* Route Information */}
           {trip.googleMapsData && (
-            <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-4 sm:p-6">
-              <h2 className="text-lg sm:text-xl font-bold text-gray-800 mb-4 sm:mb-6 border-b pb-2">
+            <div className="bg-white rounded-xl sm:rounded-2xl shadow-sm border border-gray-200 p-4 sm:p-6 animate-fade-in" style={{ animationDelay: '300ms' }}>
+              <h2 className="text-lg sm:text-xl font-bold text-gray-900 mb-4 sm:mb-6 flex items-center border-b border-gray-200 pb-3">
+                <span className="material-icons-outlined text-xl mr-2 text-purple-600">route</span>
                 Route Information
               </h2>
               <div className="space-y-3">
@@ -453,8 +457,9 @@ const TripDetails = () => {
           )}
 
           {/* Fare Information */}
-          <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-4 sm:p-6">
-            <h2 className="text-lg sm:text-xl font-bold text-gray-800 mb-4 sm:mb-6 border-b pb-2">
+          <div className="bg-white rounded-xl sm:rounded-2xl shadow-sm border border-gray-200 p-4 sm:p-6 animate-fade-in" style={{ animationDelay: '350ms' }}>
+            <h2 className="text-lg sm:text-xl font-bold text-gray-900 mb-4 sm:mb-6 flex items-center border-b border-gray-200 pb-3">
+              <span className="material-icons-outlined text-xl mr-2 text-yellow-600">attach_money</span>
               Fare Information
             </h2>
             <div className="space-y-3">
@@ -502,8 +507,9 @@ const TripDetails = () => {
 
           {/* Cancellation Penalty */}
           {trip.cancellationPenalty?.penaltyApplied && (
-            <div className="bg-white rounded-xl shadow-sm border border-red-200 p-4 sm:p-6">
-              <h2 className="text-lg sm:text-xl font-bold text-red-800 mb-4 sm:mb-6 border-b border-red-200 pb-2">
+            <div className="bg-white rounded-xl sm:rounded-2xl shadow-sm border border-red-200 p-4 sm:p-6 animate-fade-in" style={{ animationDelay: '400ms' }}>
+              <h2 className="text-lg sm:text-xl font-bold text-red-800 mb-4 sm:mb-6 flex items-center border-b border-red-200 pb-3">
+                <span className="material-icons-outlined text-xl mr-2 text-red-600">cancel</span>
                 Cancellation Penalty
               </h2>
               <div className="space-y-3">
@@ -557,8 +563,9 @@ const TripDetails = () => {
 
           {/* Payment Information */}
           {trip.razorpayOrderId && (
-            <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-4 sm:p-6">
-              <h2 className="text-lg sm:text-xl font-bold text-gray-800 mb-4 sm:mb-6 border-b pb-2">
+            <div className="bg-white rounded-xl sm:rounded-2xl shadow-sm border border-gray-200 p-4 sm:p-6 animate-fade-in" style={{ animationDelay: '450ms' }}>
+              <h2 className="text-lg sm:text-xl font-bold text-gray-900 mb-4 sm:mb-6 flex items-center border-b border-gray-200 pb-3">
+                <span className="material-icons-outlined text-xl mr-2 text-teal-600">payment</span>
                 Payment Information
               </h2>
               <div className="space-y-3">
@@ -578,13 +585,16 @@ const TripDetails = () => {
 
           {/* Driver Location Section */}
           {trip.driver && (
-            <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-4 sm:p-6 lg:col-span-2">
-              <div className="flex items-center justify-between border-b pb-3 mb-4">
-                <h2 className="text-lg sm:text-xl font-bold text-gray-800">Driver Current Location</h2>
+            <div className="bg-white rounded-xl sm:rounded-2xl shadow-sm border border-gray-200 p-4 sm:p-6 lg:col-span-2 animate-fade-in" style={{ animationDelay: '500ms' }}>
+              <div className="flex items-center justify-between border-b border-gray-200 pb-3 mb-4">
+                <h2 className="text-lg sm:text-xl font-bold text-gray-900 flex items-center">
+                  <span className="material-icons-outlined text-xl mr-2 text-indigo-600">my_location</span>
+                  Driver Current Location
+                </h2>
                 <button
                   onClick={handleRequestDriverLocation}
                   disabled={loadingLocation}
-                  className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm font-medium disabled:opacity-50 disabled:cursor-not-allowed flex items-center space-x-2"
+                  className="px-4 sm:px-6 py-2.5 sm:py-3 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-lg sm:rounded-xl hover:from-blue-700 hover:to-indigo-700 transition-all duration-200 shadow-lg font-semibold disabled:opacity-50 disabled:cursor-not-allowed flex items-center space-x-2 text-sm sm:text-base"
                 >
                   {loadingLocation ? (
                     <>

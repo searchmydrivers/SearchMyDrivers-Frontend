@@ -84,8 +84,10 @@ const UserDetails = () => {
     return (
       <Layout>
         <div className="flex items-center justify-center h-64">
-          <div className="w-12 h-12 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
-          <p className="ml-4 text-gray-600">Loading user details...</p>
+          <div className="flex flex-col items-center space-y-4">
+            <div className="w-12 h-12 border-4 border-blue-600 border-t-transparent rounded-full animate-spin"></div>
+            <div className="text-gray-500 font-medium">Loading user details...</div>
+          </div>
         </div>
       </Layout>
     );
@@ -94,11 +96,12 @@ const UserDetails = () => {
   if (!user) {
     return (
       <Layout>
-        <div className="text-center py-12">
-          <p className="text-gray-500 text-lg">User not found</p>
+        <div className="bg-white rounded-xl shadow-sm border border-gray-200 text-center py-12">
+          <span className="material-icons-outlined text-6xl text-gray-300 mb-4 block">person_off</span>
+          <p className="text-gray-500 text-lg font-medium mb-4">User not found</p>
           <button
             onClick={() => navigate('/users')}
-            className="mt-4 px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+            className="px-6 py-2.5 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-lg hover:from-blue-700 hover:to-indigo-700 transition-all duration-200 shadow-lg font-semibold"
           >
             Back to Users
           </button>
@@ -109,19 +112,19 @@ const UserDetails = () => {
 
   return (
     <Layout>
-      <div className="animate-fade-in">
+      <div className="space-y-4 sm:space-y-6 animate-fade-in">
         {/* Header */}
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-4 sm:mb-6">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div>
             <button
               onClick={() => navigate('/users')}
-              className="flex items-center space-x-2 text-gray-600 hover:text-gray-800 mb-2 text-sm sm:text-base"
+              className="text-blue-600 hover:text-blue-900 font-semibold flex items-center space-x-2 transition-colors group mb-2"
             >
-              <span className="material-icons-outlined text-lg sm:text-xl">arrow_back</span>
+              <span className="material-icons-outlined text-lg group-hover:-translate-x-1 transition-transform">arrow_back</span>
               <span>Back to Users</span>
             </button>
-            <h1 className="text-2xl sm:text-3xl font-bold text-gray-800 mb-1 sm:mb-2">User Details</h1>
-            <p className="text-sm sm:text-base text-gray-500">View and manage user information</p>
+            <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 tracking-tight mb-1 sm:mb-2">User Details</h1>
+            <p className="text-sm sm:text-base text-gray-600 font-medium">View and manage user information</p>
           </div>
           <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 sm:gap-3">
             <button
@@ -168,23 +171,23 @@ const UserDetails = () => {
         </div>
 
         {error && (
-          <div className="bg-red-50 border-l-4 border-red-500 text-red-700 px-4 py-3 rounded-lg mb-6 flex items-center animate-slide-in">
-            <span className="material-icons-outlined mr-2 text-red-500">error</span>
-            <span className="font-medium">{error}</span>
+          <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg flex items-center animate-fade-in">
+            <span className="material-icons-outlined mr-2">error_outline</span>
+            {error}
           </div>
         )}
 
         {success && (
-          <div className="bg-green-50 border-l-4 border-green-500 text-green-700 px-4 py-3 rounded-lg mb-6 flex items-center animate-slide-in">
-            <span className="material-icons-outlined mr-2 text-green-500">check_circle</span>
-            <span className="font-medium">{success}</span>
+          <div className="bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-lg flex items-center animate-fade-in">
+            <span className="material-icons-outlined mr-2">check_circle</span>
+            {success}
           </div>
         )}
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6">
           {/* Profile Card */}
           <div className="lg:col-span-1">
-            <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-4 sm:p-6">
+            <div className="bg-white rounded-xl sm:rounded-2xl shadow-sm border border-gray-200 p-4 sm:p-6 animate-fade-in" style={{ animationDelay: '100ms' }}>
               <div className="text-center">
                 {user.profilePicture ? (
                   <img
@@ -227,10 +230,10 @@ const UserDetails = () => {
 
           {/* Details Card */}
           <div className="lg:col-span-2">
-            <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-4 sm:p-6">
-              <h3 className="text-lg sm:text-xl font-bold text-gray-800 mb-4 sm:mb-6 flex items-center space-x-2">
-                <span className="material-icons-outlined text-blue-600 text-xl sm:text-2xl">person</span>
-                <span>User Information</span>
+            <div className="bg-white rounded-xl sm:rounded-2xl shadow-sm border border-gray-200 p-4 sm:p-6 animate-fade-in" style={{ animationDelay: '150ms' }}>
+              <h3 className="text-lg sm:text-xl font-bold text-gray-900 mb-4 sm:mb-6 flex items-center">
+                <span className="material-icons-outlined text-xl mr-2 text-blue-600">person</span>
+                User Information
               </h3>
 
               <div className="space-y-4">

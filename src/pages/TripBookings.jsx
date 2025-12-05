@@ -127,32 +127,30 @@ const TripBookings = () => {
 
   return (
     <Layout>
-      <div className="space-y-4 sm:space-y-6">
+      <div className="space-y-4 sm:space-y-6 animate-fade-in">
         {error && (
-          <div className="bg-red-50 border-l-4 border-red-500 text-red-700 px-4 py-3 rounded-lg flex items-center animate-slide-in">
-            <span className="material-icons-outlined mr-2 text-red-500">error</span>
-            <span className="font-medium">{error}</span>
-            <button onClick={() => setError('')} className="ml-auto text-red-500 hover:text-red-700">
+          <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg flex items-center animate-fade-in">
+            <span className="material-icons-outlined mr-2">error_outline</span>
+            <span className="flex-1">{error}</span>
+            <button onClick={() => setError('')} className="text-red-500 hover:text-red-700">
               <span className="material-icons-outlined">close</span>
             </button>
           </div>
         )}
 
         {success && (
-          <div className="bg-green-50 border-l-4 border-green-500 text-green-700 px-4 py-3 rounded-lg flex items-center animate-slide-in">
-            <span className="material-icons-outlined mr-2 text-green-500">check_circle</span>
-            <span className="font-medium">{success}</span>
-            <button onClick={() => setSuccess('')} className="ml-auto text-green-500 hover:text-green-700">
+          <div className="bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-lg flex items-center animate-fade-in">
+            <span className="material-icons-outlined mr-2">check_circle</span>
+            <span className="flex-1">{success}</span>
+            <button onClick={() => setSuccess('')} className="text-green-500 hover:text-green-700">
               <span className="material-icons-outlined">close</span>
             </button>
           </div>
         )}
-        <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 mb-4 sm:mb-6">
-          <div>
-            <h1 className="text-2xl sm:text-3xl font-bold text-gray-800 mb-1 sm:mb-2">Manage Trip Bookings</h1>
-            <p className="text-sm sm:text-base text-gray-500">View and manage all trip bookings</p>
-          </div>
-          <div className="flex flex-wrap items-center gap-2">
+       
+
+        {/* Filters */}
+        <div className="flex flex-wrap items-center gap-2">
             <button
               onClick={() => handleFilterChange('all')}
               className={`px-3 sm:px-4 py-2 sm:py-2.5 rounded-lg sm:rounded-xl font-semibold transition-all duration-300 text-xs sm:text-sm ${
@@ -213,40 +211,39 @@ const TripBookings = () => {
             >
               Cancelled
             </button>
-          </div>
         </div>
 
         {/* Desktop Table View */}
-        <div className="hidden lg:block bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+        <div className="hidden lg:block bg-white rounded-xl sm:rounded-2xl shadow-sm border border-gray-200 overflow-hidden animate-fade-in" style={{ animationDelay: '100ms' }}>
           <div className="overflow-x-auto">
             <table className="min-w-full divide-y divide-gray-200">
               <thead className="bg-gradient-to-r from-gray-50 to-gray-100">
                 <tr>
-                  <th className="px-6 py-4 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
+                  <th className="px-6 py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">
                     Trip ID
                   </th>
-                  <th className="px-6 py-4 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
+                  <th className="px-6 py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">
                     User
                   </th>
-                  <th className="px-6 py-4 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
+                  <th className="px-6 py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">
                     Driver
                   </th>
-                  <th className="px-6 py-4 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
+                  <th className="px-6 py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">
                     Route
                   </th>
-                  <th className="px-6 py-4 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
+                  <th className="px-6 py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">
                     Module/Type
                   </th>
-                  <th className="px-6 py-4 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
+                  <th className="px-6 py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">
                     Amount
                   </th>
-                  <th className="px-6 py-4 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
+                  <th className="px-6 py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">
                     Status
                   </th>
-                  <th className="px-6 py-4 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
+                  <th className="px-6 py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">
                     Date
                   </th>
-                  <th className="px-6 py-4 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
+                  <th className="px-6 py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">
                     Actions
                   </th>
                 </tr>
@@ -262,8 +259,8 @@ const TripBookings = () => {
                     </td>
                   </tr>
                 ) : (
-                  trips.map((trip) => (
-                    <tr key={trip._id} className="hover:bg-gray-50 transition-colors">
+                  trips.map((trip, index) => (
+                    <tr key={trip._id} className="hover:bg-gray-50 transition-colors duration-200 animate-fade-in" style={{ animationDelay: `${index * 30}ms` }}>
                       <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
                         #{trip._id?.slice(-6) || 'N/A'}
                       </td>
@@ -345,17 +342,18 @@ const TripBookings = () => {
         {/* Mobile/Tablet Card View */}
         <div className="lg:hidden space-y-3 sm:space-y-4">
           {trips.length === 0 ? (
-            <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-12 text-center">
+            <div className="bg-white rounded-xl sm:rounded-2xl shadow-sm border border-gray-200 p-12 text-center animate-fade-in">
               <div className="flex flex-col items-center space-y-3">
                 <span className="material-icons-outlined text-6xl text-gray-300">inbox</span>
                 <p className="text-gray-500 font-medium">No trips found</p>
               </div>
             </div>
           ) : (
-            trips.map((trip) => (
+            trips.map((trip, index) => (
               <div
                 key={trip._id}
-                className="bg-white rounded-xl shadow-sm border border-gray-200 p-4 sm:p-5 hover:shadow-md transition-shadow"
+                className="bg-white rounded-xl sm:rounded-2xl shadow-sm border border-gray-200 p-4 sm:p-5 hover:shadow-md transition-all duration-200 animate-fade-in"
+                style={{ animationDelay: `${index * 50}ms` }}
               >
                 <div className="flex items-start justify-between mb-3">
                   <div className="flex-1 min-w-0">

@@ -107,13 +107,8 @@ const Users = () => {
   return (
     <Layout>
       <div className="space-y-4 sm:space-y-6 animate-fade-in">
-        {/* Header */}
-        <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4">
-          <div>
-            <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 tracking-tight mb-1 sm:mb-2">Users Management</h1>
-            <p className="text-sm sm:text-base text-gray-600 font-medium">Manage all registered users</p>
-          </div>
-        </div>
+          {/* Header */}
+          
 
         {/* Search and Filters */}
         <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">

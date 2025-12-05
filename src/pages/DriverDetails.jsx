@@ -146,7 +146,10 @@ const DriverDetails = () => {
     return (
       <Layout>
         <div className="flex items-center justify-center h-64">
-          <div className="text-gray-500">Loading driver details...</div>
+          <div className="flex flex-col items-center space-y-4">
+            <div className="w-12 h-12 border-4 border-blue-600 border-t-transparent rounded-full animate-spin"></div>
+            <div className="text-gray-500 font-medium">Loading driver details...</div>
+          </div>
         </div>
       </Layout>
     );
@@ -155,8 +158,9 @@ const DriverDetails = () => {
   if (!driver) {
     return (
       <Layout>
-        <div className="card text-center py-12">
-          <p className="text-gray-500 text-lg">Driver not found</p>
+        <div className="bg-white rounded-xl shadow-sm border border-gray-200 text-center py-12">
+          <span className="material-icons-outlined text-6xl text-gray-300 mb-4 block">person_off</span>
+          <p className="text-gray-500 text-lg font-medium">Driver not found</p>
         </div>
       </Layout>
     );
@@ -164,49 +168,49 @@ const DriverDetails = () => {
 
   return (
     <Layout>
-      <div>
+      <div className="space-y-4 sm:space-y-6 animate-fade-in">
         <button
           onClick={() => navigate('/drivers')}
-          className="mb-3 sm:mb-4 text-primary-600 hover:text-primary-800 flex items-center text-sm sm:text-base"
+          className="text-blue-600 hover:text-blue-900 font-semibold flex items-center space-x-2 transition-colors group"
         >
-          <span className="material-icons-outlined text-lg sm:text-xl mr-1">arrow_back</span>
+          <span className="material-icons-outlined text-lg group-hover:-translate-x-1 transition-transform">arrow_back</span>
           <span>Back to Drivers</span>
         </button>
 
-        <div className="card mb-4 sm:mb-6">
+        <div className="bg-white rounded-xl sm:rounded-2xl shadow-sm border border-gray-200 p-4 sm:p-6 mb-4 sm:mb-6 animate-fade-in" style={{ animationDelay: '100ms' }}>
           <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-4 mb-4 sm:mb-6">
             <div className="flex items-center flex-1 min-w-0">
               {driver.profilePicture ? (
                 <img
-                  className="h-16 w-16 sm:h-20 sm:w-20 rounded-full mr-3 sm:mr-4 flex-shrink-0"
+                  className="h-20 w-20 sm:h-24 sm:w-24 rounded-full mr-4 sm:mr-6 flex-shrink-0 shadow-lg border-4 border-white"
                   src={driver.profilePicture}
                   alt={driver.name}
                 />
               ) : (
-                <div className="h-16 w-16 sm:h-20 sm:w-20 rounded-full bg-primary-100 flex items-center justify-center mr-3 sm:mr-4 flex-shrink-0">
-                  <span className="text-primary-600 font-bold text-xl sm:text-2xl">
+                <div className="h-20 w-20 sm:h-24 sm:w-24 rounded-full bg-gradient-to-br from-indigo-500 to-indigo-600 flex items-center justify-center mr-4 sm:mr-6 flex-shrink-0 shadow-lg border-4 border-white">
+                  <span className="text-white font-bold text-2xl sm:text-3xl">
                     {driver.name?.charAt(0).toUpperCase()}
                   </span>
                 </div>
               )}
               <div className="flex-1 min-w-0">
-                <h1 className="text-2xl sm:text-3xl font-bold text-gray-800 truncate">{driver.name}</h1>
-                <p className="text-sm sm:text-base text-gray-600 truncate">{driver.email}</p>
-                <p className="text-sm sm:text-base text-gray-600">{driver.phone}</p>
-                <div className="flex items-center mt-2">
-                  <span className="material-icons-outlined text-yellow-500 text-lg sm:text-xl mr-1">star</span>
-                  <span className="text-sm sm:text-base font-semibold text-gray-900">
+                <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 tracking-tight truncate mb-1">{driver.name}</h1>
+                <p className="text-sm sm:text-base text-gray-600 truncate mb-1">{driver.email}</p>
+                <p className="text-sm sm:text-base text-gray-600 mb-2">{driver.phone}</p>
+                <div className="flex items-center">
+                  <span className="material-icons-outlined text-yellow-500 text-xl mr-1">star</span>
+                  <span className="text-base sm:text-lg font-bold text-gray-900">
                     {driver.rating ? driver.rating.toFixed(1) : '3.0'}
                   </span>
                   <span className="text-xs sm:text-sm text-gray-500 ml-2">
-                    ({driver.totalRides || 0} total rides)
+                    / 5.0 • {driver.totalRides || 0} rides
                   </span>
                 </div>
               </div>
             </div>
             <div>
               <span
-                className={`px-4 py-2 inline-flex text-sm leading-5 font-semibold rounded-full ${
+                className={`px-4 py-2 inline-flex items-center text-sm leading-5 font-semibold rounded-full ${
                   driver.verificationStatus === 'pending'
                     ? 'bg-yellow-100 text-yellow-800'
                     : driver.verificationStatus === 'documents-uploaded'
@@ -218,19 +222,24 @@ const DriverDetails = () => {
                     : 'bg-red-100 text-red-800'
                 }`}
               >
+                <span className="material-icons-outlined text-sm mr-1">
+                  {driver.verificationStatus === 'verified' ? 'check_circle' : driver.verificationStatus === 'rejected' ? 'cancel' : 'schedule'}
+                </span>
                 {driver.verificationStatus}
               </span>
             </div>
           </div>
 
           {error && (
-            <div className="mb-4 bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg">
+            <div className="mb-4 bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg flex items-center animate-fade-in">
+              <span className="material-icons-outlined mr-2">error_outline</span>
               {error}
             </div>
           )}
 
           {success && (
-            <div className="mb-4 bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-lg">
+            <div className="mb-4 bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-lg flex items-center animate-fade-in">
+              <span className="material-icons-outlined mr-2">check_circle</span>
               {success}
             </div>
           )}
@@ -367,8 +376,11 @@ const DriverDetails = () => {
         )}
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
-          <div className="card">
-            <h2 className="text-lg sm:text-xl font-semibold mb-3 sm:mb-4">Personal Information</h2>
+          <div className="bg-white rounded-xl sm:rounded-2xl shadow-sm border border-gray-200 p-4 sm:p-6 animate-fade-in" style={{ animationDelay: '200ms' }}>
+            <h2 className="text-lg sm:text-xl font-bold text-gray-900 mb-4 sm:mb-6 flex items-center">
+              <span className="material-icons-outlined text-xl mr-2 text-blue-600">person</span>
+              Personal Information
+            </h2>
             <div className="space-y-3">
               <div>
                 <label className="text-sm text-gray-500">Name</label>
@@ -405,8 +417,11 @@ const DriverDetails = () => {
             </div>
           </div>
 
-          <div className="card">
-            <h2 className="text-lg sm:text-xl font-semibold mb-3 sm:mb-4">Document Numbers</h2>
+          <div className="bg-white rounded-xl sm:rounded-2xl shadow-sm border border-gray-200 p-4 sm:p-6 animate-fade-in" style={{ animationDelay: '250ms' }}>
+            <h2 className="text-lg sm:text-xl font-bold text-gray-900 mb-4 sm:mb-6 flex items-center">
+              <span className="material-icons-outlined text-xl mr-2 text-indigo-600">description</span>
+              Document Numbers
+            </h2>
             <div className="space-y-3">
               <div>
                 <label className="text-sm text-gray-500">Aadhar Number</label>
@@ -432,8 +447,11 @@ const DriverDetails = () => {
             </div>
           </div>
 
-          <div className="card md:col-span-2">
-            <h2 className="text-lg sm:text-xl font-semibold mb-3 sm:mb-4">Verification Documents</h2>
+          <div className="bg-white rounded-xl sm:rounded-2xl shadow-sm border border-gray-200 p-4 sm:p-6 md:col-span-2 animate-fade-in" style={{ animationDelay: '300ms' }}>
+            <h2 className="text-lg sm:text-xl font-bold text-gray-900 mb-4 sm:mb-6 flex items-center">
+              <span className="material-icons-outlined text-xl mr-2 text-purple-600">folder</span>
+              Verification Documents
+            </h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 sm:gap-4">
               {driver.verificationDocuments?.aadharFront && (
                 <div>
@@ -518,8 +536,11 @@ const DriverDetails = () => {
             )}
           </div>
 
-          <div className="card md:col-span-2">
-            <h2 className="text-lg sm:text-xl font-semibold mb-3 sm:mb-4">Work Location</h2>
+          <div className="bg-white rounded-xl sm:rounded-2xl shadow-sm border border-gray-200 p-4 sm:p-6 md:col-span-2 animate-fade-in" style={{ animationDelay: '350ms' }}>
+            <h2 className="text-lg sm:text-xl font-bold text-gray-900 mb-4 sm:mb-6 flex items-center">
+              <span className="material-icons-outlined text-xl mr-2 text-green-600">location_on</span>
+              Work Location
+            </h2>
             <div className="space-y-3">
               <div>
                 <label className="text-sm text-gray-500">Work Location</label>
@@ -537,8 +558,11 @@ const DriverDetails = () => {
             </div>
           </div>
 
-          <div className="card md:col-span-2">
-            <h2 className="text-lg sm:text-xl font-semibold mb-3 sm:mb-4">Registration Timeline</h2>
+          <div className="bg-white rounded-xl sm:rounded-2xl shadow-sm border border-gray-200 p-4 sm:p-6 md:col-span-2 animate-fade-in" style={{ animationDelay: '400ms' }}>
+            <h2 className="text-lg sm:text-xl font-bold text-gray-900 mb-4 sm:mb-6 flex items-center">
+              <span className="material-icons-outlined text-xl mr-2 text-teal-600">schedule</span>
+              Registration Timeline
+            </h2>
             <div className="space-y-2">
               <div className="flex items-center justify-between">
                 <span className="text-sm text-gray-600">Account Created</span>

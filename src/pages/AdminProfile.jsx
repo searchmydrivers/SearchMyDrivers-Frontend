@@ -90,16 +90,11 @@ const AdminProfile = () => {
   return (
     <Layout>
       <div>
-        <div className="mb-4 sm:mb-6">
-          <h1 className="text-2xl sm:text-3xl font-bold text-gray-800 mb-1 sm:mb-2">Admin Profile</h1>
-          <p className="text-sm sm:text-base text-gray-500">Manage your admin account settings</p>
-        </div>
-
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6 items-stretch">
           {/* Profile Card */}
-          <div className="lg:col-span-1">
-            <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-4 sm:p-6">
-              <div className="text-center">
+          <div className="lg:col-span-1 flex">
+            <div className="bg-white rounded-xl sm:rounded-2xl shadow-sm border border-gray-200 p-4 sm:p-6 w-full flex flex-col animate-fade-in" style={{ animationDelay: '100ms' }}>
+              <div className="text-center flex-1 flex flex-col justify-center">
                 <div className="w-20 h-20 sm:w-24 sm:h-24 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-full flex items-center justify-center text-white text-2xl sm:text-3xl font-bold mx-auto mb-3 sm:mb-4 shadow-lg">
                   {admin?.name?.charAt(0)?.toUpperCase() || 'A'}
                 </div>
@@ -115,16 +110,20 @@ const AdminProfile = () => {
           </div>
 
           {/* Profile Details */}
-          <div className="lg:col-span-2">
-            <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-              <div className="flex justify-between items-center mb-6">
-                <h3 className="text-xl font-bold text-gray-800">Profile Information</h3>
+          <div className="lg:col-span-2 flex">
+            <div className="bg-white rounded-xl sm:rounded-2xl shadow-sm border border-gray-200 p-4 sm:p-6 w-full flex flex-col animate-fade-in" style={{ animationDelay: '150ms' }}>
+              <div className="flex justify-between items-center mb-4 sm:mb-6">
+                <h3 className="text-xl sm:text-2xl font-bold text-gray-900 flex items-center">
+                  <span className="material-icons-outlined text-xl mr-2 text-blue-600">person</span>
+                  Profile Information
+                </h3>
                 {!editing && (
                   <button
                     onClick={() => setEditing(true)}
-                    className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium"
+                    className="px-4 sm:px-6 py-2.5 sm:py-3 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-lg sm:rounded-xl hover:from-blue-700 hover:to-indigo-700 transition-all duration-200 shadow-lg font-semibold flex items-center space-x-2 text-sm sm:text-base"
                   >
-                    Edit Profile
+                    <span className="material-icons-outlined text-lg">edit</span>
+                    <span>Edit Profile</span>
                   </button>
                 )}
               </div>
@@ -151,12 +150,13 @@ const AdminProfile = () => {
                       required
                     />
                   </div>
-                  <div className="flex space-x-3">
+                  <div className="flex space-x-3 pt-4">
                     <button
                       type="submit"
-                      className="px-6 py-2 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-lg hover:from-blue-700 hover:to-indigo-700 transition-all duration-200 font-medium"
+                      className="px-6 py-2.5 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-lg hover:from-blue-700 hover:to-indigo-700 transition-all duration-200 shadow-lg font-semibold flex items-center space-x-2"
                     >
-                      Save Changes
+                      <span className="material-icons-outlined text-lg">save</span>
+                      <span>Save Changes</span>
                     </button>
                     <button
                       type="button"
@@ -167,7 +167,7 @@ const AdminProfile = () => {
                           email: admin?.email || '',
                         });
                       }}
-                      className="px-6 py-2 bg-gray-200 text-gray-800 rounded-lg hover:bg-gray-300 transition-colors font-medium"
+                      className="px-6 py-2.5 bg-white text-gray-700 border border-gray-300 rounded-lg hover:bg-gray-50 transition-all duration-200 font-semibold"
                     >
                       Cancel
                     </button>

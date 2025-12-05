@@ -138,8 +138,10 @@ const Banners = () => {
     return (
       <Layout>
         <div className="flex items-center justify-center h-64">
-          <div className="w-12 h-12 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
-          <p className="ml-4 text-gray-600">Loading banners...</p>
+          <div className="flex flex-col items-center space-y-4">
+            <div className="w-12 h-12 border-4 border-blue-600 border-t-transparent rounded-full animate-spin"></div>
+            <div className="text-gray-500 font-medium">Loading banners...</div>
+          </div>
         </div>
       </Layout>
     );
@@ -147,12 +149,8 @@ const Banners = () => {
 
   return (
     <Layout>
-      <div className="animate-fade-in">
-        <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 mb-4 sm:mb-6">
-          <div>
-            <h1 className="text-2xl sm:text-3xl font-bold text-gray-800 mb-1 sm:mb-2">Manage Banners</h1>
-            <p className="text-sm sm:text-base text-gray-500">Upload and manage promotional banners for users and drivers</p>
-          </div>
+      <div className="space-y-4 sm:space-y-6 animate-fade-in">
+        <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4">
           <button
             onClick={handleCreate}
             className="px-4 sm:px-6 py-2.5 sm:py-3 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-lg sm:rounded-xl hover:from-blue-700 hover:to-indigo-700 transition-all duration-200 shadow-lg font-semibold flex items-center justify-center space-x-2 text-sm sm:text-base"
@@ -163,16 +161,16 @@ const Banners = () => {
         </div>
 
         {error && (
-          <div className="bg-red-50 border-l-4 border-red-500 text-red-700 px-4 py-3 rounded-lg mb-6 flex items-center animate-slide-in">
-            <span className="material-icons-outlined mr-2 text-red-500">error</span>
-            <span className="font-medium">{error}</span>
+          <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg flex items-center animate-fade-in">
+            <span className="material-icons-outlined mr-2">error_outline</span>
+            {error}
           </div>
         )}
 
         {success && (
-          <div className="bg-green-50 border-l-4 border-green-500 text-green-700 px-4 py-3 rounded-lg mb-6 flex items-center animate-slide-in">
-            <span className="material-icons-outlined mr-2 text-green-500">check_circle</span>
-            <span className="font-medium">{success}</span>
+          <div className="bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-lg flex items-center animate-fade-in">
+            <span className="material-icons-outlined mr-2">check_circle</span>
+            {success}
           </div>
         )}
 
@@ -211,15 +209,15 @@ const Banners = () => {
         </div>
 
         {filteredBanners.length === 0 ? (
-          <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-12 text-center">
-            <span className="material-icons-outlined text-6xl text-gray-300 mb-4">collections</span>
+          <div className="bg-white rounded-xl sm:rounded-2xl shadow-sm border border-gray-200 p-12 text-center animate-fade-in">
+            <span className="material-icons-outlined text-6xl text-gray-300 mb-4 block">collections</span>
             <p className="text-gray-500 text-lg font-medium">No banners found</p>
             <p className="text-gray-400 text-sm mt-2">Create your first banner to get started</p>
           </div>
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
-            {filteredBanners.map((banner) => (
-              <div key={banner._id} className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden hover:shadow-lg transition-shadow">
+            {filteredBanners.map((banner, index) => (
+              <div key={banner._id} className="bg-white rounded-xl sm:rounded-2xl shadow-sm border border-gray-200 overflow-hidden hover:shadow-lg transition-all duration-200 animate-fade-in" style={{ animationDelay: `${index * 50}ms` }}>
                 <div className="h-48 bg-gradient-to-br from-gray-100 to-gray-200 flex items-center justify-center relative">
                   {banner.image ? (
                     <img src={banner.image} alt={banner.title} className="w-full h-full object-cover" />
