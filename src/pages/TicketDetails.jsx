@@ -127,10 +127,10 @@ const TicketDetails = () => {
                     <select
                       value={ticket.status}
                       onChange={(e) => handleStatusChange(e.target.value)}
-                      className={`text-sm font-semibold rounded-lg px-2 py-1 border-0 ring-1 ring-inset ${ticket.status === 'open' ? 'ring-blue-600/20 bg-blue-50 text-blue-700' :
-                          ticket.status === 'in-progress' ? 'ring-yellow-600/20 bg-yellow-50 text-yellow-700' :
-                            ticket.status === 'resolved' ? 'ring-green-600/20 bg-green-50 text-green-700' :
-                              'ring-gray-600/20 bg-gray-50 text-gray-700'
+                      className={`text-sm font-semibold rounded-lg px-2 py-1 border-0 ring-1 ring-inset ${ticket.status === 'open' ? 'ring-[#0B2C4D]/20 bg-blue-50 text-[#0B2C4D]' :
+                        ticket.status === 'in-progress' ? 'ring-yellow-600/20 bg-yellow-50 text-yellow-700' :
+                          ticket.status === 'resolved' ? 'ring-green-600/20 bg-green-50 text-green-700' :
+                            'ring-gray-600/20 bg-gray-50 text-gray-700'
                         }`}
                     >
                       <option value="open">Open</option>
@@ -143,8 +143,8 @@ const TicketDetails = () => {
                 <div>
                   <span className="text-xs font-semibold text-gray-500 uppercase">Priority</span>
                   <p className={`mt-1 text-sm font-semibold px-2 py-1 rounded-lg ${ticket.priority === 'high' ? 'bg-red-50 text-red-700' :
-                      ticket.priority === 'medium' ? 'bg-orange-50 text-orange-700' :
-                        'bg-gray-50 text-gray-700'
+                    ticket.priority === 'medium' ? 'bg-orange-50 text-orange-700' :
+                      'bg-gray-50 text-gray-700'
                     }`}>
                     {ticket.priority.toUpperCase()}
                   </p>
@@ -167,7 +167,7 @@ const TicketDetails = () => {
               {requesterAvatar ? (
                 <img src={requesterAvatar} alt="Avatar" className="w-12 h-12 rounded-full object-cover" />
               ) : (
-                <div className="w-12 h-12 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-600 font-bold text-xl">
+                <div className="w-12 h-12 rounded-full bg-[#0B2C4D]/10 flex items-center justify-center text-[#0B2C4D] font-bold text-xl">
                   {requesterName[0]}
                 </div>
               )}
@@ -200,11 +200,11 @@ const TicketDetails = () => {
               const isAdmin = msg.sender === 'admin' || msg.sender === 'subadmin';
               return (
                 <div key={index} className={`flex gap-3 ${isAdmin ? 'flex-row-reverse' : ''}`}>
-                  <div className={`w-8 h-8 rounded-full flex items-center justify-center shrink-0 ${isAdmin ? 'bg-indigo-600 text-white' : 'bg-gray-200 text-gray-600'}`}>
+                  <div className={`w-8 h-8 rounded-full flex items-center justify-center shrink-0 ${isAdmin ? 'bg-[#0B2C4D] text-white' : 'bg-gray-200 text-gray-600'}`}>
                     {isAdmin ? <span className="material-icons-outlined text-sm">support_agent</span> : <span className="font-bold text-xs">{requesterName[0]}</span>}
                   </div>
                   <div className={`max-w-[80%] space-y-1 ${isAdmin ? 'items-end flex flex-col' : ''}`}>
-                    <div className={`p-3 rounded-2xl text-sm ${isAdmin ? 'bg-indigo-600 text-white rounded-tr-none' : 'bg-white border border-gray-100 text-gray-800 rounded-tl-none shadow-sm'}`}>
+                    <div className={`p-3 rounded-2xl text-sm ${isAdmin ? 'bg-[#0B2C4D] text-white rounded-tr-none' : 'bg-white border border-gray-100 text-gray-800 rounded-tl-none shadow-sm'}`}>
                       <p className="whitespace-pre-wrap">{msg.message}</p>
                     </div>
                     {/* Attachments */}
@@ -247,7 +247,7 @@ const TicketDetails = () => {
                   <div className="relative flex-1">
                     <textarea
                       rows="1"
-                      className="w-full pl-4 pr-12 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none resize-none"
+                      className="w-full pl-4 pr-12 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#0B2C4D] outline-none resize-none"
                       placeholder="Type your reply here..."
                       value={replyMessage}
                       onChange={(e) => setReplyMessage(e.target.value)}
@@ -277,7 +277,7 @@ const TicketDetails = () => {
                   <button
                     type="submit"
                     disabled={sending || (!replyMessage.trim() && !replyImage)}
-                    className="bg-indigo-600 text-white px-4 py-2 rounded-xl hover:bg-indigo-700 transition disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center shrink-0 w-12 h-12"
+                    className="bg-[#0B2C4D] text-white px-4 py-2 rounded-xl hover:bg-[#091E3A] transition disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center shrink-0 w-12 h-12"
                   >
                     {sending ? (
                       <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>

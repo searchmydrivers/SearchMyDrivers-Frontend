@@ -15,6 +15,8 @@ const Drivers = () => {
     limit: 10,
   });
 
+  const ITEMS_PER_PAGE = 10;
+
   useEffect(() => {
     fetchDrivers();
   }, [statusFilter, pagination.page, searchTerm]);
@@ -24,7 +26,7 @@ const Drivers = () => {
     try {
       const params = {
         page: pagination.page,
-        limit: 10,
+        limit: ITEMS_PER_PAGE,
       };
 
       if (searchTerm) {
@@ -42,7 +44,7 @@ const Drivers = () => {
         page: data.page || 1,
         totalPages: data.totalPages || 1,
         total: data.total || 0,
-        limit: data.limit || 10,
+        limit: data.limit || ITEMS_PER_PAGE,
       });
     } catch (error) {
       console.error('Error fetching drivers:', error);
@@ -82,7 +84,7 @@ const Drivers = () => {
   const getStatusLabel = (status) => {
     const labels = {
       pending: 'Pending',
-      'documents-uploaded': 'Documents Uploaded',
+      'documents-uploaded': 'Docs Uploaded',
       'otp-verified': 'OTP Verified',
       verified: 'Verified',
       rejected: 'Rejected',
@@ -106,8 +108,7 @@ const Drivers = () => {
   return (
     <Layout>
       <div className="space-y-4 sm:space-y-6 animate-fade-in">
-        {/* Header */}
-
+        <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 tracking-tight">Drivers Management</h1>
 
         {/* Search and Filters */}
         <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
@@ -117,56 +118,29 @@ const Drivers = () => {
               placeholder="Search by name, email, or phone..."
               value={searchTerm}
               onChange={handleSearch}
-              className="pl-10 sm:pl-12 pr-4 py-2 sm:py-2.5 border border-gray-300 rounded-lg sm:rounded-xl focus:ring-2 focus:ring-[#0B2C4D]/20 focus:border-[#0B2C4D] w-full text-sm"
+              className="pl-10 sm:pl-12 pr-4 py-2 sm:py-2.5 border border-gray-300 rounded-lg sm:rounded-xl focus:ring-2 focus:ring-[#0B2C4D]/20 focus:border-[#0B2C4D] w-full text-sm sm:text-base transition-all shadow-sm"
             />
             <span className="material-icons-outlined absolute left-3 sm:left-4 top-1/2 transform -translate-y-1/2 text-gray-400 text-lg sm:text-xl">search</span>
           </div>
           <div className="flex flex-wrap items-center gap-2">
-            <button
-              onClick={() => handleStatusFilter('all')}
-              className={`px-3 sm:px-4 py-2 sm:py-2.5 rounded-lg sm:rounded-xl font-semibold transition-all duration-300 text-xs sm:text-sm ${statusFilter === 'all'
-                  ? 'bg-gradient-to-r from-[#0B2C4D] to-[#254f7a] text-white shadow-lg'
+            {[
+              { id: 'all', label: 'All', activeClass: 'from-[#0B2C4D] to-[#254f7a]' },
+              { id: 'pending', label: 'Pending', activeClass: 'from-yellow-400 to-yellow-600' },
+              { id: 'verified', label: 'Verified', activeClass: 'from-[#2BB673] to-[#239960]' },
+              { id: 'rejected', label: 'Rejected', activeClass: 'from-red-500 to-red-600' },
+              { id: 'suspended', label: 'Suspended', activeClass: 'from-orange-500 to-orange-600' },
+            ].map((filter) => (
+              <button
+                key={filter.id}
+                onClick={() => handleStatusFilter(filter.id)}
+                className={`px-3 sm:px-4 py-2 sm:py-2.5 rounded-lg sm:rounded-xl font-semibold transition-all duration-300 text-xs sm:text-sm shadow-sm ${statusFilter === filter.id
+                  ? `bg-gradient-to-r ${filter.activeClass} text-white shadow-md transform scale-[1.02]`
                   : 'bg-white text-gray-700 hover:bg-gray-50 border border-gray-300'
-                }`}
-            >
-              All
-            </button>
-            <button
-              onClick={() => handleStatusFilter('pending')}
-              className={`px-3 sm:px-4 py-2 sm:py-2.5 rounded-lg sm:rounded-xl font-semibold transition-all duration-300 text-xs sm:text-sm ${statusFilter === 'pending'
-                  ? 'bg-gradient-to-r from-yellow-500 to-yellow-600 text-white shadow-lg'
-                  : 'bg-white text-gray-700 hover:bg-gray-50 border border-gray-300'
-                }`}
-            >
-              Pending
-            </button>
-            <button
-              onClick={() => handleStatusFilter('verified')}
-              className={`px-3 sm:px-4 py-2 sm:py-2.5 rounded-lg sm:rounded-xl font-semibold transition-all duration-300 text-xs sm:text-sm ${statusFilter === 'verified'
-                  ? 'bg-gradient-to-r from-[#2BB673] to-[#239960] text-white shadow-lg'
-                  : 'bg-white text-gray-700 hover:bg-gray-50 border border-gray-300'
-                }`}
-            >
-              Verified
-            </button>
-            <button
-              onClick={() => handleStatusFilter('rejected')}
-              className={`px-3 sm:px-4 py-2 sm:py-2.5 rounded-lg sm:rounded-xl font-semibold transition-all duration-300 text-xs sm:text-sm ${statusFilter === 'rejected'
-                  ? 'bg-gradient-to-r from-red-500 to-red-600 text-white shadow-lg'
-                  : 'bg-white text-gray-700 hover:bg-gray-50 border border-gray-300'
-                }`}
-            >
-              Rejected
-            </button>
-            <button
-              onClick={() => handleStatusFilter('suspended')}
-              className={`px-3 sm:px-4 py-2 sm:py-2.5 rounded-lg sm:rounded-xl font-semibold transition-all duration-300 text-xs sm:text-sm ${statusFilter === 'suspended'
-                  ? 'bg-gradient-to-r from-orange-500 to-orange-600 text-white shadow-lg'
-                  : 'bg-white text-gray-700 hover:bg-gray-50 border border-gray-300'
-                }`}
-            >
-              Suspended
-            </button>
+                  }`}
+              >
+                {filter.label}
+              </button>
+            ))}
           </div>
         </div>
 
@@ -174,32 +148,16 @@ const Drivers = () => {
         <div className="hidden lg:block bg-white rounded-xl sm:rounded-2xl shadow-sm border border-gray-200 overflow-hidden animate-fade-in" style={{ animationDelay: '200ms' }}>
           <div className="overflow-x-auto">
             <table className="min-w-full divide-y divide-gray-200">
-              <thead className="bg-gradient-to-r from-gray-50 to-gray-100">
+              <thead className="bg-[#0B2C4D]">
                 <tr>
-                  <th className="px-6 py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">
-                    Driver
-                  </th>
-                  <th className="px-6 py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">
-                    Contact
-                  </th>
-                  <th className="px-6 py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">
-                    Work Location
-                  </th>
-                  <th className="px-6 py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">
-                    Rating
-                  </th>
-                  <th className="px-6 py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">
-                    Documents
-                  </th>
-                  <th className="px-6 py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">
-                    Status
-                  </th>
-                  <th className="px-6 py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">
-                    Registered
-                  </th>
-                  <th className="px-6 py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">
-                    Actions
-                  </th>
+                  <th className="px-6 py-4 text-left text-xs font-bold text-white uppercase tracking-wider">Driver</th>
+                  <th className="px-6 py-4 text-left text-xs font-bold text-white uppercase tracking-wider">Contact</th>
+                  <th className="px-6 py-4 text-left text-xs font-bold text-white uppercase tracking-wider">Work Location</th>
+                  <th className="px-6 py-4 text-left text-xs font-bold text-white uppercase tracking-wider">Rating</th>
+                  <th className="px-6 py-4 text-left text-xs font-bold text-white uppercase tracking-wider">Documents</th>
+                  <th className="px-6 py-4 text-left text-xs font-bold text-white uppercase tracking-wider">Status</th>
+                  <th className="px-6 py-4 text-left text-xs font-bold text-white uppercase tracking-wider">Registered</th>
+                  <th className="px-6 py-4 text-right text-xs font-bold text-white uppercase tracking-wider">Actions</th>
                 </tr>
               </thead>
               <tbody className="bg-white divide-y divide-gray-200">
@@ -208,7 +166,8 @@ const Drivers = () => {
                     <td colSpan="8" className="px-6 py-12 text-center">
                       <div className="flex flex-col items-center space-y-3">
                         <span className="material-icons-outlined text-6xl text-gray-300">inbox</span>
-                        <p className="text-gray-500 font-medium">No drivers found</p>
+                        <p className="text-lg font-medium text-gray-600">No drivers found</p>
+                        <p className="text-sm text-gray-400">Try adjusting your filters</p>
                       </div>
                     </td>
                   </tr>
@@ -218,88 +177,63 @@ const Drivers = () => {
                     return (
                       <tr
                         key={driver._id}
-                        className="hover:bg-gray-50 transition-colors duration-200 animate-fade-in"
+                        className="hover:bg-gray-50 transition-colors duration-200 animate-fade-in group"
                         style={{ animationDelay: `${index * 50}ms` }}
                       >
                         <td className="px-6 py-4 whitespace-nowrap">
                           <div className="flex items-center">
-                            <div className="w-12 h-12 bg-gradient-to-br from-[#0B2C4D] to-[#254f7a] rounded-full flex items-center justify-center text-white font-bold shadow-lg mr-4">
+                            <div className="w-10 h-10 bg-gradient-to-br from-[#0B2C4D] to-[#254f7a] rounded-full flex items-center justify-center text-white font-bold shadow-md mr-3">
                               {driver.name?.charAt(0)?.toUpperCase() || 'D'}
                             </div>
                             <div>
-                              <div className="text-sm font-semibold text-gray-900">{driver.name || 'N/A'}</div>
-                              <div className="text-sm text-gray-500">{driver.email || 'N/A'}</div>
+                              <div className="text-sm font-bold text-gray-900 group-hover:text-[#0B2C4D] transition-colors">{driver.name || 'N/A'}</div>
+                              <div className="text-xs text-gray-500">{driver.email || 'N/A'}</div>
                             </div>
                           </div>
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap">
-                          <div className="flex items-center text-sm text-gray-900">
-                            <span className="material-icons-outlined text-gray-400 mr-2 text-lg">phone</span>
+                          <div className="flex items-center text-sm text-gray-600">
+                            <span className="material-icons-outlined text-gray-400 mr-2 text-base">phone</span>
                             {driver.phone || 'N/A'}
                           </div>
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap">
                           {driver.workLocation ? (
-                            <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-gray-100 text-[#0B2C4D]">
-                              <span className="material-icons-outlined text-sm mr-1">location_on</span>
+                            <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-[#0B2C4D]">
                               {driver.workLocation}
                             </span>
                           ) : (
-                            <span className="text-sm text-gray-400">Not set</span>
+                            <span className="text-sm text-gray-400 italic">Not set</span>
                           )}
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap">
                           <div className="flex items-center">
                             <span className="material-icons-outlined text-yellow-500 text-lg mr-1">star</span>
-                            <span className="text-sm font-semibold text-gray-900">
-                              {driver.rating ? driver.rating.toFixed(1) : '3.0'}
-                            </span>
-                            <span className="text-xs text-gray-500 ml-1">({driver.totalRides || 0} rides)</span>
+                            <span className="text-sm font-bold text-gray-900">{driver.rating ? driver.rating.toFixed(1) : '3.0'}</span>
+                            <span className="text-xs text-gray-500 ml-1">({driver.totalRides || 0})</span>
                           </div>
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap">
                           <div className="flex items-center space-x-2">
-                            {driver.verificationDocuments?.licenseFront && (
-                              <span className="material-icons-outlined text-[#2BB673] text-xl" title="License">check_circle</span>
-                            )}
-                            {driver.verificationDocuments?.aadharFront && (
-                              <span className="material-icons-outlined text-[#2BB673] text-xl" title="Aadhar">check_circle</span>
-                            )}
-                            {driver.verificationDocuments?.panFront && (
-                              <span className="material-icons-outlined text-[#2BB673] text-xl" title="PAN">check_circle</span>
-                            )}
-                            {driver.verificationDocuments?.electricityBill && (
-                              <span className="material-icons-outlined text-blue-500 text-xl" title="Electricity Bill">receipt</span>
-                            )}
-                            {driver.verificationDocuments?.rentAgreement && (
-                              <span className="material-icons-outlined text-purple-500 text-xl" title="Rent Agreement">description</span>
-                            )}
+                            {driver.verificationDocuments?.licenseFront && <span className="material-icons-outlined text-[#2BB673] text-xl" title="License">check_circle</span>}
+                            {driver.verificationDocuments?.aadharFront && <span className="material-icons-outlined text-[#2BB673] text-xl" title="Aadhar">check_circle</span>}
+                            {driver.verificationDocuments?.policeVerificationCertificate && <span className="material-icons-outlined text-indigo-500 text-xl" title="Police Verification">security</span>}
                           </div>
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap">
-                          <div className="flex flex-col space-y-1">
-                            <span className={`px-3 py-1.5 inline-flex items-center text-xs leading-5 font-semibold rounded-full ${badge.bg} ${badge.text}`}>
-                              <span className="material-icons-outlined text-sm mr-1">{badge.icon}</span>
-                              {getStatusLabel(driver.verificationStatus)}
-                            </span>
-                            {driver.isSuspended && (
-                              <span className="px-3 py-1.5 inline-flex items-center text-xs leading-5 font-semibold rounded-full bg-orange-100 text-orange-800">
-                                <span className="material-icons-outlined text-sm mr-1">block</span>
-                                Suspended
-                              </span>
-                            )}
-                          </div>
+                          <span className={`px-2.5 py-1 inline-flex items-center text-xs leading-5 font-semibold rounded-full ${badge.bg} ${badge.text}`}>
+                            {getStatusLabel(driver.verificationStatus)}
+                          </span>
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                           {driver.createdAt ? new Date(driver.createdAt).toLocaleDateString() : 'N/A'}
                         </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                        <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                           <Link
                             to={`/drivers/${driver._id}`}
-                            className="text-[#0B2C4D] hover:text-[#2BB673] font-semibold flex items-center space-x-1 group"
+                            className="text-[#0B2C4D] hover:text-[#2BB673] font-semibold flex items-center justify-end space-x-1 transition-colors p-2 rounded-full hover:bg-gray-100"
                           >
-                            <span>View Details</span>
-                            <span className="material-icons-outlined text-lg group-hover:translate-x-1 transition-transform">arrow_forward</span>
+                            <span className="material-icons-outlined text-xl">visibility</span>
                           </Link>
                         </td>
                       </tr>
@@ -313,93 +247,56 @@ const Drivers = () => {
 
         {/* Mobile/Tablet Card View */}
         <div className="lg:hidden space-y-3 sm:space-y-4 animate-fade-in" style={{ animationDelay: '200ms' }}>
-          {drivers.length === 0 ? (
-            <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-12 text-center">
-              <div className="flex flex-col items-center space-y-3">
-                <span className="material-icons-outlined text-6xl text-gray-300">inbox</span>
-                <p className="text-gray-500 font-medium">No drivers found</p>
-              </div>
-            </div>
-          ) : (
-            drivers.map((driver, index) => {
-              const badge = getStatusBadge(driver.verificationStatus);
-              return (
-                <div
-                  key={driver._id}
-                  className="bg-white rounded-xl shadow-sm border border-gray-200 p-4 sm:p-5 hover:shadow-md transition-shadow duration-200 animate-fade-in"
-                  style={{ animationDelay: `${index * 50}ms` }}
-                >
-                  <div className="flex items-start justify-between mb-3">
-                    <div className="flex items-center flex-1 min-w-0">
-                      <div className="w-12 h-12 sm:w-14 sm:h-14 bg-gradient-to-br from-[#0B2C4D] to-[#254f7a] rounded-full flex items-center justify-center text-white font-bold shadow-lg mr-3 sm:mr-4 flex-shrink-0 text-lg sm:text-xl">
-                        {driver.name?.charAt(0)?.toUpperCase() || 'D'}
-                      </div>
-                      <div className="flex-1 min-w-0">
-                        <div className="text-sm sm:text-base font-semibold text-gray-900 truncate">{driver.name || 'N/A'}</div>
-                        <div className="text-xs sm:text-sm text-gray-500 truncate">{driver.email || 'N/A'}</div>
-                        <div className="flex items-center text-xs sm:text-sm text-gray-600 mt-1">
-                          <span className="material-icons-outlined text-gray-400 mr-1 text-base">phone</span>
-                          {driver.phone || 'N/A'}
-                        </div>
-                        {driver.workLocation && (
-                          <div className="flex items-center text-xs sm:text-sm text-gray-600 mt-1">
-                            <span className="material-icons-outlined text-gray-400 mr-1 text-base">location_on</span>
-                            <span className="font-medium">{driver.workLocation}</span>
-                          </div>
-                        )}
-                        <div className="flex items-center text-xs sm:text-sm text-gray-600 mt-1">
-                          <span className="material-icons-outlined text-yellow-500 text-base mr-1">star</span>
-                          <span className="font-semibold">{driver.rating ? driver.rating.toFixed(1) : '3.0'}</span>
-                          <span className="text-gray-500 ml-1">({driver.totalRides || 0} rides)</span>
-                        </div>
-                      </div>
+          {drivers.map((driver, index) => {
+            const badge = getStatusBadge(driver.verificationStatus);
+            return (
+              <div
+                key={driver._id}
+                className="bg-white rounded-xl shadow-sm border border-gray-200 p-4 sm:p-5 hover:shadow-md transition-shadow duration-200"
+                style={{ animationDelay: `${index * 50}ms` }}
+              >
+                <div className="flex items-start justify-between mb-3">
+                  <div className="flex items-center gap-3">
+                    <div className="w-12 h-12 bg-gradient-to-br from-[#0B2C4D] to-[#254f7a] rounded-full flex items-center justify-center text-white font-bold shadow-md">
+                      {driver.name?.charAt(0)?.toUpperCase() || 'D'}
+                    </div>
+                    <div>
+                      <div className="font-bold text-gray-900">{driver.name || 'N/A'}</div>
+                      <div className="text-xs text-gray-500">{driver.phone}</div>
                     </div>
                   </div>
-                  <div className="flex flex-wrap items-center gap-2 mb-3">
-                    <span className={`px-2.5 sm:px-3 py-1 sm:py-1.5 inline-flex items-center text-xs leading-5 font-semibold rounded-full ${badge.bg} ${badge.text}`}>
-                      <span className="material-icons-outlined text-xs sm:text-sm mr-1">{badge.icon}</span>
-                      {getStatusLabel(driver.verificationStatus)}
-                    </span>
-                    {driver.isSuspended && (
-                      <span className="px-2.5 sm:px-3 py-1 sm:py-1.5 inline-flex items-center text-xs leading-5 font-semibold rounded-full bg-orange-100 text-orange-800">
-                        <span className="material-icons-outlined text-xs sm:text-sm mr-1">block</span>
-                        Suspended
-                      </span>
-                    )}
-                    <div className="flex items-center space-x-1">
-                      {driver.verificationDocuments?.licenseFront && (
-                        <span className="material-icons-outlined text-[#2BB673] text-base sm:text-lg" title="License">check_circle</span>
-                      )}
-                      {driver.verificationDocuments?.aadharFront && (
-                        <span className="material-icons-outlined text-[#2BB673] text-base sm:text-lg" title="Aadhar">check_circle</span>
-                      )}
-                      {driver.verificationDocuments?.panFront && (
-                        <span className="material-icons-outlined text-[#2BB673] text-base sm:text-lg" title="PAN">check_circle</span>
-                      )}
-                      {driver.verificationDocuments?.electricityBill && (
-                        <span className="material-icons-outlined text-blue-500 text-base sm:text-lg" title="Electricity Bill">receipt</span>
-                      )}
-                      {driver.verificationDocuments?.rentAgreement && (
-                        <span className="material-icons-outlined text-purple-500 text-base sm:text-lg" title="Rent Agreement">description</span>
-                      )}
-                    </div>
+                  <span className={`px-2 py-1 text-xs font-bold rounded-full uppercase tracking-wider ${badge.bg} ${badge.text}`}>
+                    {getStatusLabel(driver.verificationStatus)}
+                  </span>
+                </div>
+
+                <div className="grid grid-cols-2 gap-2 text-sm text-gray-600 mb-3 pl-1">
+                  <div className="flex items-center">
+                    <span className="material-icons-outlined text-gray-400 mr-2 text-base">location_on</span>
+                    {driver.workLocation || 'N/A'}
                   </div>
-                  <div className="flex items-center justify-between pt-3 border-t border-gray-100">
-                    <div className="text-xs sm:text-sm text-gray-500">
-                      {driver.createdAt ? new Date(driver.createdAt).toLocaleDateString() : 'N/A'}
-                    </div>
-                    <Link
-                      to={`/drivers/${driver._id}`}
-                      className="text-[#0B2C4D] hover:text-[#2BB673] font-semibold flex items-center space-x-1 group text-xs sm:text-sm"
-                    >
-                      <span>View</span>
-                      <span className="material-icons-outlined text-base sm:text-lg group-hover:translate-x-1 transition-transform">arrow_forward</span>
-                    </Link>
+                  <div className="flex items-center">
+                    <span className="material-icons-outlined text-yellow-500 mr-2 text-base">star</span>
+                    {driver.rating?.toFixed(1) || '3.0'} ({driver.totalRides || 0})
                   </div>
                 </div>
-              );
-            })
-          )}
+
+                <div className="flex items-center justify-between pt-3 border-t border-gray-100">
+                  <div className="flex -space-x-1">
+                    {driver.verificationDocuments?.licenseFront && <span className="material-icons-outlined text-[#2BB673] bg-white rounded-full" title="License">check_circle</span>}
+                    {driver.verificationDocuments?.policeVerificationCertificate && <span className="material-icons-outlined text-indigo-500 bg-white rounded-full ml-1" title="Police Verification">security</span>}
+                  </div>
+                  <Link
+                    to={`/drivers/${driver._id}`}
+                    className="text-[#0B2C4D] hover:text-[#2BB673] font-semibold flex items-center space-x-1 text-sm"
+                  >
+                    <span>View Details</span>
+                    <span className="material-icons-outlined text-lg">arrow_forward</span>
+                  </Link>
+                </div>
+              </div>
+            );
+          })}
         </div>
 
         {/* Pagination */}
@@ -413,13 +310,14 @@ const Drivers = () => {
                 onClick={() => handlePageChange(pagination.page - 1)}
                 disabled={pagination.page === 1}
                 className={`px-3 sm:px-4 py-2 rounded-lg font-semibold transition-all duration-300 text-xs sm:text-sm flex items-center space-x-1 ${pagination.page === 1
-                    ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
-                    : 'bg-white text-gray-700 hover:bg-gray-50 border border-gray-300'
+                  ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
+                  : 'bg-white text-gray-700 hover:bg-gray-50 border border-gray-300'
                   }`}
               >
                 <span className="material-icons-outlined text-base sm:text-lg">chevron_left</span>
                 <span className="hidden sm:inline">Previous</span>
               </button>
+
               <div className="flex items-center space-x-1">
                 {Array.from({ length: Math.min(5, pagination.totalPages) }, (_, i) => {
                   let pageNum;
@@ -432,13 +330,14 @@ const Drivers = () => {
                   } else {
                     pageNum = pagination.page - 2 + i;
                   }
+
                   return (
                     <button
                       key={pageNum}
                       onClick={() => handlePageChange(pageNum)}
                       className={`px-3 sm:px-4 py-2 rounded-lg font-semibold transition-all duration-300 text-xs sm:text-sm ${pagination.page === pageNum
-                          ? 'bg-gradient-to-r from-[#0B2C4D] to-[#254f7a] text-white shadow-lg'
-                          : 'bg-white text-gray-700 hover:bg-gray-50 border border-gray-300'
+                        ? 'bg-gradient-to-r from-[#0B2C4D] to-[#254f7a] text-white shadow-lg'
+                        : 'bg-white text-gray-700 hover:bg-gray-50 border border-gray-300'
                         }`}
                     >
                       {pageNum}
@@ -446,25 +345,19 @@ const Drivers = () => {
                   );
                 })}
               </div>
+
               <button
                 onClick={() => handlePageChange(pagination.page + 1)}
                 disabled={pagination.page === pagination.totalPages}
                 className={`px-3 sm:px-4 py-2 rounded-lg font-semibold transition-all duration-300 text-xs sm:text-sm flex items-center space-x-1 ${pagination.page === pagination.totalPages
-                    ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
-                    : 'bg-white text-gray-700 hover:bg-gray-50 border border-gray-300'
+                  ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
+                  : 'bg-white text-gray-700 hover:bg-gray-50 border border-gray-300'
                   }`}
               >
                 <span className="hidden sm:inline">Next</span>
                 <span className="material-icons-outlined text-base sm:text-lg">chevron_right</span>
               </button>
             </div>
-          </div>
-        )}
-
-        {/* Footer */}
-        {pagination.totalPages <= 1 && (
-          <div className="text-xs sm:text-sm text-gray-500 font-medium animate-fade-in" style={{ animationDelay: '300ms' }}>
-            Showing {drivers.length} of {pagination.total} driver{drivers.length !== 1 ? 's' : ''}
           </div>
         )}
       </div>

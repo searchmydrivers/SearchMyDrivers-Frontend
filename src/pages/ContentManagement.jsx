@@ -3,6 +3,7 @@ import Layout from '../components/Layout/Layout';
 import { contentService } from '../services/contentService';
 
 const ContentManagement = () => {
+  const [activeTab, setActiveTab] = useState('user'); // 'user' or 'driver'
   const [contents, setContents] = useState([]);
   const [loading, setLoading] = useState(true);
   const [editingContent, setEditingContent] = useState(null);
@@ -14,14 +15,24 @@ const ContentManagement = () => {
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
 
+  const contentTypes = {
+    'privacy-policy': 'Privacy Policy',
+    'terms-conditions': 'Terms & Conditions',
+    'about-us': 'About Us',
+    'contact-us': 'Contact Us',
+    'faq': 'Frequently Asked Questions (FAQ)',
+  };
+
   useEffect(() => {
     fetchContents();
-  }, []);
+    // Reset editing state when tab changes to avoid confusion
+    handleCancel();
+  }, [activeTab]);
 
   const fetchContents = async () => {
     setLoading(true);
     try {
-      const response = await contentService.getAllContentForAdmin();
+      const response = await contentService.getAllContentForAdmin(activeTab);
       setContents(response.data?.contents || []);
     } catch (error) {
       console.error('Error fetching contents:', error);
@@ -40,6 +51,8 @@ const ContentManagement = () => {
     });
     setError('');
     setSuccess('');
+    // Scroll to form
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   const handleCancel = () => {
@@ -55,12 +68,18 @@ const ContentManagement = () => {
     setSuccess('');
 
     try {
-      if (editingContent) {
-        await contentService.updateContent(editingContent.type, formData);
-        setSuccess('Content updated successfully!');
+      const payload = {
+        ...formData,
+        appType: activeTab, // vital for saving to correct app
+      };
+
+      if (editingContent._id) {
+        // payload includes appType, critical for backend to find the right doc to update
+        await contentService.updateContent(editingContent.type, payload);
+        setSuccess(`${activeTab === 'user' ? 'User' : 'Driver'} App content updated successfully!`);
       } else {
-        await contentService.createOrUpdateContent(formData);
-        setSuccess('Content created successfully!');
+        await contentService.createOrUpdateContent(payload);
+        setSuccess(`${activeTab === 'user' ? 'User' : 'Driver'} App content created successfully!`);
       }
 
       await fetchContents();
@@ -74,11 +93,11 @@ const ContentManagement = () => {
   };
 
   const handleDelete = async (type) => {
-    if (!window.confirm('Are you sure you want to delete this content?')) return;
+    if (!window.confirm('Are you sure you want to PERMANENTLY delete this content? This action cannot be undone.')) return;
 
     try {
-      await contentService.deleteContent(type);
-      setSuccess('Content deleted successfully!');
+      await contentService.deleteContent(type, activeTab);
+      setSuccess('Content deleted permanently!');
       await fetchContents();
       setTimeout(() => setSuccess(''), 2000);
     } catch (error) {
@@ -86,39 +105,59 @@ const ContentManagement = () => {
     }
   };
 
-  const contentTypes = {
-    'privacy-policy': 'Privacy Policy',
-    'terms-conditions': 'Terms & Conditions',
-    'about-us': 'About Us',
-    'contact-us': 'Contact Us',
-    'faq': 'Frequently Asked Questions (FAQ)',
-  };
-
-  if (loading) {
-    return (
-      <Layout>
-        <div className="flex items-center justify-center h-64">
-          <div className="flex flex-col items-center space-y-4">
-            <div className="w-12 h-12 border-4 border-[#2BB673] border-t-transparent rounded-full animate-spin"></div>
-            <div className="text-gray-500 font-medium">Loading content...</div>
-          </div>
-        </div>
-      </Layout>
-    );
-  }
+  // Filter available content types
+  // Exclude types that are already present in the current list, UNLESS we are editing that specific one.
+  const availableContentTypes = Object.entries(contentTypes).filter(([type, label]) => {
+    const exists = contents.some(c => c.type === type);
+    // If editing, include the current type. If adding, exclude existing.
+    if (editingContent && editingContent.type === type) return true;
+    return !exists;
+  });
 
   return (
     <Layout>
       <div className="space-y-4 sm:space-y-6 animate-fade-in">
+
+        {/* Header and Tabs */}
+        <div>
+          <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-6">Content Management</h1>
+
+          <div className="flex space-x-4 border-b border-gray-200 mb-6">
+            <button
+              onClick={() => setActiveTab('user')}
+              className={`pb-3 px-4 text-sm sm:text-base font-semibold transition-all duration-200 border-b-2 ${activeTab === 'user'
+                ? 'border-[#0B2C4D] text-[#0B2C4D]'
+                : 'border-transparent text-gray-500 hover:text-gray-700'
+                }`}
+            >
+              User App Content
+            </button>
+            <button
+              onClick={() => setActiveTab('driver')}
+              className={`pb-3 px-4 text-sm sm:text-base font-semibold transition-all duration-200 border-b-2 ${activeTab === 'driver'
+                ? 'border-[#0B2C4D] text-[#0B2C4D]'
+                : 'border-transparent text-gray-500 hover:text-gray-700'
+                }`}
+            >
+              Driver App Content
+            </button>
+          </div>
+        </div>
+
         <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4">
-          {!editingContent && (
+          {!editingContent && availableContentTypes.length > 0 && (
             <button
               onClick={() => setEditingContent({ type: '', title: '', content: '' })}
               className="px-4 sm:px-6 py-2.5 sm:py-3 bg-gradient-to-r from-[#0B2C4D] to-[#254f7a] text-white rounded-lg sm:rounded-xl hover:from-[#091E3A] hover:to-[#1a3a5a] transition-all duration-200 shadow-lg font-semibold flex items-center justify-center space-x-2 text-sm sm:text-base"
             >
               <span className="material-icons-outlined text-lg sm:text-xl">add</span>
-              <span>Add New Content</span>
+              <span>Add Content for {activeTab === 'user' ? 'User' : 'Driver'} App</span>
             </button>
+          )}
+          {!editingContent && availableContentTypes.length === 0 && contents.length > 0 && (
+            <div className="text-sm text-gray-500 italic bg-gray-50 px-3 py-2 rounded-lg border border-gray-200">
+              All content types for {activeTab} app have been created.
+            </div>
           )}
         </div>
 
@@ -141,6 +180,7 @@ const ContentManagement = () => {
             <h2 className="text-xl sm:text-2xl font-bold text-gray-900 mb-4 sm:mb-6 flex items-center">
               <span className="material-icons-outlined text-xl mr-2 text-[#0B2C4D]">edit</span>
               {editingContent._id ? 'Edit Content' : 'Create New Content'}
+              <span className="ml-2 text-sm font-normal text-gray-500 bg-gray-100 px-2 py-0.5 rounded-full capitalize">({activeTab} App)</span>
             </h2>
             <form onSubmit={handleSubmit} className="space-y-4">
               <div>
@@ -150,15 +190,18 @@ const ContentManagement = () => {
                   onChange={(e) => setFormData({ ...formData, type: e.target.value })}
                   className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#0B2C4D]/20 focus:border-[#0B2C4D]"
                   required
-                  disabled={!!editingContent._id}
+                  disabled={!!editingContent._id} // Disable if editing existing
                 >
                   <option value="">Select Type</option>
-                  {Object.entries(contentTypes).map(([value, label]) => (
+                  {availableContentTypes.map(([value, label]) => (
                     <option key={value} value={value}>
                       {label}
                     </option>
                   ))}
                 </select>
+                {!!editingContent._id && (
+                  <p className="text-xs text-gray-400 mt-1">Content type cannot be changed once created.</p>
+                )}
               </div>
 
               <div>
@@ -208,12 +251,20 @@ const ContentManagement = () => {
         <div className="bg-white rounded-xl sm:rounded-2xl shadow-sm border border-gray-200 p-4 sm:p-6 animate-fade-in" style={{ animationDelay: '200ms' }}>
           <h2 className="text-xl sm:text-2xl font-bold text-gray-900 mb-4 sm:mb-6 flex items-center">
             <span className="material-icons-outlined text-xl mr-2 text-[#0B2C4D]">description</span>
-            All Content Pages
+            All {activeTab === 'user' ? 'User' : 'Driver'} Content Pages
           </h2>
-          {contents.length === 0 ? (
+
+          {loading ? (
+            <div className="flex items-center justify-center py-12">
+              <div className="flex flex-col items-center space-y-4">
+                <div className="w-12 h-12 border-4 border-[#2BB673] border-t-transparent rounded-full animate-spin"></div>
+                <div className="text-gray-500 font-medium">Loading content...</div>
+              </div>
+            </div>
+          ) : contents.length === 0 ? (
             <div className="text-center py-12">
               <span className="material-icons-outlined text-6xl text-gray-300 mb-4 block">description</span>
-              <p className="text-gray-500 font-medium">No content found</p>
+              <p className="text-gray-500 font-medium">No content found for {activeTab} app</p>
             </div>
           ) : (
             <div className="space-y-4">
@@ -229,13 +280,11 @@ const ContentManagement = () => {
                         <h3 className="text-lg font-semibold text-gray-800">
                           {contentTypes[content.type] || content.type}
                         </h3>
+                        {/* Status Badge */}
                         <span
-                          className={`px-2 py-1 text-xs rounded-full ${content.isActive
-                              ? 'bg-green-100 text-green-800'
-                              : 'bg-red-100 text-red-800'
-                            }`}
+                          className={`px-2 py-1 text-xs rounded-full uppercase tracking-wider font-bold bg-green-100 text-green-800`}
                         >
-                          {content.isActive ? 'Active' : 'Inactive'}
+                          {content.appType.toUpperCase()}
                         </span>
                       </div>
                       <p className="text-gray-600 font-medium mb-1">{content.title}</p>
@@ -254,15 +303,13 @@ const ContentManagement = () => {
                         <span className="material-icons-outlined text-base">edit</span>
                         <span>Edit</span>
                       </button>
-                      {content.isActive && (
-                        <button
-                          onClick={() => handleDelete(content.type)}
-                          className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors text-sm font-medium flex items-center space-x-1"
-                        >
-                          <span className="material-icons-outlined text-base">delete</span>
-                          <span>Delete</span>
-                        </button>
-                      )}
+                      <button
+                        onClick={() => handleDelete(content.type)}
+                        className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors text-sm font-medium flex items-center space-x-1"
+                      >
+                        <span className="material-icons-outlined text-base">delete</span>
+                        <span>Delete</span>
+                      </button>
                     </div>
                   </div>
                 </div>

@@ -211,14 +211,14 @@ const DriverDetails = () => {
             <div>
               <span
                 className={`px-4 py-2 inline-flex items-center text-sm leading-5 font-semibold rounded-full ${driver.verificationStatus === 'pending'
-                    ? 'bg-yellow-100 text-yellow-800'
-                    : driver.verificationStatus === 'documents-uploaded'
-                      ? 'bg-gray-100 text-[#0B2C4D]'
-                      : driver.verificationStatus === 'otp-verified'
-                        ? 'bg-purple-100 text-purple-800'
-                        : driver.verificationStatus === 'verified'
-                          ? 'bg-green-100 text-[#2BB673]'
-                          : 'bg-red-100 text-red-800'
+                  ? 'bg-yellow-100 text-yellow-800'
+                  : driver.verificationStatus === 'documents-uploaded'
+                    ? 'bg-gray-100 text-[#0B2C4D]'
+                    : driver.verificationStatus === 'otp-verified'
+                      ? 'bg-purple-100 text-purple-800'
+                      : driver.verificationStatus === 'verified'
+                        ? 'bg-green-100 text-[#2BB673]'
+                        : 'bg-red-100 text-red-800'
                   }`}
               >
                 <span className="material-icons-outlined text-sm mr-1">
@@ -283,8 +283,8 @@ const DriverDetails = () => {
                   onClick={handleSuspend}
                   disabled={actionLoading}
                   className={`px-4 sm:px-6 py-2.5 sm:py-3 rounded-lg sm:rounded-xl font-semibold transition-all duration-200 shadow-lg flex items-center justify-center space-x-2 text-sm sm:text-base ${driver.isSuspended
-                      ? 'bg-gradient-to-r from-[#2BB673] to-[#239960] text-white hover:from-[#239960] hover:to-[#1a7548]'
-                      : 'bg-gradient-to-r from-red-600 to-red-700 text-white hover:from-red-700 hover:to-red-800'
+                    ? 'bg-gradient-to-r from-[#2BB673] to-[#239960] text-white hover:from-[#239960] hover:to-[#1a7548]'
+                    : 'bg-gradient-to-r from-red-600 to-red-700 text-white hover:from-red-700 hover:to-red-800'
                     }`}
                 >
                   {actionLoading ? (
@@ -525,6 +525,17 @@ const DriverDetails = () => {
                     alt="Rent Agreement"
                     className="w-full h-48 object-cover rounded-lg border cursor-pointer hover:opacity-80"
                     onClick={() => window.open(driver.verificationDocuments.rentAgreement, '_blank')}
+                  />
+                </div>
+              )}
+              {driver.verificationDocuments?.policeVerificationCertificate && (
+                <div>
+                  <label className="text-sm text-gray-500 block mb-2">Police Verification</label>
+                  <img
+                    src={driver.verificationDocuments.policeVerificationCertificate}
+                    alt="Police Verification"
+                    className="w-full h-48 object-cover rounded-lg border cursor-pointer hover:opacity-80"
+                    onClick={() => window.open(driver.verificationDocuments.policeVerificationCertificate, '_blank')}
                   />
                 </div>
               )}

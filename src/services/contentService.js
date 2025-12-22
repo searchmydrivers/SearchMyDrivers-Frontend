@@ -14,8 +14,8 @@ export const contentService = {
   },
 
   // Get all content for admin (including inactive)
-  getAllContentForAdmin: async () => {
-    const response = await api.get('/content/admin/all');
+  getAllContentForAdmin: async (appType = 'user') => {
+    const response = await api.get('/content/admin/all', { params: { appType } });
     return response.data;
   },
 
@@ -31,9 +31,9 @@ export const contentService = {
     return response.data;
   },
 
-  // Delete content (soft delete)
-  deleteContent: async (type) => {
-    const response = await api.delete(`/content/${type}`);
+  // Delete content (permanent delete)
+  deleteContent: async (type, appType = 'user') => {
+    const response = await api.delete(`/content/${type}`, { params: { appType } });
     return response.data;
   },
 };

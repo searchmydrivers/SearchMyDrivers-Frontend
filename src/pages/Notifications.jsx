@@ -140,7 +140,7 @@ const Notifications = () => {
     <Layout>
       <div className="space-y-4 sm:space-y-6 animate-fade-in">
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-          
+
           <div className="flex items-center space-x-3">
             {unreadCount > 0 && (
               <button
@@ -156,7 +156,7 @@ const Notifications = () => {
                 setError('');
                 setSuccess('');
               }}
-              className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm font-medium flex items-center space-x-2"
+              className="px-4 py-2 bg-gradient-to-r from-[#0B2C4D] to-[#254f7a] text-white rounded-lg hover:from-[#091E3A] hover:to-[#1a3a5a] transition-colors text-sm font-medium flex items-center space-x-2"
             >
               <span className="material-icons-outlined text-lg">send</span>
               <span>Send Notification</span>
@@ -190,7 +190,7 @@ const Notifications = () => {
           <div className="px-6 py-4 border-b border-gray-200 bg-gradient-to-r from-gray-50 to-gray-100">
             <div className="flex items-center justify-between">
               <h2 className="text-lg font-bold text-gray-900 flex items-center">
-                <span className="material-icons-outlined text-xl mr-2 text-indigo-600">notifications</span>
+                <span className="material-icons-outlined text-xl mr-2 text-[#0B2C4D]">notifications</span>
                 All Notifications {unreadCount > 0 && <span className="text-sm font-normal text-gray-500 ml-2">({unreadCount} unread)</span>}
               </h2>
             </div>
@@ -199,7 +199,7 @@ const Notifications = () => {
           {loading ? (
             <div className="flex items-center justify-center py-12">
               <div className="flex flex-col items-center space-y-4">
-                <div className="w-12 h-12 border-4 border-blue-600 border-t-transparent rounded-full animate-spin"></div>
+                <div className="w-12 h-12 border-4 border-[#0B2C4D] border-t-transparent rounded-full animate-spin"></div>
                 <div className="text-gray-500 font-medium">Loading notifications...</div>
               </div>
             </div>
@@ -214,9 +214,8 @@ const Notifications = () => {
                 {notifications.map((notification, index) => (
                   <div
                     key={notification._id}
-                    className={`p-6 hover:bg-gray-50 transition-colors duration-200 animate-fade-in ${
-                      !notification.isRead ? 'bg-blue-50/50' : ''
-                    }`}
+                    className={`p-6 hover:bg-gray-50 transition-colors duration-200 animate-fade-in ${!notification.isRead ? 'bg-blue-50/50' : ''
+                      }`}
                     style={{ animationDelay: `${index * 30}ms` }}
                   >
                     <div className="flex items-start space-x-4">
@@ -235,7 +234,7 @@ const Notifications = () => {
                             <div className="flex items-center space-x-2 mb-1">
                               <h3 className="text-base font-semibold text-gray-900">{notification.title}</h3>
                               {!notification.isRead && (
-                                <span className="w-2 h-2 bg-blue-600 rounded-full"></span>
+                                <span className="w-2 h-2 bg-[#0B2C4D] rounded-full"></span>
                               )}
                               <span
                                 className={`px-2 py-0.5 rounded-full text-xs font-medium ${getNotificationColor(
@@ -251,7 +250,7 @@ const Notifications = () => {
                           {!notification.isRead && (
                             <button
                               onClick={() => handleMarkAsRead(notification._id)}
-                              className="ml-4 p-2 text-gray-400 hover:text-blue-600 transition-colors"
+                              className="ml-4 p-2 text-gray-400 hover:text-[#0B2C4D] transition-colors"
                               title="Mark as read"
                             >
                               <span className="material-icons-outlined">check_circle</span>
@@ -276,11 +275,10 @@ const Notifications = () => {
                       <button
                         onClick={() => setPagination((prev) => ({ ...prev, page: prev.page - 1 }))}
                         disabled={pagination.page === 1}
-                        className={`px-3 py-2 rounded-lg font-medium text-sm ${
-                          pagination.page === 1
+                        className={`px-3 py-2 rounded-lg font-medium text-sm ${pagination.page === 1
                             ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
                             : 'bg-white text-gray-700 hover:bg-gray-50 border border-gray-300'
-                        }`}
+                          }`}
                       >
                         Previous
                       </button>
@@ -290,11 +288,10 @@ const Notifications = () => {
                       <button
                         onClick={() => setPagination((prev) => ({ ...prev, page: prev.page + 1 }))}
                         disabled={pagination.page === pagination.totalPages}
-                        className={`px-3 py-2 rounded-lg font-medium text-sm ${
-                          pagination.page === pagination.totalPages
+                        className={`px-3 py-2 rounded-lg font-medium text-sm ${pagination.page === pagination.totalPages
                             ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
                             : 'bg-white text-gray-700 hover:bg-gray-50 border border-gray-300'
-                        }`}
+                          }`}
                       >
                         Next
                       </button>

@@ -374,9 +374,19 @@ const TripDetails = () => {
                 <p className="text-xs text-gray-500">{trip.vehicle?.transmissionMode || ''}</p>
               </div>
               {trip.driverPin && (
-                <div>
-                  <span className="text-sm font-medium text-gray-600">Driver PIN:</span>
-                  <p className="text-sm text-gray-900 font-mono">{trip.driverPin}</p>
+                <div className="bg-blue-50 border border-blue-200 rounded-xl p-4 mt-2 mb-4 flex items-center justify-between shadow-sm">
+                  <div>
+                    <p className="text-xs text-blue-600 font-bold uppercase tracking-wider mb-1">Driver Verification PIN</p>
+                    <div className="flex items-center gap-3">
+                      <p className="text-3xl font-mono font-bold text-blue-900 tracking-widest">{trip.driverPin}</p>
+                      <span className={`px-2 py-0.5 rounded text-[10px] font-bold uppercase ${trip.pinVerified ? 'bg-green-100 text-green-700' : 'bg-yellow-100 text-yellow-700'}`}>
+                        {trip.pinVerified ? 'Verified' : 'Pending'}
+                      </span>
+                    </div>
+                  </div>
+                  <div className="h-10 w-10 rounded-full bg-blue-100 flex items-center justify-center">
+                    <span className="material-icons-outlined text-blue-600 text-xl">lock</span>
+                  </div>
                 </div>
               )}
               <div>
@@ -584,13 +594,14 @@ const TripDetails = () => {
           )}
 
           {/* Driver Location Section */}
-          {trip.driver && (
-            <div className="bg-white rounded-xl sm:rounded-2xl shadow-sm border border-gray-200 p-4 sm:p-6 lg:col-span-2 animate-fade-in" style={{ animationDelay: '500ms' }}>
-              <div className="flex items-center justify-between border-b border-gray-200 pb-3 mb-4">
-                <h2 className="text-lg sm:text-xl font-bold text-gray-900 flex items-center">
-                  <span className="material-icons-outlined text-xl mr-2 text-[#0B2C4D]">my_location</span>
-                  Driver Current Location
-                </h2>
+          {/* Driver Location Section - Always visible now as per requirement */}
+          <div className="bg-white rounded-xl sm:rounded-2xl shadow-sm border border-gray-200 p-4 sm:p-6 lg:col-span-2 animate-fade-in" style={{ animationDelay: '500ms' }}>
+            <div className="flex items-center justify-between border-b border-gray-200 pb-3 mb-4">
+              <h2 className="text-lg sm:text-xl font-bold text-gray-900 flex items-center">
+                <span className="material-icons-outlined text-xl mr-2 text-[#0B2C4D]">my_location</span>
+                Driver Current Location
+              </h2>
+              {trip.driver && (
                 <button
                   onClick={handleRequestDriverLocation}
                   disabled={loadingLocation}
@@ -608,85 +619,97 @@ const TripDetails = () => {
                     </>
                   )}
                 </button>
-              </div>
-
-              {loadingLocation && (
-                <div className="flex items-center justify-center py-8">
-                  <div className="flex flex-col items-center space-y-3">
-                    <div className="w-8 h-8 border-4 border-[#2BB673] border-t-transparent rounded-full animate-spin"></div>
-                    <p className="text-sm text-gray-600">Waiting for driver location...</p>
-                  </div>
-                </div>
-              )}
-
-              {driverLocation && !loadingLocation && (
-                <div className="space-y-4">
-                  <div className="bg-green-50 border border-green-200 rounded-lg p-4">
-                    <div className="flex items-start justify-between">
-                      <div className="flex-1">
-                        <div className="flex items-center space-x-2 mb-3">
-                          <span className="material-icons-outlined text-[#2BB673]">location_on</span>
-                          <span className="text-sm font-semibold text-green-800">Location Received</span>
-                        </div>
-                        {driverLocationAddress ? (
-                          <div className="space-y-2">
-                            <div>
-                              <span className="text-xs font-medium text-gray-600">Address:</span>
-                              <p className="text-sm text-gray-900 font-medium mt-1">{driverLocationAddress}</p>
-                            </div>
-                          </div>
-                        ) : (
-                          <div className="space-y-1 text-sm">
-                            <p className="text-gray-500">Address not available</p>
-                          </div>
-                        )}
-                        {driverLocation.lastUpdated && (
-                          <p className="text-xs text-gray-500 mt-2">
-                            Last Updated: {new Date(driverLocation.lastUpdated).toLocaleString()}
-                          </p>
-                        )}
-                      </div>
-                      <button
-                        onClick={handleShowMap}
-                        className="px-3 py-2 bg-[#0B2C4D] text-white rounded-lg hover:bg-[#254f7a] transition-colors text-sm font-medium flex items-center space-x-1 ml-4"
-                      >
-                        <span className="material-icons-outlined text-base">map</span>
-                        <span>{showMap ? 'Hide Map' : 'Show on Map'}</span>
-                      </button>
-                    </div>
-                  </div>
-
-                  {showMap && driverLocation && (
-                    <div className="bg-white border border-gray-200 rounded-lg overflow-hidden">
-                      <div className="p-3 bg-gray-50 border-b border-gray-200">
-                        <h5 className="text-sm font-semibold text-gray-800">Driver Location on Map</h5>
-                      </div>
-                      <div className="w-full h-96">
-                        <iframe
-                          width="100%"
-                          height="100%"
-                          style={{ border: 0 }}
-                          loading="lazy"
-                          allowFullScreen
-                          referrerPolicy="no-referrer-when-downgrade"
-                          src={`https://www.google.com/maps/embed/v1/place?key=AIzaSyBEIm7hwzYIXr2Dwxb31Xh8GsJ1JQzP7xY&q=${driverLocation.latitude},${driverLocation.longitude}&zoom=15`}
-                        ></iframe>
-                      </div>
-                    </div>
-                  )}
-                </div>
-              )}
-
-              {!driverLocation && !loadingLocation && (
-                <div className="text-center py-8 text-gray-500 text-sm">
-                  <span className="material-icons-outlined text-4xl text-gray-300 mb-2 block">
-                    location_off
-                  </span>
-                  <p>Click "Get Driver Location" to request current location from driver</p>
-                </div>
               )}
             </div>
-          )}
+
+            {trip.driver ? (
+              <>
+                {loadingLocation && (
+                  <div className="flex items-center justify-center py-8">
+                    <div className="flex flex-col items-center space-y-3">
+                      <div className="w-8 h-8 border-4 border-[#2BB673] border-t-transparent rounded-full animate-spin"></div>
+                      <p className="text-sm text-gray-600">Waiting for driver location...</p>
+                    </div>
+                  </div>
+                )}
+
+                {driverLocation && !loadingLocation && (
+                  <div className="space-y-4">
+                    <div className="bg-green-50 border border-green-200 rounded-lg p-4">
+                      <div className="flex items-start justify-between">
+                        <div className="flex-1">
+                          <div className="flex items-center space-x-2 mb-3">
+                            <span className="material-icons-outlined text-[#2BB673]">location_on</span>
+                            <span className="text-sm font-semibold text-green-800">Location Received</span>
+                          </div>
+                          {driverLocationAddress ? (
+                            <div className="space-y-2">
+                              <div>
+                                <span className="text-xs font-medium text-gray-600">Address:</span>
+                                <p className="text-sm text-gray-900 font-medium mt-1">{driverLocationAddress}</p>
+                              </div>
+                            </div>
+                          ) : (
+                            <div className="space-y-1 text-sm">
+                              <p className="text-gray-500">Address not available</p>
+                            </div>
+                          )}
+                          {driverLocation.lastUpdated && (
+                            <p className="text-xs text-gray-500 mt-2">
+                              Last Updated: {new Date(driverLocation.lastUpdated).toLocaleString()}
+                            </p>
+                          )}
+                        </div>
+                        <button
+                          onClick={handleShowMap}
+                          className="px-3 py-2 bg-[#0B2C4D] text-white rounded-lg hover:bg-[#254f7a] transition-colors text-sm font-medium flex items-center space-x-1 ml-4"
+                        >
+                          <span className="material-icons-outlined text-base">map</span>
+                          <span>{showMap ? 'Hide Map' : 'Show on Map'}</span>
+                        </button>
+                      </div>
+                    </div>
+
+                    {showMap && driverLocation && (
+                      <div className="bg-white border border-gray-200 rounded-lg overflow-hidden">
+                        <div className="p-3 bg-gray-50 border-b border-gray-200">
+                          <h5 className="text-sm font-semibold text-gray-800">Driver Location on Map</h5>
+                        </div>
+                        <div className="w-full h-96">
+                          <iframe
+                            width="100%"
+                            height="100%"
+                            style={{ border: 0 }}
+                            loading="lazy"
+                            allowFullScreen
+                            referrerPolicy="no-referrer-when-downgrade"
+                            src={`https://www.google.com/maps/embed/v1/place?key=AIzaSyBEIm7hwzYIXr2Dwxb31Xh8GsJ1JQzP7xY&q=${driverLocation.latitude},${driverLocation.longitude}&zoom=15`}
+                          ></iframe>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                )}
+
+                {!driverLocation && !loadingLocation && (
+                  <div className="text-center py-8 text-gray-500 text-sm">
+                    <span className="material-icons-outlined text-4xl text-gray-300 mb-2 block">
+                      location_off
+                    </span>
+                    <p>Click "Get Driver Location" to request current location from driver</p>
+                  </div>
+                )}
+              </>
+            ) : (
+              <div className="text-center py-8 text-gray-500 text-sm">
+                <span className="material-icons-outlined text-4xl text-gray-300 mb-2 block">
+                  person_off
+                </span>
+                <p>No driver assigned to this trip yet.</p>
+                <p className="text-xs mt-1">Driver location will be available once a driver accepts the trip.</p>
+              </div>
+            )}
+          </div>
         </div>
       </div>
     </Layout>

@@ -97,7 +97,6 @@ const Dashboard = () => {
     const searchQuery = searchValue || mapSearchTerm;
     if (!searchQuery.trim()) return;
 
-    if (selectedDriver) return;
     if (mapLoading) return;
 
     setMapLoading(true);
@@ -109,9 +108,6 @@ const Dashboard = () => {
         const drivers = response.data.data.drivers || [];
         setSearchResults(drivers);
         setShowSuggestions(true);
-        if (drivers.length === 1 && drivers[0].location?.latitude) {
-          handleSelectDriver(drivers[0]);
-        }
       }
     } catch (error) {
       console.error('Error searching drivers:', error);
@@ -120,25 +116,39 @@ const Dashboard = () => {
     }
   }, [mapSearchTerm, mapLoading, selectedDriver]);
 
-  const handleSelectDriver = (driver) => {
-    setSelectedDriver(driver);
+  const handleSelectDriver = async (driverBasic) => {
+    // Show loading state or at least select the driver immediately so UI reflects it
     setMapSearchTerm('');
     setSearchResults([]);
     setShowSuggestions(false);
-    setShowInfoWindow(false);
-    if (driver.location?.latitude) {
-      setMapCenter({
-        lat: driver.location.latitude,
-        lng: driver.location.longitude,
-      });
-      setMapZoom(15);
-    } else {
-      alert(`Driver ${driver.name} does not have a current location available.`);
+    setMapLoading(true);
+
+    try {
+      const response = await api.get(`/admins/drivers/${driverBasic._id}/live-location`);
+      if (response.data.success) {
+        const fullDriver = response.data.data.driver;
+        setSelectedDriver(fullDriver);
+
+        if (fullDriver.location?.latitude) {
+          setMapCenter({
+            lat: fullDriver.location.latitude,
+            lng: fullDriver.location.longitude,
+          });
+          setMapZoom(15);
+          setShowInfoWindow(true);
+        } else {
+          alert(`Driver ${fullDriver.name} does not have a current location available.`);
+        }
+      }
+    } catch (error) {
+      console.error('Error fetching driver live location:', error);
+      alert('Failed to fetch driver location');
+    } finally {
+      setMapLoading(false);
     }
   };
 
   useEffect(() => {
-    if (selectedDriver) return;
     const timeoutId = setTimeout(() => {
       if (mapSearchTerm.trim().length >= 2) {
         handleDriverSearch(mapSearchTerm);
@@ -146,7 +156,7 @@ const Dashboard = () => {
         setSearchResults([]);
         setShowSuggestions(false);
       }
-    }, 800);
+    }, 500);
     return () => clearTimeout(timeoutId);
   }, [mapSearchTerm, handleDriverSearch, selectedDriver]);
 
@@ -257,7 +267,7 @@ const Dashboard = () => {
                 <span className="flex items-center text-xs text-gray-500"><div className="w-2 h-2 rounded-full bg-[#0B2C4D] mr-2"></div>Driver Earnings</span>
               </div>
             </div>
-            <div className="h-80">
+            <div className="h-80 w-full min-w-0">
               <ResponsiveContainer width="100%" height="100%">
                 <AreaChart data={chartData}>
                   <defs>
@@ -300,7 +310,7 @@ const Dashboard = () => {
           {/* Trip Status */}
           <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
             <h3 className="text-lg font-bold text-gray-900 mb-6">Trip Distribution</h3>
-            <div className="h-64 relative">
+            <div className="h-64 w-full relative min-w-0">
               <ResponsiveContainer width="100%" height="100%">
                 <PieChart>
                   <Pie
@@ -334,7 +344,7 @@ const Dashboard = () => {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
             <h3 className="text-lg font-bold text-gray-900 mb-6">Platform Growth</h3>
-            <div className="h-72">
+            <div className="h-72 w-full min-w-0">
               <ResponsiveContainer width="100%" height="100%">
                 <LineChart data={growthData}>
                   <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#E5E7EB" />
@@ -351,7 +361,7 @@ const Dashboard = () => {
 
           <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
             <h3 className="text-lg font-bold text-gray-900 mb-6">Peak Booking Hours</h3>
-            <div className="h-72">
+            <div className="h-72 w-full min-w-0">
               <ResponsiveContainer width="100%" height="100%">
                 <BarChart data={hourlyData}>
                   <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#E5E7EB" />
@@ -525,13 +535,16 @@ const Dashboard = () => {
                                   <p className="text-xs text-gray-500">{selectedDriver.phone}</p>
                                 </div>
                               </div>
-                              <div className="flex items-center gap-2 text-xs mt-2">
-                                <span className={`px-2 py-0.5 rounded-full ${selectedDriver.isOnline ? 'bg-[#2BB673]/10 text-[#2BB673]' : 'bg-gray-100 text-gray-600'}`}>
+                              <div className="flex flex-col gap-1 text-xs mt-2">
+                                <span className={`self-start px-2 py-0.5 rounded-full ${selectedDriver.isOnline ? 'bg-[#2BB673]/10 text-[#2BB673]' : 'bg-gray-100 text-gray-600'}`}>
                                   {selectedDriver.isOnline ? 'Online' : 'Offline'}
                                 </span>
-                                <span className="text-gray-400 border-l pl-2 border-gray-300">
-                                  {selectedDriver.workLocation || 'Unknown'}
-                                </span>
+                                <div className="flex items-start text-gray-600 mt-1">
+                                  <span className="material-icons-outlined text-sm mr-1">location_on</span>
+                                  <span className="break-words max-w-[180px]">
+                                    {selectedDriver.location?.address || selectedDriver.workLocation || 'Location unavailable'}
+                                  </span>
+                                </div>
                               </div>
                             </div>
                           </InfoWindow>

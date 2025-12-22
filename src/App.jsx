@@ -16,6 +16,9 @@ const TripBookings = lazy(() => import('./pages/TripBookings'));
 const TripDetails = lazy(() => import('./pages/TripDetails'));
 const TransactionHistory = lazy(() => import('./pages/TransactionHistory'));
 const ContentManagement = lazy(() => import('./pages/ContentManagement'));
+const HiringManagement = lazy(() => import('./pages/HiringManagement'));
+const IncompleteRegistrations = lazy(() => import('./pages/IncompleteRegistrations'));
+const WithdrawalManagement = lazy(() => import('./pages/WithdrawalManagement'));
 const Banners = lazy(() => import('./pages/Banners'));
 const AdminProfile = lazy(() => import('./pages/AdminProfile'));
 const Notifications = lazy(() => import('./pages/Notifications'));
@@ -135,6 +138,30 @@ function App() {
             element={
               <ProtectedRoute>
                 <ContentManagement />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/hiring-requests"
+            element={
+              <ProtectedRoute>
+                <HiringManagement />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/incomplete-registrations"
+            element={
+              <ProtectedRoute>
+                <IncompleteRegistrations />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/withdrawals"
+            element={
+              <ProtectedRoute>
+                <WithdrawalManagement />
               </ProtectedRoute>
             }
           />
