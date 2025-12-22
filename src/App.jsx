@@ -24,6 +24,7 @@ const SubAdmins = lazy(() => import('./pages/SubAdmins'));
 const ServiceZones = lazy(() => import('./pages/ServiceZones'));
 const SupportTickets = lazy(() => import('./pages/SupportTickets'));
 const TicketDetails = lazy(() => import('./pages/TicketDetails'));
+const Referrals = lazy(() => import('./pages/Referrals'));
 
 function App() {
   return (
@@ -38,6 +39,14 @@ function App() {
             element={
               <ProtectedRoute>
                 <Dashboard />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/referrals"
+            element={
+              <ProtectedRoute>
+                <Referrals />
               </ProtectedRoute>
             }
           />

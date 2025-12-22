@@ -13,6 +13,7 @@ const Sidebar = ({ isOpen, onClose, collapsed, toggleSidebar }) => {
   const menuItems = [
     { path: '/dashboard', label: 'Dashboard', icon: 'dashboard', section: 'main' },
     { path: '/users', label: 'Users', icon: 'people', section: 'main' },
+    { path: '/referrals', label: 'Referrals', icon: 'share', section: 'main' },
     { path: '/drivers', label: 'Drivers', icon: 'local_taxi', section: 'main' },
     { path: '/trip-bookings', label: 'Bookings', icon: 'route', section: 'main' },
     { path: '/transactions', label: 'Transactions', icon: 'receipt_long', section: 'main' },
