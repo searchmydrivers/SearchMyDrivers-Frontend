@@ -14,6 +14,8 @@ const Login = () => {
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
 
+  const [isExiting, setIsExiting] = useState(false);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     console.log('Login form submitted', formData);
@@ -31,14 +33,20 @@ const Login = () => {
         if (response.data.admin) {
           localStorage.setItem('adminData', JSON.stringify(response.data.admin));
         }
-        navigate('/dashboard');
+
+        // Trigger Exit Animation
+        setIsExiting(true);
+        setTimeout(() => {
+          navigate('/dashboard');
+        }, 500); // Wait for 500ms (animation duration)
+
       } else {
         setError(response.message || 'Login failed');
+        setLoading(false);
       }
     } catch (err) {
       console.error('Login error:', err);
       setError(err.response?.data?.message || 'Login failed. Please try again.');
-    } finally {
       setLoading(false);
     }
   };
@@ -55,7 +63,7 @@ const Login = () => {
       </div>
 
       {/* Main Content Container */}
-      <div className="relative z-10 w-full flex flex-col lg:flex-row min-h-screen">
+      <div className={`relative z-10 w-full flex flex-col lg:flex-row min-h-screen ${isExiting ? 'page-slide-out-left' : ''}`}>
 
         {/* Left Side - Tagline & Project Info */}
         <div className="hidden lg:flex flex-1 flex-col justify-end p-12 xl:p-20 pb-24 animate-fade-in-up">

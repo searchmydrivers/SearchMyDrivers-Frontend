@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, useCallback } from 'react';
+import { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import { GoogleMap, useJsApiLoader, Polygon, DrawingManager, Autocomplete } from '@react-google-maps/api';
 import Layout from '../components/Layout/Layout';
 import api from '../config/api';
@@ -30,7 +30,7 @@ const ServiceZones = () => {
     libraries: libraries
   });
 
-  const center = { lat: 20.5937, lng: 78.9629 }; // India Center
+  const center = useMemo(() => ({ lat: 20.5937, lng: 78.9629 }), []); // India Center
 
   useEffect(() => {
     fetchZones();
@@ -118,6 +118,22 @@ const ServiceZones = () => {
     setCoordinates(zone.area.coordinates[0]); // GeoJSON Polygon
     setIsEditing(true);
     setIsCreating(false);
+
+    // Pan map to the selected zone
+    if (mapRef.current && zone.area.coordinates[0].length > 0) {
+      setTimeout(() => {
+        try {
+          const bounds = new window.google.maps.LatLngBounds();
+          zone.area.coordinates[0].forEach(coord => {
+            // GeoJSON coordinates are [lng, lat], Google Maps needs {lat, lng}
+            bounds.extend({ lat: coord[1], lng: coord[0] });
+          });
+          mapRef.current.fitBounds(bounds);
+        } catch (error) {
+          console.error("Error fitting bounds:", error);
+        }
+      }, 100);
+    }
   };
 
   const resetForm = () => {

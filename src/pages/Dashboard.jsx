@@ -431,27 +431,42 @@ const Dashboard = () => {
                     setMapSearchTerm(e.target.value);
                     setShowSuggestions(true);
                   }}
-                  placeholder="Search driver..."
-                  className="w-full pl-10 pr-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#2BB673] focus:border-transparent transition-all"
+                  placeholder="Search driver by name or phone..."
+                  className="w-full pl-10 pr-10 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#2BB673] focus:border-transparent transition-all"
                 />
                 <span className="material-icons-outlined absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">search</span>
-                {showSuggestions && searchResults.length > 0 && (
+
+                {mapLoading && (
+                  <div className="absolute right-3 top-1/2 -translate-y-1/2">
+                    <div className="w-4 h-4 border-2 border-[#2BB673] border-t-transparent rounded-full animate-spin"></div>
+                  </div>
+                )}
+
+                {showSuggestions && mapSearchTerm.trim().length >= 2 && (
                   <div className="absolute z-50 w-full mt-1 bg-white border border-gray-100 rounded-lg shadow-xl max-h-60 overflow-y-auto">
-                    {searchResults.map((d) => (
-                      <div
-                        key={d._id}
-                        onClick={() => handleSelectDriver(d)}
-                        className="p-3 hover:bg-gray-50 cursor-pointer flex items-center gap-3 border-b border-gray-50 last:border-0"
-                      >
-                        <div className="w-8 h-8 rounded-full bg-blue-50 flex items-center justify-center font-bold text-xs text-[#0B2C4D]">
-                          {d.name[0]}
+                    {searchResults.length > 0 ? (
+                      searchResults.map((d) => (
+                        <div
+                          key={d._id}
+                          onClick={() => handleSelectDriver(d)}
+                          className="p-3 hover:bg-gray-50 cursor-pointer flex items-center gap-3 border-b border-gray-50 last:border-0"
+                        >
+                          <div className="w-8 h-8 rounded-full bg-blue-50 flex items-center justify-center font-bold text-xs text-[#0B2C4D]">
+                            {d.name ? d.name[0].toUpperCase() : '?'}
+                          </div>
+                          <div className="overflow-hidden">
+                            <p className="text-sm font-medium text-gray-900 truncate">{d.name}</p>
+                            <p className="text-xs text-gray-500">{d.phone}</p>
+                          </div>
                         </div>
-                        <div className="overflow-hidden">
-                          <p className="text-sm font-medium text-gray-900 truncate">{d.name}</p>
-                          <p className="text-xs text-gray-500">{d.phone}</p>
+                      ))
+                    ) : (
+                      !mapLoading && (
+                        <div className="p-4 text-center text-gray-500 text-sm">
+                          No drivers found with active location.
                         </div>
-                      </div>
-                    ))}
+                      )
+                    )}
                   </div>
                 )}
               </div>
