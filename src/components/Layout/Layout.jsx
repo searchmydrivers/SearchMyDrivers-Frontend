@@ -3,6 +3,7 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import Sidebar from './Sidebar';
 import { authService } from '../../services/authService';
 import api from '../../config/api';
+import { Toaster } from 'react-hot-toast';
 
 const Layout = ({ children }) => {
   const [admin, setAdmin] = useState(null);
@@ -104,15 +105,33 @@ const Layout = ({ children }) => {
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, [sidebarOpen, showNotificationDropdown]);
 
+  const [collapsed, setCollapsed] = useState(false);
+
   useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth < 1024) {
+        setSidebarOpen(false);
+      } else {
+        setSidebarOpen(true);
+      }
+    };
+
+    // Initialize on mount
+    handleResize();
+
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  const toggleSidebar = () => setCollapsed(!collapsed);
+
+  useEffect(() => {
+    // Only lock body scroll on mobile when sidebar is open
     if (sidebarOpen && window.innerWidth < 1024) {
       document.body.style.overflow = 'hidden';
     } else {
       document.body.style.overflow = 'unset';
     }
-    return () => {
-      document.body.style.overflow = 'unset';
-    };
   }, [sidebarOpen]);
 
   const formatTime = (dateString) => {
@@ -133,7 +152,7 @@ const Layout = ({ children }) => {
   // Get breadcrumbs and page title based on current route
   const getPageInfo = () => {
     const pathname = location.pathname;
-    
+
     // Route mapping for breadcrumbs and titles
     const routeMap = {
       '/dashboard': {
@@ -229,28 +248,35 @@ const Layout = ({ children }) => {
   const pageInfo = getPageInfo();
 
   return (
-    <div className="flex min-h-screen bg-gray-50">
+    <div className="flex min-h-screen bg-gray-50/50">
       {/* Mobile Overlay */}
       {sidebarOpen && (
         <div
-          className="fixed inset-0 bg-black/60 z-40 lg:hidden transition-opacity duration-300"
+          className="fixed inset-0 bg-gray-900/50 backdrop-blur-sm z-40 lg:hidden transition-opacity duration-300"
           onClick={() => setSidebarOpen(false)}
         />
       )}
 
+      <Toaster position="top-right" />
+
       {/* Sidebar */}
-      <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
+      <Sidebar
+        isOpen={sidebarOpen}
+        onClose={() => setSidebarOpen(false)}
+        collapsed={collapsed}
+        toggleSidebar={toggleSidebar}
+      />
 
       {/* Main Content Area */}
-      <div className="flex-1 lg:ml-64 flex flex-col min-h-screen w-full lg:w-auto">
+      <div className="flex-1 flex flex-col min-h-screen min-w-0 transition-all duration-300">
         {/* Professional Header */}
-        <header className="bg-white border-b border-gray-200 sticky top-0 z-30 shadow-sm">
-          <div className="px-4 sm:px-6 lg:px-8 py-4 flex items-center justify-between">
+        <header className="bg-white shadow-[0_4px_20px_-4px_rgba(0,0,0,0.05)] border-b border-gray-100 sticky top-0 z-30">
+          <div className="px-6 lg:px-8 py-4 flex items-center justify-between">
             {/* Mobile Menu Button */}
             <button
               id="menu-button"
               onClick={() => setSidebarOpen(!sidebarOpen)}
-              className="lg:hidden p-2 rounded-lg text-gray-600 hover:bg-gray-100 transition-colors mr-3"
+              className="lg:hidden p-2 rounded-xl text-gray-500 hover:bg-gray-100/80 transition-all mr-3"
               aria-label="Toggle menu"
             >
               <span className="material-icons-outlined text-2xl">
@@ -258,44 +284,55 @@ const Layout = ({ children }) => {
               </span>
             </button>
 
+            {/* Desktop Sidebar Toggle */}
+            <button
+              onClick={toggleSidebar}
+              className="hidden lg:flex p-2 rounded-xl text-gray-500 hover:bg-gray-100/80 hover:text-[#2BB673] transition-all mr-3 items-center justify-center"
+              title={collapsed ? "Expand Sidebar" : "Collapse Sidebar"}
+            >
+              <span className={`material-icons-outlined text-2xl transition-transform duration-300 ${collapsed ? 'rotate-180' : ''}`}>
+                menu_open
+              </span>
+            </button>
+
             {/* Breadcrumb & Title */}
-            <div className="flex-1">
-              <div className="flex items-center flex-wrap gap-x-2 text-sm text-gray-500 mb-1">
+            <div className="flex-1 min-w-0">
+              <div className="flex items-center flex-wrap gap-x-2 text-sm text-gray-500 mb-1 font-medium">
                 {pageInfo.breadcrumbs.map((crumb, index) => (
                   <div key={index} className="flex items-center gap-x-2">
                     {index > 0 && <span className="material-icons-outlined text-xs text-gray-400">chevron_right</span>}
                     {crumb.path ? (
                       <button
                         onClick={() => navigate(crumb.path)}
-                        className="hover:text-gray-900 transition-colors"
+                        className="hover:text-[#2BB673] transition-colors duration-200"
                       >
                         {crumb.label}
                       </button>
                     ) : (
-                      <span className={index === pageInfo.breadcrumbs.length - 1 ? 'text-gray-900 font-medium' : ''}>
+                      <span className={index === pageInfo.breadcrumbs.length - 1 ? 'text-[#0B2C4D] font-semibold' : ''}>
                         {crumb.label}
                       </span>
                     )}
                   </div>
                 ))}
               </div>
-              <h2 className="text-xl font-semibold text-gray-900">
+              <h2 className="text-2xl font-bold text-[#0B2C4D] tracking-tight truncate">
                 {pageInfo.title}
               </h2>
             </div>
 
             {/* Right Side Actions */}
-            <div className="flex items-center space-x-4">
+            <div className="flex items-center space-x-2 pl-4">
               {/* Notifications */}
               <div className="relative">
                 <button
                   id="notification-button"
                   onClick={() => setShowNotificationDropdown(!showNotificationDropdown)}
-                  className="relative p-2 text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-lg transition-colors"
+                  className="relative w-10 h-10 flex items-center justify-center text-gray-400 hover:text-[#2BB673] hover:bg-[#2BB673]/5 rounded-xl transition-all duration-200 group"
                 >
-                  <span className="material-icons-outlined">notifications</span>
+                  <span className="material-icons-outlined text-2xl group-hover:scale-110 transition-transform duration-200">notifications</span>
                   {unreadCount > 0 && (
-                    <span className="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full border-2 border-white"></span>
+                    <span className="absolute top-2.5 right-2.5 w-2.5 h-2.5 bg-red-500 rounded-full border-2 border-white ring-1 ring-red-500/20 shadow-sm"></span>
                   )}
                 </button>
 
@@ -303,46 +340,50 @@ const Layout = ({ children }) => {
                 {showNotificationDropdown && (
                   <div
                     id="notification-dropdown"
-                    className="absolute right-0 mt-2 w-80 bg-white rounded-lg shadow-xl border border-gray-200 z-50 max-h-96 overflow-hidden"
+                    className="absolute right-0 mt-3 w-80 sm:w-96 bg-white rounded-2xl shadow-[0_10px_40px_-10px_rgba(0,0,0,0.1)] border border-gray-100 z-50 max-h-[32rem] overflow-hidden animation-fade-in-down"
                   >
-                    <div className="p-4 border-b border-gray-200 flex items-center justify-between">
-                      <h3 className="font-semibold text-gray-900">Notifications</h3>
+                    <div className="p-4 border-b border-gray-50 flex items-center justify-between bg-gray-50/50">
+                      <h3 className="font-bold text-[#0B2C4D]">Notifications</h3>
                       {unreadCount > 0 && (
-                        <span className="text-xs bg-red-100 text-red-700 px-2 py-1 rounded-full font-medium">
+                        <span className="text-xs bg-[#2BB673]/10 text-[#2BB673] px-2.5 py-1 rounded-full font-bold">
                           {unreadCount} new
                         </span>
                       )}
                     </div>
-                    <div className="max-h-80 overflow-y-auto">
+                    <div className="max-h-80 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-200">
                       {notifications.length === 0 ? (
-                        <div className="p-8 text-center">
-                          <span className="material-icons-outlined text-gray-300 text-5xl mb-2 block">notifications_none</span>
-                          <p className="text-gray-500 text-sm">No notifications</p>
+                        <div className="p-12 text-center">
+                          <div className="w-16 h-16 bg-gray-50 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <span className="material-icons-outlined text-gray-300 text-3xl">notifications_none</span>
+                          </div>
+                          <h4 className="text-gray-900 font-medium mb-1">No notifications</h4>
+                          <p className="text-gray-500 text-sm">You are all caught up!</p>
                         </div>
                       ) : (
                         notifications.map((notification) => (
                           <div
                             key={notification._id}
                             onClick={() => handleNotificationClick()}
-                            className={`p-4 border-b border-gray-100 hover:bg-gray-50 cursor-pointer transition-colors ${
-                              !notification.isRead ? 'bg-blue-50' : ''
-                            }`}
+                            className={`p-4 border-b border-gray-50 hover:bg-gray-50/80 cursor-pointer transition-colors ${!notification.isRead ? 'bg-[#2BB673]/5' : ''
+                              }`}
                           >
-                            <div className="flex items-start justify-between">
+                            <div className="flex items-start justify-between gap-3">
                               <div className="flex-1 min-w-0">
-                                <div className="flex items-center space-x-2 mb-1">
-                                  <h4 className="font-semibold text-sm text-gray-900 truncate">{notification.title}</h4>
+                                <div className="flex items-center space-x-2 mb-1.5">
+                                  <h4 className={`text-sm truncate ${!notification.isRead ? 'font-bold text-[#0B2C4D]' : 'font-medium text-gray-700'}`}>
+                                    {notification.title}
+                                  </h4>
                                   {!notification.isRead && (
-                                    <span className="w-2 h-2 bg-blue-600 rounded-full flex-shrink-0"></span>
+                                    <span className="w-2 h-2 bg-[#2BB673] rounded-full flex-shrink-0 shadow-sm shadow-[#2BB673]/50"></span>
                                   )}
                                 </div>
-                                <p className="text-xs text-gray-600 line-clamp-2 mb-2">{notification.message}</p>
-                                <p className="text-xs text-gray-400">{formatTime(notification.createdAt)}</p>
+                                <p className="text-xs text-gray-600 line-clamp-2 mb-2 leading-relaxed">{notification.message}</p>
+                                <p className="text-xs text-gray-400 font-medium">{formatTime(notification.createdAt)}</p>
                               </div>
                               {!notification.isRead && (
                                 <button
                                   onClick={(e) => handleMarkAsRead(notification._id, e)}
-                                  className="ml-2 p-1 text-gray-400 hover:text-blue-600 transition-colors"
+                                  className="p-1.5 text-gray-400 hover:text-[#2BB673] hover:bg-[#2BB673]/10 rounded-full transition-all"
                                   title="Mark as read"
                                 >
                                   <span className="material-icons-outlined text-sm">check_circle</span>
@@ -353,10 +394,10 @@ const Layout = ({ children }) => {
                         ))
                       )}
                     </div>
-                    <div className="p-3 border-t border-gray-200 bg-gray-50">
+                    <div className="p-3 border-t border-gray-50 bg-gray-50/50">
                       <button
                         onClick={handleNotificationClick}
-                        className="w-full text-sm text-blue-600 hover:text-blue-700 font-medium text-center"
+                        className="w-full text-sm text-[#0B2C4D] hover:text-[#2BB673] font-semibold text-center py-2 hover:bg-white rounded-lg transition-all shadow-sm"
                       >
                         View All Notifications
                       </button>
@@ -366,18 +407,24 @@ const Layout = ({ children }) => {
               </div>
 
               {/* Settings */}
-              <button className="p-2 text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-lg transition-colors">
-                <span className="material-icons-outlined">settings</span>
+              <button className="w-10 h-10 flex items-center justify-center text-gray-400 hover:text-[#0B2C4D] hover:bg-[#0B2C4D]/5 rounded-xl transition-all duration-200">
+                <span className="material-icons-outlined text-2xl hover:rotate-90 transition-transform duration-500">settings</span>
               </button>
 
+              <div className="h-8 w-px bg-gray-200 mx-2 lg:mx-3"></div>
+
               {/* User Profile */}
-              <div className="flex items-center space-x-3 pl-4 border-l border-gray-200">
+              <div className="flex items-center gap-3 pl-1 cursor-pointer group rounded-xl p-1 hover:bg-gray-50 transition-colors">
                 <div className="text-right hidden sm:block">
-                  <p className="text-sm font-medium text-gray-900">{admin?.name || 'Admin'}</p>
-                  <p className="text-xs text-gray-500">{admin?.email || 'admin@example.com'}</p>
+                  <p className="text-sm font-bold text-[#0B2C4D] group-hover:text-[#2BB673] transition-colors">{admin?.name || 'Admin'}</p>
+                  <p className="text-xs text-gray-500 font-medium">{admin?.email || 'admin@example.com'}</p>
                 </div>
-                <div className="w-10 h-10 bg-gradient-to-br from-blue-600 to-indigo-600 rounded-lg flex items-center justify-center text-white font-semibold shadow-md">
-                  {admin?.name?.charAt(0)?.toUpperCase() || 'A'}
+                <div className="w-10 h-10 bg-gradient-to-br from-[#0B2C4D] to-[#254f7a] rounded-xl flex items-center justify-center text-white font-bold shadow-md shadow-[#0B2C4D]/20 ring-2 ring-white group-hover:scale-105 transition-transform duration-200 overflow-hidden">
+                  {admin?.profileImage ? (
+                    <img src={admin.profileImage} alt="Profile" className="w-full h-full object-cover" />
+                  ) : (
+                    <span className="text-sm">{admin?.name?.charAt(0)?.toUpperCase() || 'A'}</span>
+                  )}
                 </div>
               </div>
             </div>
@@ -385,7 +432,7 @@ const Layout = ({ children }) => {
         </header>
 
         {/* Main Content */}
-        <main className="flex-1 p-6 lg:p-8">
+        <main className="flex-1 p-6 lg:p-8 overflow-x-hidden">
           {children}
         </main>
       </div>

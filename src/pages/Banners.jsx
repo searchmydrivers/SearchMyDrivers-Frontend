@@ -130,8 +130,8 @@ const Banners = () => {
     }
   };
 
-  const filteredBanners = filterType === 'all' 
-    ? banners 
+  const filteredBanners = filterType === 'all'
+    ? banners
     : banners.filter(b => b.type === filterType);
 
   if (loading) {
@@ -139,7 +139,7 @@ const Banners = () => {
       <Layout>
         <div className="flex items-center justify-center h-64">
           <div className="flex flex-col items-center space-y-4">
-            <div className="w-12 h-12 border-4 border-blue-600 border-t-transparent rounded-full animate-spin"></div>
+            <div className="w-12 h-12 border-4 border-[#2BB673] border-t-transparent rounded-full animate-spin"></div>
             <div className="text-gray-500 font-medium">Loading banners...</div>
           </div>
         </div>
@@ -153,7 +153,7 @@ const Banners = () => {
         <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4">
           <button
             onClick={handleCreate}
-            className="px-4 sm:px-6 py-2.5 sm:py-3 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-lg sm:rounded-xl hover:from-blue-700 hover:to-indigo-700 transition-all duration-200 shadow-lg font-semibold flex items-center justify-center space-x-2 text-sm sm:text-base"
+            className="px-4 sm:px-6 py-2.5 sm:py-3 bg-gradient-to-r from-[#0B2C4D] to-[#254f7a] text-white rounded-lg sm:rounded-xl hover:from-[#091E3A] hover:to-[#1a3a5a] transition-all duration-200 shadow-lg font-semibold flex items-center justify-center space-x-2 text-sm sm:text-base"
           >
             <span className="material-icons-outlined text-lg sm:text-xl">add</span>
             <span>Add New Banner</span>
@@ -178,31 +178,28 @@ const Banners = () => {
         <div className="flex flex-wrap items-center gap-2 sm:gap-2 mb-4 sm:mb-6">
           <button
             onClick={() => setFilterType('all')}
-            className={`px-3 sm:px-4 py-2 rounded-lg font-medium transition-all duration-200 text-xs sm:text-sm ${
-              filterType === 'all'
-                ? 'bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-lg'
+            className={`px-3 sm:px-4 py-2 rounded-lg font-medium transition-all duration-200 text-xs sm:text-sm ${filterType === 'all'
+                ? 'bg-gradient-to-r from-[#0B2C4D] to-[#254f7a] text-white shadow-lg'
                 : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
-            }`}
+              }`}
           >
             All Banners
           </button>
           <button
             onClick={() => setFilterType('user')}
-            className={`px-3 sm:px-4 py-2 rounded-lg font-medium transition-all duration-200 text-xs sm:text-sm ${
-              filterType === 'user'
-                ? 'bg-gradient-to-r from-green-600 to-emerald-600 text-white shadow-lg'
+            className={`px-3 sm:px-4 py-2 rounded-lg font-medium transition-all duration-200 text-xs sm:text-sm ${filterType === 'user'
+                ? 'bg-gradient-to-r from-[#2BB673] to-[#239960] text-white shadow-lg'
                 : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
-            }`}
+              }`}
           >
             User Banners
           </button>
           <button
             onClick={() => setFilterType('driver')}
-            className={`px-3 sm:px-4 py-2 rounded-lg font-medium transition-all duration-200 text-xs sm:text-sm ${
-              filterType === 'driver'
-                ? 'bg-gradient-to-r from-purple-600 to-indigo-600 text-white shadow-lg'
+            className={`px-3 sm:px-4 py-2 rounded-lg font-medium transition-all duration-200 text-xs sm:text-sm ${filterType === 'driver'
+                ? 'bg-gradient-to-r from-[#0B2C4D] to-[#254f7a] text-white shadow-lg'
                 : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
-            }`}
+              }`}
           >
             Driver Banners
           </button>
@@ -226,11 +223,10 @@ const Banners = () => {
                   )}
                   <div className="absolute top-2 right-2">
                     <span
-                      className={`px-3 py-1 text-xs font-semibold rounded-full ${
-                        banner.type === 'user'
-                          ? 'bg-green-100 text-green-800'
-                          : 'bg-purple-100 text-purple-800'
-                      }`}
+                      className={`px-3 py-1 text-xs font-semibold rounded-full ${banner.type === 'user'
+                          ? 'bg-green-100 text-[#2BB673]'
+                          : 'bg-gray-100 text-[#0B2C4D]'
+                        }`}
                     >
                       {banner.type === 'user' ? 'User' : 'Driver'}
                     </span>
@@ -241,11 +237,10 @@ const Banners = () => {
                   <div className="flex items-center justify-between mb-3">
                     <span className="text-sm text-gray-500">Position: {banner.position}</span>
                     <span
-                      className={`px-2 py-1 text-xs font-semibold rounded-full ${
-                        banner.isActive
-                          ? 'bg-green-100 text-green-800'
+                      className={`px-2 py-1 text-xs font-semibold rounded-full ${banner.isActive
+                          ? 'bg-green-100 text-[#2BB673]'
                           : 'bg-gray-100 text-gray-800'
-                      }`}
+                        }`}
                     >
                       {banner.isActive ? 'Active' : 'Inactive'}
                     </span>
@@ -253,7 +248,7 @@ const Banners = () => {
                   <div className="flex space-x-2">
                     <button
                       onClick={() => handleEdit(banner)}
-                      className="flex-1 px-3 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm font-medium flex items-center justify-center space-x-1"
+                      className="flex-1 px-3 py-2 bg-[#0B2C4D] text-white rounded-lg hover:bg-[#091E3A] transition-colors text-sm font-medium flex items-center justify-center space-x-1"
                     >
                       <span className="material-icons-outlined text-base">edit</span>
                       <span>Edit</span>

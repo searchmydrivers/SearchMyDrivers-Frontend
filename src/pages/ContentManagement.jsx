@@ -62,7 +62,7 @@ const ContentManagement = () => {
         await contentService.createOrUpdateContent(formData);
         setSuccess('Content created successfully!');
       }
-      
+
       await fetchContents();
       setTimeout(() => {
         handleCancel();
@@ -99,7 +99,7 @@ const ContentManagement = () => {
       <Layout>
         <div className="flex items-center justify-center h-64">
           <div className="flex flex-col items-center space-y-4">
-            <div className="w-12 h-12 border-4 border-blue-600 border-t-transparent rounded-full animate-spin"></div>
+            <div className="w-12 h-12 border-4 border-[#2BB673] border-t-transparent rounded-full animate-spin"></div>
             <div className="text-gray-500 font-medium">Loading content...</div>
           </div>
         </div>
@@ -114,7 +114,7 @@ const ContentManagement = () => {
           {!editingContent && (
             <button
               onClick={() => setEditingContent({ type: '', title: '', content: '' })}
-              className="px-4 sm:px-6 py-2.5 sm:py-3 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-lg sm:rounded-xl hover:from-blue-700 hover:to-indigo-700 transition-all duration-200 shadow-lg font-semibold flex items-center justify-center space-x-2 text-sm sm:text-base"
+              className="px-4 sm:px-6 py-2.5 sm:py-3 bg-gradient-to-r from-[#0B2C4D] to-[#254f7a] text-white rounded-lg sm:rounded-xl hover:from-[#091E3A] hover:to-[#1a3a5a] transition-all duration-200 shadow-lg font-semibold flex items-center justify-center space-x-2 text-sm sm:text-base"
             >
               <span className="material-icons-outlined text-lg sm:text-xl">add</span>
               <span>Add New Content</span>
@@ -139,7 +139,7 @@ const ContentManagement = () => {
         {editingContent && (
           <div className="bg-white rounded-xl sm:rounded-2xl shadow-sm border border-gray-200 p-4 sm:p-6 mb-6 animate-fade-in" style={{ animationDelay: '100ms' }}>
             <h2 className="text-xl sm:text-2xl font-bold text-gray-900 mb-4 sm:mb-6 flex items-center">
-              <span className="material-icons-outlined text-xl mr-2 text-blue-600">edit</span>
+              <span className="material-icons-outlined text-xl mr-2 text-[#0B2C4D]">edit</span>
               {editingContent._id ? 'Edit Content' : 'Create New Content'}
             </h2>
             <form onSubmit={handleSubmit} className="space-y-4">
@@ -148,7 +148,7 @@ const ContentManagement = () => {
                 <select
                   value={formData.type}
                   onChange={(e) => setFormData({ ...formData, type: e.target.value })}
-                  className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#0B2C4D]/20 focus:border-[#0B2C4D]"
                   required
                   disabled={!!editingContent._id}
                 >
@@ -167,7 +167,7 @@ const ContentManagement = () => {
                   type="text"
                   value={formData.title}
                   onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-                  className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#0B2C4D]/20 focus:border-[#0B2C4D]"
                   required
                   placeholder="Enter title"
                 />
@@ -178,7 +178,7 @@ const ContentManagement = () => {
                 <textarea
                   value={formData.content}
                   onChange={(e) => setFormData({ ...formData, content: e.target.value })}
-                  className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#0B2C4D]/20 focus:border-[#0B2C4D]"
                   rows="15"
                   required
                   placeholder="Enter content (supports markdown)"
@@ -186,16 +186,16 @@ const ContentManagement = () => {
               </div>
 
               <div className="flex gap-4">
-                <button 
-                  type="submit" 
-                  className="px-6 py-2.5 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-lg hover:from-blue-700 hover:to-indigo-700 transition-all duration-200 shadow-lg font-semibold flex items-center space-x-2"
+                <button
+                  type="submit"
+                  className="px-6 py-2.5 bg-gradient-to-r from-[#0B2C4D] to-[#254f7a] text-white rounded-lg hover:from-[#091E3A] hover:to-[#1a3a5a] transition-all duration-200 shadow-lg font-semibold flex items-center space-x-2"
                 >
                   <span className="material-icons-outlined text-lg">{editingContent._id ? 'save' : 'add'}</span>
                   <span>{editingContent._id ? 'Update Content' : 'Create Content'}</span>
                 </button>
-                <button 
-                  type="button" 
-                  onClick={handleCancel} 
+                <button
+                  type="button"
+                  onClick={handleCancel}
                   className="px-6 py-2.5 bg-white text-gray-700 border border-gray-300 rounded-lg hover:bg-gray-50 transition-all duration-200 font-semibold"
                 >
                   Cancel
@@ -207,7 +207,7 @@ const ContentManagement = () => {
 
         <div className="bg-white rounded-xl sm:rounded-2xl shadow-sm border border-gray-200 p-4 sm:p-6 animate-fade-in" style={{ animationDelay: '200ms' }}>
           <h2 className="text-xl sm:text-2xl font-bold text-gray-900 mb-4 sm:mb-6 flex items-center">
-            <span className="material-icons-outlined text-xl mr-2 text-indigo-600">description</span>
+            <span className="material-icons-outlined text-xl mr-2 text-[#0B2C4D]">description</span>
             All Content Pages
           </h2>
           {contents.length === 0 ? (
@@ -230,11 +230,10 @@ const ContentManagement = () => {
                           {contentTypes[content.type] || content.type}
                         </h3>
                         <span
-                          className={`px-2 py-1 text-xs rounded-full ${
-                            content.isActive
+                          className={`px-2 py-1 text-xs rounded-full ${content.isActive
                               ? 'bg-green-100 text-green-800'
                               : 'bg-red-100 text-red-800'
-                          }`}
+                            }`}
                         >
                           {content.isActive ? 'Active' : 'Inactive'}
                         </span>
@@ -250,7 +249,7 @@ const ContentManagement = () => {
                     <div className="flex gap-2 ml-4">
                       <button
                         onClick={() => handleEdit(content)}
-                        className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm font-medium flex items-center space-x-1"
+                        className="px-4 py-2 bg-[#0B2C4D] text-white rounded-lg hover:bg-[#091E3A] transition-colors text-sm font-medium flex items-center space-x-1"
                       >
                         <span className="material-icons-outlined text-base">edit</span>
                         <span>Edit</span>
@@ -277,4 +276,3 @@ const ContentManagement = () => {
 };
 
 export default ContentManagement;
-

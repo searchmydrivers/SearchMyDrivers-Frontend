@@ -111,7 +111,7 @@ const Fare = () => {
       <Layout>
         <div className="flex items-center justify-center h-64">
           <div className="flex flex-col items-center space-y-4">
-            <div className="w-12 h-12 border-4 border-blue-600 border-t-transparent rounded-full animate-spin"></div>
+            <div className="w-12 h-12 border-4 border-[#2BB673] border-t-transparent rounded-full animate-spin"></div>
             <div className="text-gray-500 font-medium">Loading fare settings...</div>
           </div>
         </div>
@@ -123,7 +123,7 @@ const Fare = () => {
     <Layout>
       <div className="space-y-4 sm:space-y-6 animate-fade-in">
         <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4">
-          
+
           {!editing && (
             <button
               onClick={() => {
@@ -131,7 +131,7 @@ const Fare = () => {
                 setError('');
                 setSuccess('');
               }}
-              className="px-4 sm:px-6 py-2.5 sm:py-3 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-lg sm:rounded-xl hover:from-blue-700 hover:to-indigo-700 transition-all duration-200 shadow-lg font-semibold flex items-center justify-center space-x-2 text-sm sm:text-base"
+              className="px-4 sm:px-6 py-2.5 sm:py-3 bg-gradient-to-r from-[#0B2C4D] to-[#254f7a] text-white rounded-lg sm:rounded-xl hover:from-[#091E3A] hover:to-[#1a3a5a] transition-all duration-200 shadow-lg font-semibold flex items-center justify-center space-x-2 text-sm sm:text-base"
             >
               <span className="material-icons-outlined text-lg sm:text-xl">edit</span>
               <span>Edit Settings</span>
@@ -148,11 +148,10 @@ const Fare = () => {
               setError('');
               setSuccess('');
             }}
-            className={`px-4 sm:px-6 py-2 sm:py-2.5 rounded-lg sm:rounded-xl font-semibold transition-all duration-300 text-sm sm:text-base flex items-center space-x-2 ${
-              activeModule === 'incity'
-                ? 'bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-lg'
+            className={`px-4 sm:px-6 py-2 sm:py-2.5 rounded-lg sm:rounded-xl font-semibold transition-all duration-300 text-sm sm:text-base flex items-center space-x-2 ${activeModule === 'incity'
+                ? 'bg-gradient-to-r from-[#0B2C4D] to-[#254f7a] text-white shadow-lg'
                 : 'bg-white text-gray-700 hover:bg-gray-50 border border-gray-300'
-            }`}
+              }`}
           >
             <span className="material-icons-outlined text-lg">location_on</span>
             <span>InCity</span>
@@ -164,11 +163,10 @@ const Fare = () => {
               setError('');
               setSuccess('');
             }}
-            className={`px-4 sm:px-6 py-2 sm:py-2.5 rounded-lg sm:rounded-xl font-semibold transition-all duration-300 text-sm sm:text-base flex items-center space-x-2 ${
-              activeModule === 'outstation'
-                ? 'bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-lg'
+            className={`px-4 sm:px-6 py-2 sm:py-2.5 rounded-lg sm:rounded-xl font-semibold transition-all duration-300 text-sm sm:text-base flex items-center space-x-2 ${activeModule === 'outstation'
+                ? 'bg-gradient-to-r from-[#0B2C4D] to-[#254f7a] text-white shadow-lg'
                 : 'bg-white text-gray-700 hover:bg-gray-50 border border-gray-300'
-            }`}
+              }`}
           >
             <span className="material-icons-outlined text-lg">flight_takeoff</span>
             <span>Outstation</span>
@@ -193,7 +191,7 @@ const Fare = () => {
           {/* Fare Settings */}
           <div className="bg-white rounded-xl sm:rounded-2xl shadow-sm border border-gray-200 p-4 sm:p-6 animate-fade-in" style={{ animationDelay: '100ms' }}>
             <h2 className="text-lg sm:text-xl font-bold text-gray-900 mb-4 sm:mb-6 flex items-center">
-              <span className="material-icons-outlined text-xl mr-2 text-blue-600">attach_money</span>
+              <span className="material-icons-outlined text-xl mr-2 text-[#0B2C4D]">attach_money</span>
               Fare Settings - {activeModule === 'incity' ? 'InCity' : 'Outstation'}
             </h2>
             {editing ? (
@@ -210,7 +208,7 @@ const Fare = () => {
                         onChange={(e) =>
                           setFareSettings({ ...fareSettings, basePrice: parseFloat(e.target.value) })
                         }
-                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#0B2C4D]/20 focus:border-[#0B2C4D]"
                         required
                       />
                       <p className="text-xs text-gray-500 mt-1">
@@ -228,7 +226,7 @@ const Fare = () => {
                         onChange={(e) =>
                           setFareSettings({ ...fareSettings, perKmRate: parseFloat(e.target.value) })
                         }
-                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#0B2C4D]/20 focus:border-[#0B2C4D]"
                         required
                       />
                       <p className="text-xs text-gray-500 mt-1">
@@ -248,7 +246,7 @@ const Fare = () => {
                         onChange={(e) =>
                           setFareSettings({ ...fareSettings, outstationBasePrice24Hrs: parseFloat(e.target.value) })
                         }
-                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#0B2C4D]/20 focus:border-[#0B2C4D]"
                         required
                       />
                       <p className="text-xs text-gray-500 mt-1">
@@ -266,7 +264,7 @@ const Fare = () => {
                         onChange={(e) =>
                           setFareSettings({ ...fareSettings, perKmRate: parseFloat(e.target.value) })
                         }
-                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#0B2C4D]/20 focus:border-[#0B2C4D]"
                         required
                       />
                       <p className="text-xs text-gray-500 mt-1">
@@ -286,7 +284,7 @@ const Fare = () => {
                     onChange={(e) =>
                       setFareSettings({ ...fareSettings, perMinuteRate: parseFloat(e.target.value) })
                     }
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#0B2C4D]/20 focus:border-[#0B2C4D]"
                     required
                   />
                   <p className="text-xs text-gray-500 mt-1">
@@ -304,7 +302,7 @@ const Fare = () => {
                     onChange={(e) =>
                       setFareSettings({ ...fareSettings, waitingTimePerMinute: parseFloat(e.target.value) })
                     }
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#0B2C4D]/20 focus:border-[#0B2C4D]"
                     required
                     min="0"
                   />
@@ -325,7 +323,7 @@ const Fare = () => {
                         [activeModule === 'incity' ? 'nightCharge' : 'outstationNightCharge']: parseFloat(e.target.value),
                       })
                     }
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#0B2C4D]/20 focus:border-[#0B2C4D]"
                     required
                     min="0"
                   />
@@ -344,7 +342,7 @@ const Fare = () => {
                       onChange={(e) =>
                         setFareSettings({ ...fareSettings, nightStartHour: parseInt(e.target.value, 10) })
                       }
-                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#0B2C4D]/20 focus:border-[#0B2C4D]"
                       required
                       min="0"
                       max="23"
@@ -363,7 +361,7 @@ const Fare = () => {
                       onChange={(e) =>
                         setFareSettings({ ...fareSettings, nightEndHour: parseInt(e.target.value, 10) })
                       }
-                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#0B2C4D]/20 focus:border-[#0B2C4D]"
                       required
                       min="0"
                       max="23"
@@ -383,7 +381,7 @@ const Fare = () => {
                     onChange={(e) =>
                       setFareSettings({ ...fareSettings, cancellationPenaltyAmount: parseFloat(e.target.value) })
                     }
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#0B2C4D]/20 focus:border-[#0B2C4D]"
                     required
                     min="0"
                   />
@@ -395,7 +393,7 @@ const Fare = () => {
                   <button
                     type="submit"
                     disabled={saving}
-                    className="flex-1 px-4 py-2 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-lg hover:from-blue-700 hover:to-indigo-700 transition-all duration-200 font-medium disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center space-x-2"
+                    className="flex-1 px-4 py-2 bg-gradient-to-r from-[#0B2C4D] to-[#254f7a] text-white rounded-lg hover:from-[#091E3A] hover:to-[#1a3a5a] transition-all duration-200 font-medium disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center space-x-2"
                   >
                     {saving ? (
                       <>
@@ -538,7 +536,7 @@ const Fare = () => {
                     onChange={(e) =>
                       setFareSettings({ ...fareSettings, adminCommissionPercentage: parseFloat(e.target.value) })
                     }
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#0B2C4D]/20 focus:border-[#0B2C4D]"
                     required
                     min="0"
                     max="100"
@@ -547,7 +545,7 @@ const Fare = () => {
                     Commission percentage deducted from each trip
                   </p>
                 </div>
-                <div className="mt-6 p-4 bg-blue-50 rounded-lg">
+                <div className="mt-6 p-4 bg-green-50 rounded-lg">
                   <p className="text-sm text-gray-600">
                     <strong>Example Calculation:</strong>
                   </p>
@@ -573,7 +571,7 @@ const Fare = () => {
                     Commission percentage deducted from each trip
                   </p>
                 </div>
-                <div className="mt-6 p-4 bg-blue-50 rounded-lg">
+                <div className="mt-6 p-4 bg-green-50 rounded-lg">
                   <p className="text-sm text-gray-600 mb-2">
                     <strong>Commission Calculation:</strong>
                   </p>

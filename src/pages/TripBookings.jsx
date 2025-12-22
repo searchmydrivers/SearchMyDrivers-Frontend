@@ -64,17 +64,17 @@ const TripBookings = () => {
   const getStatusBadge = (status) => {
     const statusConfig = {
       pending: { bg: 'bg-yellow-100', text: 'text-yellow-800', label: 'Pending' },
-      'driver-assigned': { bg: 'bg-blue-100', text: 'text-blue-800', label: 'Driver Assigned' },
+      'driver-assigned': { bg: 'bg-[#0B2C4D]/10', text: 'text-[#0B2C4D]', label: 'Driver Assigned' },
       'pin-verified': { bg: 'bg-indigo-100', text: 'text-indigo-800', label: 'PIN Verified' },
       'in-progress': { bg: 'bg-purple-100', text: 'text-purple-800', label: 'In Progress' },
-      completed: { bg: 'bg-green-100', text: 'text-green-800', label: 'Completed' },
+      completed: { bg: 'bg-[#2BB673]/10', text: 'text-[#2BB673]', label: 'Completed' },
       cancelled: { bg: 'bg-red-100', text: 'text-red-800', label: 'Cancelled' },
       'payment-pending': { bg: 'bg-orange-100', text: 'text-orange-800', label: 'Payment Pending' },
-      'payment-completed': { bg: 'bg-green-100', text: 'text-green-800', label: 'Payment Completed' },
+      'payment-completed': { bg: 'bg-[#2BB673]/20', text: 'text-[#2BB673]', label: 'Payment Completed' },
     };
     const config = statusConfig[status] || { bg: 'bg-gray-100', text: 'text-gray-800', label: status || 'Unknown' };
     return (
-      <span className={`px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${config.bg} ${config.text}`}>
+      <span className={`px-3 py-1 inline-flex text-xs leading-5 font-bold rounded-full ${config.bg} ${config.text}`}>
         {config.label}
       </span>
     );
@@ -117,7 +117,7 @@ const TripBookings = () => {
       <Layout>
         <div className="flex items-center justify-center h-64">
           <div className="flex flex-col items-center space-y-4">
-            <div className="w-12 h-12 border-4 border-blue-600 border-t-transparent rounded-full animate-spin"></div>
+            <div className="w-12 h-12 border-4 border-[#2BB673] border-t-transparent rounded-full animate-spin"></div>
             <div className="text-gray-500 font-medium">Loading trips...</div>
           </div>
         </div>
@@ -147,103 +147,97 @@ const TripBookings = () => {
             </button>
           </div>
         )}
-       
+
 
         {/* Filters */}
         <div className="flex flex-wrap items-center gap-2">
-            <button
-              onClick={() => handleFilterChange('all')}
-              className={`px-3 sm:px-4 py-2 sm:py-2.5 rounded-lg sm:rounded-xl font-semibold transition-all duration-300 text-xs sm:text-sm ${
-                filter === 'all'
-                  ? 'bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-lg'
-                  : 'bg-white text-gray-700 hover:bg-gray-50 border border-gray-300'
+          <button
+            onClick={() => handleFilterChange('all')}
+            className={`px-3 sm:px-4 py-2 sm:py-2.5 rounded-lg sm:rounded-xl font-semibold transition-all duration-300 text-xs sm:text-sm ${filter === 'all'
+                ? 'bg-gradient-to-r from-[#0B2C4D] to-[#254f7a] text-white shadow-lg'
+                : 'bg-white text-gray-700 hover:bg-gray-50 border border-gray-300'
               }`}
-            >
-              All
-            </button>
-            <button
-              onClick={() => handleFilterChange('pending')}
-              className={`px-3 sm:px-4 py-2 sm:py-2.5 rounded-lg sm:rounded-xl font-semibold transition-all duration-300 text-xs sm:text-sm ${
-                filter === 'pending'
-                  ? 'bg-gradient-to-r from-yellow-500 to-yellow-600 text-white shadow-lg'
-                  : 'bg-white text-gray-700 hover:bg-gray-50 border border-gray-300'
+          >
+            All
+          </button>
+          <button
+            onClick={() => handleFilterChange('pending')}
+            className={`px-3 sm:px-4 py-2 sm:py-2.5 rounded-lg sm:rounded-xl font-semibold transition-all duration-300 text-xs sm:text-sm ${filter === 'pending'
+                ? 'bg-gradient-to-r from-yellow-500 to-yellow-600 text-white shadow-lg'
+                : 'bg-white text-gray-700 hover:bg-gray-50 border border-gray-300'
               }`}
-            >
-              Pending
-            </button>
-            <button
-              onClick={() => handleFilterChange('driver-assigned')}
-              className={`px-3 sm:px-4 py-2 sm:py-2.5 rounded-lg sm:rounded-xl font-semibold transition-all duration-300 text-xs sm:text-sm ${
-                filter === 'driver-assigned'
-                  ? 'bg-gradient-to-r from-blue-500 to-blue-600 text-white shadow-lg'
-                  : 'bg-white text-gray-700 hover:bg-gray-50 border border-gray-300'
+          >
+            Pending
+          </button>
+          <button
+            onClick={() => handleFilterChange('driver-assigned')}
+            className={`px-3 sm:px-4 py-2 sm:py-2.5 rounded-lg sm:rounded-xl font-semibold transition-all duration-300 text-xs sm:text-sm ${filter === 'driver-assigned'
+                ? 'bg-gradient-to-r from-[#0B2C4D] to-blue-600 text-white shadow-lg'
+                : 'bg-white text-gray-700 hover:bg-gray-50 border border-gray-300'
               }`}
-            >
-              Driver Assigned
-            </button>
-            <button
-              onClick={() => handleFilterChange('in-progress')}
-              className={`px-3 sm:px-4 py-2 sm:py-2.5 rounded-lg sm:rounded-xl font-semibold transition-all duration-300 text-xs sm:text-sm ${
-                filter === 'in-progress'
-                  ? 'bg-gradient-to-r from-purple-500 to-purple-600 text-white shadow-lg'
-                  : 'bg-white text-gray-700 hover:bg-gray-50 border border-gray-300'
+          >
+            Driver Assigned
+          </button>
+          <button
+            onClick={() => handleFilterChange('in-progress')}
+            className={`px-3 sm:px-4 py-2 sm:py-2.5 rounded-lg sm:rounded-xl font-semibold transition-all duration-300 text-xs sm:text-sm ${filter === 'in-progress'
+                ? 'bg-gradient-to-r from-purple-500 to-purple-600 text-white shadow-lg'
+                : 'bg-white text-gray-700 hover:bg-gray-50 border border-gray-300'
               }`}
-            >
-              In Progress
-            </button>
-            <button
-              onClick={() => handleFilterChange('completed')}
-              className={`px-3 sm:px-4 py-2 sm:py-2.5 rounded-lg sm:rounded-xl font-semibold transition-all duration-300 text-xs sm:text-sm ${
-                filter === 'completed'
-                  ? 'bg-gradient-to-r from-green-500 to-green-600 text-white shadow-lg'
-                  : 'bg-white text-gray-700 hover:bg-gray-50 border border-gray-300'
+          >
+            In Progress
+          </button>
+          <button
+            onClick={() => handleFilterChange('completed')}
+            className={`px-3 sm:px-4 py-2 sm:py-2.5 rounded-lg sm:rounded-xl font-semibold transition-all duration-300 text-xs sm:text-sm ${filter === 'completed'
+                ? 'bg-gradient-to-r from-[#2BB673] to-[#239960] text-white shadow-lg'
+                : 'bg-white text-gray-700 hover:bg-gray-50 border border-gray-300'
               }`}
-            >
-              Completed
-            </button>
-            <button
-              onClick={() => handleFilterChange('cancelled')}
-              className={`px-3 sm:px-4 py-2 sm:py-2.5 rounded-lg sm:rounded-xl font-semibold transition-all duration-300 text-xs sm:text-sm ${
-                filter === 'cancelled'
-                  ? 'bg-gradient-to-r from-red-500 to-red-600 text-white shadow-lg'
-                  : 'bg-white text-gray-700 hover:bg-gray-50 border border-gray-300'
+          >
+            Completed
+          </button>
+          <button
+            onClick={() => handleFilterChange('cancelled')}
+            className={`px-3 sm:px-4 py-2 sm:py-2.5 rounded-lg sm:rounded-xl font-semibold transition-all duration-300 text-xs sm:text-sm ${filter === 'cancelled'
+                ? 'bg-gradient-to-r from-red-500 to-red-600 text-white shadow-lg'
+                : 'bg-white text-gray-700 hover:bg-gray-50 border border-gray-300'
               }`}
-            >
-              Cancelled
-            </button>
+          >
+            Cancelled
+          </button>
         </div>
 
         {/* Desktop Table View */}
         <div className="hidden lg:block bg-white rounded-xl sm:rounded-2xl shadow-sm border border-gray-200 overflow-hidden animate-fade-in" style={{ animationDelay: '100ms' }}>
           <div className="overflow-x-auto">
             <table className="min-w-full divide-y divide-gray-200">
-              <thead className="bg-gradient-to-r from-gray-50 to-gray-100">
+              <thead className="bg-[#0B2C4D]">
                 <tr>
-                  <th className="px-6 py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">
+                  <th className="px-6 py-4 text-left text-xs font-bold text-white uppercase tracking-wider">
                     Trip ID
                   </th>
-                  <th className="px-6 py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">
+                  <th className="px-6 py-4 text-left text-xs font-bold text-white uppercase tracking-wider">
                     User
                   </th>
-                  <th className="px-6 py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">
+                  <th className="px-6 py-4 text-left text-xs font-bold text-white uppercase tracking-wider">
                     Driver
                   </th>
-                  <th className="px-6 py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">
+                  <th className="px-6 py-4 text-left text-xs font-bold text-white uppercase tracking-wider">
                     Route
                   </th>
-                  <th className="px-6 py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">
+                  <th className="px-6 py-4 text-left text-xs font-bold text-white uppercase tracking-wider">
                     Module/Type
                   </th>
-                  <th className="px-6 py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">
+                  <th className="px-6 py-4 text-left text-xs font-bold text-white uppercase tracking-wider">
                     Amount
                   </th>
-                  <th className="px-6 py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">
+                  <th className="px-6 py-4 text-left text-xs font-bold text-white uppercase tracking-wider">
                     Status
                   </th>
-                  <th className="px-6 py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">
+                  <th className="px-6 py-4 text-left text-xs font-bold text-white uppercase tracking-wider">
                     Date
                   </th>
-                  <th className="px-6 py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">
+                  <th className="px-6 py-4 text-left text-xs font-bold text-white uppercase tracking-wider">
                     Actions
                   </th>
                 </tr>
@@ -261,7 +255,7 @@ const TripBookings = () => {
                 ) : (
                   trips.map((trip, index) => (
                     <tr key={trip._id} className="hover:bg-gray-50 transition-colors duration-200 animate-fade-in" style={{ animationDelay: `${index * 30}ms` }}>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                      <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-[rgb(11,44,77)]">
                         #{trip._id?.slice(-6) || 'N/A'}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
@@ -285,7 +279,7 @@ const TripBookings = () => {
                         </div>
                         {trip.cancellationPenalty?.penaltyApplied && (
                           <div className="text-xs text-red-600 mt-1">
-                            Penalty: ₹{trip.cancellationPenalty.userPenaltyAmount > 0 
+                            Penalty: ₹{trip.cancellationPenalty.userPenaltyAmount > 0
                               ? trip.cancellationPenalty.userPenaltyAmount.toFixed(2)
                               : trip.cancellationPenalty.driverPenaltyAmount > 0
                                 ? trip.cancellationPenalty.driverPenaltyAmount.toFixed(2)
@@ -295,10 +289,10 @@ const TripBookings = () => {
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm font-semibold text-gray-900">
                         <div>
-                          ₹{trip.fareDetails?.totalAmount > 0 
-                            ? trip.fareDetails.totalAmount.toFixed(2) 
-                            : trip.totalEstimatedFare 
-                              ? trip.totalEstimatedFare.toFixed(2) 
+                          ₹{trip.fareDetails?.totalAmount > 0
+                            ? trip.fareDetails.totalAmount.toFixed(2)
+                            : trip.totalEstimatedFare
+                              ? trip.totalEstimatedFare.toFixed(2)
                               : '0.00'}
                         </div>
                         {trip.fareDetails?.totalAmount > 0 && (
@@ -317,7 +311,7 @@ const TripBookings = () => {
                       <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
                         <button
                           onClick={() => handleViewTrip(trip._id)}
-                          className="text-blue-600 hover:text-blue-900 mr-3 font-semibold"
+                          className="text-[#0B2C4D] hover:text-[#254f7a] mr-3 font-semibold"
                         >
                           View
                         </button>
@@ -390,10 +384,10 @@ const TripBookings = () => {
                   <div>
                     <span className="font-medium text-gray-700">Amount: </span>
                     <span className="text-gray-900 font-semibold">
-                      ₹{trip.fareDetails?.totalAmount > 0 
-                        ? trip.fareDetails.totalAmount.toFixed(2) 
-                        : trip.totalEstimatedFare 
-                          ? trip.totalEstimatedFare.toFixed(2) 
+                      ₹{trip.fareDetails?.totalAmount > 0
+                        ? trip.fareDetails.totalAmount.toFixed(2)
+                        : trip.totalEstimatedFare
+                          ? trip.totalEstimatedFare.toFixed(2)
                           : '0.00'}
                     </span>
                     {trip.fareDetails?.totalAmount > 0 && (
@@ -407,7 +401,7 @@ const TripBookings = () => {
                     <div>
                       <span className="font-medium text-red-700">Penalty: </span>
                       <span className="text-red-900 font-semibold">
-                        ₹{trip.cancellationPenalty.userPenaltyAmount > 0 
+                        ₹{trip.cancellationPenalty.userPenaltyAmount > 0
                           ? trip.cancellationPenalty.userPenaltyAmount.toFixed(2)
                           : trip.cancellationPenalty.driverPenaltyAmount > 0
                             ? trip.cancellationPenalty.driverPenaltyAmount.toFixed(2)
@@ -422,7 +416,7 @@ const TripBookings = () => {
                 <div className="flex items-center justify-between pt-3 border-t border-gray-100">
                   <button
                     onClick={() => handleViewTrip(trip._id)}
-                    className="text-blue-600 hover:text-blue-900 font-semibold text-xs sm:text-sm"
+                    className="text-[#0B2C4D] hover:text-[#254f7a] font-semibold text-xs sm:text-sm"
                   >
                     View
                   </button>
@@ -451,11 +445,10 @@ const TripBookings = () => {
               <button
                 onClick={() => handlePageChange(pagination.page - 1)}
                 disabled={pagination.page === 1}
-                className={`px-3 sm:px-4 py-2 rounded-lg font-semibold transition-all duration-300 text-xs sm:text-sm flex items-center space-x-1 ${
-                  pagination.page === 1
+                className={`px-3 sm:px-4 py-2 rounded-lg font-semibold transition-all duration-300 text-xs sm:text-sm flex items-center space-x-1 ${pagination.page === 1
                     ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
                     : 'bg-white text-gray-700 hover:bg-gray-50 border border-gray-300'
-                }`}
+                  }`}
               >
                 <span className="material-icons-outlined text-base sm:text-lg">chevron_left</span>
                 <span className="hidden sm:inline">Previous</span>
@@ -476,11 +469,10 @@ const TripBookings = () => {
                     <button
                       key={pageNum}
                       onClick={() => handlePageChange(pageNum)}
-                      className={`px-3 sm:px-4 py-2 rounded-lg font-semibold transition-all duration-300 text-xs sm:text-sm ${
-                        pagination.page === pageNum
-                          ? 'bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-lg'
+                      className={`px-3 sm:px-4 py-2 rounded-lg font-semibold transition-all duration-300 text-xs sm:text-sm ${pagination.page === pageNum
+                          ? 'bg-gradient-to-r from-[#0B2C4D] to-[#254f7a] text-white shadow-lg'
                           : 'bg-white text-gray-700 hover:bg-gray-50 border border-gray-300'
-                      }`}
+                        }`}
                     >
                       {pageNum}
                     </button>
@@ -490,11 +482,10 @@ const TripBookings = () => {
               <button
                 onClick={() => handlePageChange(pagination.page + 1)}
                 disabled={pagination.page === pagination.totalPages}
-                className={`px-3 sm:px-4 py-2 rounded-lg font-semibold transition-all duration-300 text-xs sm:text-sm flex items-center space-x-1 ${
-                  pagination.page === pagination.totalPages
+                className={`px-3 sm:px-4 py-2 rounded-lg font-semibold transition-all duration-300 text-xs sm:text-sm flex items-center space-x-1 ${pagination.page === pagination.totalPages
                     ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
                     : 'bg-white text-gray-700 hover:bg-gray-50 border border-gray-300'
-                }`}
+                  }`}
               >
                 <span className="hidden sm:inline">Next</span>
                 <span className="material-icons-outlined text-base sm:text-lg">chevron_right</span>

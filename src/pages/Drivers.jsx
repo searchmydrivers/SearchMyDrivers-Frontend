@@ -95,7 +95,7 @@ const Drivers = () => {
       <Layout>
         <div className="flex items-center justify-center h-64">
           <div className="flex flex-col items-center space-y-4">
-            <div className="w-12 h-12 border-4 border-blue-600 border-t-transparent rounded-full animate-spin"></div>
+            <div className="w-12 h-12 border-4 border-[#2BB673] border-t-transparent rounded-full animate-spin"></div>
             <div className="text-gray-500 font-medium">Loading drivers...</div>
           </div>
         </div>
@@ -107,7 +107,7 @@ const Drivers = () => {
     <Layout>
       <div className="space-y-4 sm:space-y-6 animate-fade-in">
         {/* Header */}
-        
+
 
         {/* Search and Filters */}
         <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
@@ -117,58 +117,53 @@ const Drivers = () => {
               placeholder="Search by name, email, or phone..."
               value={searchTerm}
               onChange={handleSearch}
-              className="pl-10 sm:pl-12 pr-4 py-2 sm:py-2.5 border border-gray-300 rounded-lg sm:rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent w-full text-sm"
+              className="pl-10 sm:pl-12 pr-4 py-2 sm:py-2.5 border border-gray-300 rounded-lg sm:rounded-xl focus:ring-2 focus:ring-[#0B2C4D]/20 focus:border-[#0B2C4D] w-full text-sm"
             />
             <span className="material-icons-outlined absolute left-3 sm:left-4 top-1/2 transform -translate-y-1/2 text-gray-400 text-lg sm:text-xl">search</span>
           </div>
           <div className="flex flex-wrap items-center gap-2">
             <button
               onClick={() => handleStatusFilter('all')}
-              className={`px-3 sm:px-4 py-2 sm:py-2.5 rounded-lg sm:rounded-xl font-semibold transition-all duration-300 text-xs sm:text-sm ${
-                statusFilter === 'all'
-                  ? 'bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-lg'
+              className={`px-3 sm:px-4 py-2 sm:py-2.5 rounded-lg sm:rounded-xl font-semibold transition-all duration-300 text-xs sm:text-sm ${statusFilter === 'all'
+                  ? 'bg-gradient-to-r from-[#0B2C4D] to-[#254f7a] text-white shadow-lg'
                   : 'bg-white text-gray-700 hover:bg-gray-50 border border-gray-300'
-              }`}
+                }`}
             >
               All
             </button>
             <button
               onClick={() => handleStatusFilter('pending')}
-              className={`px-3 sm:px-4 py-2 sm:py-2.5 rounded-lg sm:rounded-xl font-semibold transition-all duration-300 text-xs sm:text-sm ${
-                statusFilter === 'pending'
+              className={`px-3 sm:px-4 py-2 sm:py-2.5 rounded-lg sm:rounded-xl font-semibold transition-all duration-300 text-xs sm:text-sm ${statusFilter === 'pending'
                   ? 'bg-gradient-to-r from-yellow-500 to-yellow-600 text-white shadow-lg'
                   : 'bg-white text-gray-700 hover:bg-gray-50 border border-gray-300'
-              }`}
+                }`}
             >
               Pending
             </button>
             <button
               onClick={() => handleStatusFilter('verified')}
-              className={`px-3 sm:px-4 py-2 sm:py-2.5 rounded-lg sm:rounded-xl font-semibold transition-all duration-300 text-xs sm:text-sm ${
-                statusFilter === 'verified'
-                  ? 'bg-gradient-to-r from-green-500 to-green-600 text-white shadow-lg'
+              className={`px-3 sm:px-4 py-2 sm:py-2.5 rounded-lg sm:rounded-xl font-semibold transition-all duration-300 text-xs sm:text-sm ${statusFilter === 'verified'
+                  ? 'bg-gradient-to-r from-[#2BB673] to-[#239960] text-white shadow-lg'
                   : 'bg-white text-gray-700 hover:bg-gray-50 border border-gray-300'
-              }`}
+                }`}
             >
               Verified
             </button>
             <button
               onClick={() => handleStatusFilter('rejected')}
-              className={`px-3 sm:px-4 py-2 sm:py-2.5 rounded-lg sm:rounded-xl font-semibold transition-all duration-300 text-xs sm:text-sm ${
-                statusFilter === 'rejected'
+              className={`px-3 sm:px-4 py-2 sm:py-2.5 rounded-lg sm:rounded-xl font-semibold transition-all duration-300 text-xs sm:text-sm ${statusFilter === 'rejected'
                   ? 'bg-gradient-to-r from-red-500 to-red-600 text-white shadow-lg'
                   : 'bg-white text-gray-700 hover:bg-gray-50 border border-gray-300'
-              }`}
+                }`}
             >
               Rejected
             </button>
             <button
               onClick={() => handleStatusFilter('suspended')}
-              className={`px-3 sm:px-4 py-2 sm:py-2.5 rounded-lg sm:rounded-xl font-semibold transition-all duration-300 text-xs sm:text-sm ${
-                statusFilter === 'suspended'
+              className={`px-3 sm:px-4 py-2 sm:py-2.5 rounded-lg sm:rounded-xl font-semibold transition-all duration-300 text-xs sm:text-sm ${statusFilter === 'suspended'
                   ? 'bg-gradient-to-r from-orange-500 to-orange-600 text-white shadow-lg'
                   : 'bg-white text-gray-700 hover:bg-gray-50 border border-gray-300'
-              }`}
+                }`}
             >
               Suspended
             </button>
@@ -221,14 +216,14 @@ const Drivers = () => {
                   drivers.map((driver, index) => {
                     const badge = getStatusBadge(driver.verificationStatus);
                     return (
-                      <tr 
-                        key={driver._id} 
+                      <tr
+                        key={driver._id}
                         className="hover:bg-gray-50 transition-colors duration-200 animate-fade-in"
                         style={{ animationDelay: `${index * 50}ms` }}
                       >
                         <td className="px-6 py-4 whitespace-nowrap">
                           <div className="flex items-center">
-                            <div className="w-12 h-12 bg-gradient-to-br from-indigo-500 to-indigo-600 rounded-full flex items-center justify-center text-white font-bold shadow-lg mr-4">
+                            <div className="w-12 h-12 bg-gradient-to-br from-[#0B2C4D] to-[#254f7a] rounded-full flex items-center justify-center text-white font-bold shadow-lg mr-4">
                               {driver.name?.charAt(0)?.toUpperCase() || 'D'}
                             </div>
                             <div>
@@ -245,7 +240,7 @@ const Drivers = () => {
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap">
                           {driver.workLocation ? (
-                            <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-blue-100 text-blue-800">
+                            <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-gray-100 text-[#0B2C4D]">
                               <span className="material-icons-outlined text-sm mr-1">location_on</span>
                               {driver.workLocation}
                             </span>
@@ -265,13 +260,13 @@ const Drivers = () => {
                         <td className="px-6 py-4 whitespace-nowrap">
                           <div className="flex items-center space-x-2">
                             {driver.verificationDocuments?.licenseFront && (
-                              <span className="material-icons-outlined text-green-500 text-xl" title="License">check_circle</span>
+                              <span className="material-icons-outlined text-[#2BB673] text-xl" title="License">check_circle</span>
                             )}
                             {driver.verificationDocuments?.aadharFront && (
-                              <span className="material-icons-outlined text-green-500 text-xl" title="Aadhar">check_circle</span>
+                              <span className="material-icons-outlined text-[#2BB673] text-xl" title="Aadhar">check_circle</span>
                             )}
                             {driver.verificationDocuments?.panFront && (
-                              <span className="material-icons-outlined text-green-500 text-xl" title="PAN">check_circle</span>
+                              <span className="material-icons-outlined text-[#2BB673] text-xl" title="PAN">check_circle</span>
                             )}
                             {driver.verificationDocuments?.electricityBill && (
                               <span className="material-icons-outlined text-blue-500 text-xl" title="Electricity Bill">receipt</span>
@@ -301,7 +296,7 @@ const Drivers = () => {
                         <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
                           <Link
                             to={`/drivers/${driver._id}`}
-                            className="text-blue-600 hover:text-blue-900 font-semibold flex items-center space-x-1 group"
+                            className="text-[#0B2C4D] hover:text-[#2BB673] font-semibold flex items-center space-x-1 group"
                           >
                             <span>View Details</span>
                             <span className="material-icons-outlined text-lg group-hover:translate-x-1 transition-transform">arrow_forward</span>
@@ -336,7 +331,7 @@ const Drivers = () => {
                 >
                   <div className="flex items-start justify-between mb-3">
                     <div className="flex items-center flex-1 min-w-0">
-                      <div className="w-12 h-12 sm:w-14 sm:h-14 bg-gradient-to-br from-indigo-500 to-indigo-600 rounded-full flex items-center justify-center text-white font-bold shadow-lg mr-3 sm:mr-4 flex-shrink-0 text-lg sm:text-xl">
+                      <div className="w-12 h-12 sm:w-14 sm:h-14 bg-gradient-to-br from-[#0B2C4D] to-[#254f7a] rounded-full flex items-center justify-center text-white font-bold shadow-lg mr-3 sm:mr-4 flex-shrink-0 text-lg sm:text-xl">
                         {driver.name?.charAt(0)?.toUpperCase() || 'D'}
                       </div>
                       <div className="flex-1 min-w-0">
@@ -373,13 +368,13 @@ const Drivers = () => {
                     )}
                     <div className="flex items-center space-x-1">
                       {driver.verificationDocuments?.licenseFront && (
-                        <span className="material-icons-outlined text-green-500 text-base sm:text-lg" title="License">check_circle</span>
+                        <span className="material-icons-outlined text-[#2BB673] text-base sm:text-lg" title="License">check_circle</span>
                       )}
                       {driver.verificationDocuments?.aadharFront && (
-                        <span className="material-icons-outlined text-green-500 text-base sm:text-lg" title="Aadhar">check_circle</span>
+                        <span className="material-icons-outlined text-[#2BB673] text-base sm:text-lg" title="Aadhar">check_circle</span>
                       )}
                       {driver.verificationDocuments?.panFront && (
-                        <span className="material-icons-outlined text-green-500 text-base sm:text-lg" title="PAN">check_circle</span>
+                        <span className="material-icons-outlined text-[#2BB673] text-base sm:text-lg" title="PAN">check_circle</span>
                       )}
                       {driver.verificationDocuments?.electricityBill && (
                         <span className="material-icons-outlined text-blue-500 text-base sm:text-lg" title="Electricity Bill">receipt</span>
@@ -395,7 +390,7 @@ const Drivers = () => {
                     </div>
                     <Link
                       to={`/drivers/${driver._id}`}
-                      className="text-blue-600 hover:text-blue-900 font-semibold flex items-center space-x-1 group text-xs sm:text-sm"
+                      className="text-[#0B2C4D] hover:text-[#2BB673] font-semibold flex items-center space-x-1 group text-xs sm:text-sm"
                     >
                       <span>View</span>
                       <span className="material-icons-outlined text-base sm:text-lg group-hover:translate-x-1 transition-transform">arrow_forward</span>
@@ -417,11 +412,10 @@ const Drivers = () => {
               <button
                 onClick={() => handlePageChange(pagination.page - 1)}
                 disabled={pagination.page === 1}
-                className={`px-3 sm:px-4 py-2 rounded-lg font-semibold transition-all duration-300 text-xs sm:text-sm flex items-center space-x-1 ${
-                  pagination.page === 1
+                className={`px-3 sm:px-4 py-2 rounded-lg font-semibold transition-all duration-300 text-xs sm:text-sm flex items-center space-x-1 ${pagination.page === 1
                     ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
                     : 'bg-white text-gray-700 hover:bg-gray-50 border border-gray-300'
-                }`}
+                  }`}
               >
                 <span className="material-icons-outlined text-base sm:text-lg">chevron_left</span>
                 <span className="hidden sm:inline">Previous</span>
@@ -442,11 +436,10 @@ const Drivers = () => {
                     <button
                       key={pageNum}
                       onClick={() => handlePageChange(pageNum)}
-                      className={`px-3 sm:px-4 py-2 rounded-lg font-semibold transition-all duration-300 text-xs sm:text-sm ${
-                        pagination.page === pageNum
-                          ? 'bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-lg'
+                      className={`px-3 sm:px-4 py-2 rounded-lg font-semibold transition-all duration-300 text-xs sm:text-sm ${pagination.page === pageNum
+                          ? 'bg-gradient-to-r from-[#0B2C4D] to-[#254f7a] text-white shadow-lg'
                           : 'bg-white text-gray-700 hover:bg-gray-50 border border-gray-300'
-                      }`}
+                        }`}
                     >
                       {pageNum}
                     </button>
@@ -456,11 +449,10 @@ const Drivers = () => {
               <button
                 onClick={() => handlePageChange(pagination.page + 1)}
                 disabled={pagination.page === pagination.totalPages}
-                className={`px-3 sm:px-4 py-2 rounded-lg font-semibold transition-all duration-300 text-xs sm:text-sm flex items-center space-x-1 ${
-                  pagination.page === pagination.totalPages
+                className={`px-3 sm:px-4 py-2 rounded-lg font-semibold transition-all duration-300 text-xs sm:text-sm flex items-center space-x-1 ${pagination.page === pagination.totalPages
                     ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
                     : 'bg-white text-gray-700 hover:bg-gray-50 border border-gray-300'
-                }`}
+                  }`}
               >
                 <span className="hidden sm:inline">Next</span>
                 <span className="material-icons-outlined text-base sm:text-lg">chevron_right</span>

@@ -188,17 +188,17 @@ const TripDetails = () => {
   const getStatusBadge = (status) => {
     const statusConfig = {
       pending: { bg: 'bg-yellow-100', text: 'text-yellow-800', label: 'Pending' },
-      'driver-assigned': { bg: 'bg-blue-100', text: 'text-blue-800', label: 'Driver Assigned' },
+      'driver-assigned': { bg: 'bg-[#0B2C4D]/10', text: 'text-[#0B2C4D]', label: 'Driver Assigned' },
       'pin-verified': { bg: 'bg-indigo-100', text: 'text-indigo-800', label: 'PIN Verified' },
       'in-progress': { bg: 'bg-purple-100', text: 'text-purple-800', label: 'In Progress' },
-      completed: { bg: 'bg-green-100', text: 'text-green-800', label: 'Completed' },
+      completed: { bg: 'bg-[#2BB673]/10', text: 'text-[#2BB673]', label: 'Completed' },
       cancelled: { bg: 'bg-red-100', text: 'text-red-800', label: 'Cancelled' },
       'payment-pending': { bg: 'bg-orange-100', text: 'text-orange-800', label: 'Payment Pending' },
-      'payment-completed': { bg: 'bg-green-100', text: 'text-green-800', label: 'Payment Completed' },
+      'payment-completed': { bg: 'bg-[#2BB673]/20', text: 'text-[#2BB673]', label: 'Payment Completed' },
     };
     const config = statusConfig[status] || { bg: 'bg-gray-100', text: 'text-gray-800', label: status || 'Unknown' };
     return (
-      <span className={`px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${config.bg} ${config.text}`}>
+      <span className={`px-3 py-1 inline-flex text-xs leading-5 font-bold rounded-full ${config.bg} ${config.text}`}>
         {config.label}
       </span>
     );
@@ -209,7 +209,7 @@ const TripDetails = () => {
       <Layout>
         <div className="flex items-center justify-center h-64">
           <div className="flex flex-col items-center space-y-4">
-            <div className="w-12 h-12 border-4 border-blue-600 border-t-transparent rounded-full animate-spin"></div>
+            <div className="w-12 h-12 border-4 border-[#2BB673] border-t-transparent rounded-full animate-spin"></div>
             <div className="text-gray-500 font-medium">Loading trip details...</div>
           </div>
         </div>
@@ -225,7 +225,7 @@ const TripDetails = () => {
           <p className="text-gray-500 text-lg font-medium mb-4">Trip not found</p>
           <button
             onClick={() => navigate('/trip-bookings')}
-            className="px-6 py-2.5 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-lg hover:from-blue-700 hover:to-indigo-700 transition-all duration-200 shadow-lg font-semibold"
+            className="px-6 py-2.5 bg-gradient-to-r from-[#0B2C4D] to-[#254f7a] text-white rounded-lg hover:from-[#091E3A] hover:to-[#1a3a5a] transition-all duration-200 shadow-lg font-semibold"
           >
             Back to Trips
           </button>
@@ -242,7 +242,7 @@ const TripDetails = () => {
           <div>
             <button
               onClick={() => navigate('/trip-bookings')}
-              className="text-blue-600 hover:text-blue-900 font-semibold flex items-center space-x-2 transition-colors group mb-2"
+              className="text-[#0B2C4D] hover:text-[#254f7a] font-semibold flex items-center space-x-2 transition-colors group mb-2"
             >
               <span className="material-icons-outlined text-lg group-hover:-translate-x-1 transition-transform">arrow_back</span>
               <span>Back to Trips</span>
@@ -295,7 +295,7 @@ const TripDetails = () => {
           {/* Trip Information */}
           <div className="bg-white rounded-xl sm:rounded-2xl shadow-sm border border-gray-200 p-4 sm:p-6 animate-fade-in" style={{ animationDelay: '100ms' }}>
             <h2 className="text-lg sm:text-xl font-bold text-gray-900 mb-4 sm:mb-6 flex items-center border-b border-gray-200 pb-3">
-              <span className="material-icons-outlined text-xl mr-2 text-blue-600">info</span>
+              <span className="material-icons-outlined text-xl mr-2 text-[#0B2C4D]">info</span>
               Trip Information
             </h2>
             <div className="space-y-4">
@@ -341,7 +341,7 @@ const TripDetails = () => {
           {/* User & Driver Information */}
           <div className="bg-white rounded-xl sm:rounded-2xl shadow-sm border border-gray-200 p-4 sm:p-6 animate-fade-in" style={{ animationDelay: '150ms' }}>
             <h2 className="text-lg sm:text-xl font-bold text-gray-900 mb-4 sm:mb-6 flex items-center border-b border-gray-200 pb-3">
-              <span className="material-icons-outlined text-xl mr-2 text-indigo-600">people</span>
+              <span className="material-icons-outlined text-xl mr-2 text-[#0B2C4D]">people</span>
               User & Driver
             </h2>
             <div className="space-y-4">
@@ -389,7 +389,7 @@ const TripDetails = () => {
           {/* Pickup Location */}
           <div className="bg-white rounded-xl sm:rounded-2xl shadow-sm border border-gray-200 p-4 sm:p-6 animate-fade-in" style={{ animationDelay: '200ms' }}>
             <h2 className="text-lg sm:text-xl font-bold text-gray-900 mb-4 sm:mb-6 flex items-center border-b border-gray-200 pb-3">
-              <span className="material-icons-outlined text-xl mr-2 text-green-600">location_on</span>
+              <span className="material-icons-outlined text-xl mr-2 text-[#2BB673]">location_on</span>
               Pickup Location
             </h2>
             <div>
@@ -432,7 +432,7 @@ const TripDetails = () => {
           {trip.googleMapsData && (
             <div className="bg-white rounded-xl sm:rounded-2xl shadow-sm border border-gray-200 p-4 sm:p-6 animate-fade-in" style={{ animationDelay: '300ms' }}>
               <h2 className="text-lg sm:text-xl font-bold text-gray-900 mb-4 sm:mb-6 flex items-center border-b border-gray-200 pb-3">
-                <span className="material-icons-outlined text-xl mr-2 text-purple-600">route</span>
+                <span className="material-icons-outlined text-xl mr-2 text-[#0B2C4D]">route</span>
                 Route Information
               </h2>
               <div className="space-y-3">
@@ -459,7 +459,7 @@ const TripDetails = () => {
           {/* Fare Information */}
           <div className="bg-white rounded-xl sm:rounded-2xl shadow-sm border border-gray-200 p-4 sm:p-6 animate-fade-in" style={{ animationDelay: '350ms' }}>
             <h2 className="text-lg sm:text-xl font-bold text-gray-900 mb-4 sm:mb-6 flex items-center border-b border-gray-200 pb-3">
-              <span className="material-icons-outlined text-xl mr-2 text-yellow-600">attach_money</span>
+              <span className="material-icons-outlined text-xl mr-2 text-[#0B2C4D]">attach_money</span>
               Fare Information
             </h2>
             <div className="space-y-3">
@@ -565,7 +565,7 @@ const TripDetails = () => {
           {trip.razorpayOrderId && (
             <div className="bg-white rounded-xl sm:rounded-2xl shadow-sm border border-gray-200 p-4 sm:p-6 animate-fade-in" style={{ animationDelay: '450ms' }}>
               <h2 className="text-lg sm:text-xl font-bold text-gray-900 mb-4 sm:mb-6 flex items-center border-b border-gray-200 pb-3">
-                <span className="material-icons-outlined text-xl mr-2 text-teal-600">payment</span>
+                <span className="material-icons-outlined text-xl mr-2 text-[#0B2C4D]">payment</span>
                 Payment Information
               </h2>
               <div className="space-y-3">
@@ -588,13 +588,13 @@ const TripDetails = () => {
             <div className="bg-white rounded-xl sm:rounded-2xl shadow-sm border border-gray-200 p-4 sm:p-6 lg:col-span-2 animate-fade-in" style={{ animationDelay: '500ms' }}>
               <div className="flex items-center justify-between border-b border-gray-200 pb-3 mb-4">
                 <h2 className="text-lg sm:text-xl font-bold text-gray-900 flex items-center">
-                  <span className="material-icons-outlined text-xl mr-2 text-indigo-600">my_location</span>
+                  <span className="material-icons-outlined text-xl mr-2 text-[#0B2C4D]">my_location</span>
                   Driver Current Location
                 </h2>
                 <button
                   onClick={handleRequestDriverLocation}
                   disabled={loadingLocation}
-                  className="px-4 sm:px-6 py-2.5 sm:py-3 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-lg sm:rounded-xl hover:from-blue-700 hover:to-indigo-700 transition-all duration-200 shadow-lg font-semibold disabled:opacity-50 disabled:cursor-not-allowed flex items-center space-x-2 text-sm sm:text-base"
+                  className="px-4 sm:px-6 py-2.5 sm:py-3 bg-gradient-to-r from-[#0B2C4D] to-[#254f7a] text-white rounded-lg sm:rounded-xl hover:from-[#091E3A] hover:to-[#1a3a5a] transition-all duration-200 shadow-lg font-semibold disabled:opacity-50 disabled:cursor-not-allowed flex items-center space-x-2 text-sm sm:text-base"
                 >
                   {loadingLocation ? (
                     <>
@@ -613,7 +613,7 @@ const TripDetails = () => {
               {loadingLocation && (
                 <div className="flex items-center justify-center py-8">
                   <div className="flex flex-col items-center space-y-3">
-                    <div className="w-8 h-8 border-4 border-blue-600 border-t-transparent rounded-full animate-spin"></div>
+                    <div className="w-8 h-8 border-4 border-[#2BB673] border-t-transparent rounded-full animate-spin"></div>
                     <p className="text-sm text-gray-600">Waiting for driver location...</p>
                   </div>
                 </div>
@@ -625,7 +625,7 @@ const TripDetails = () => {
                     <div className="flex items-start justify-between">
                       <div className="flex-1">
                         <div className="flex items-center space-x-2 mb-3">
-                          <span className="material-icons-outlined text-green-600">location_on</span>
+                          <span className="material-icons-outlined text-[#2BB673]">location_on</span>
                           <span className="text-sm font-semibold text-green-800">Location Received</span>
                         </div>
                         {driverLocationAddress ? (
@@ -648,7 +648,7 @@ const TripDetails = () => {
                       </div>
                       <button
                         onClick={handleShowMap}
-                        className="px-3 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors text-sm font-medium flex items-center space-x-1 ml-4"
+                        className="px-3 py-2 bg-[#0B2C4D] text-white rounded-lg hover:bg-[#254f7a] transition-colors text-sm font-medium flex items-center space-x-1 ml-4"
                       >
                         <span className="material-icons-outlined text-base">map</span>
                         <span>{showMap ? 'Hide Map' : 'Show on Map'}</span>

@@ -16,6 +16,9 @@ import AdminProfile from './pages/AdminProfile';
 import Notifications from './pages/Notifications';
 import Fare from './pages/Fare';
 import SubAdmins from './pages/SubAdmins';
+import ServiceZones from './pages/ServiceZones';
+import SupportTickets from './pages/SupportTickets';
+import TicketDetails from './pages/TicketDetails';
 import ProtectedRoute from './components/ProtectedRoute';
 
 function App() {
@@ -158,6 +161,30 @@ function App() {
           element={
             <ProtectedRoute>
               <SubAdmins />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/zones"
+          element={
+            <ProtectedRoute>
+              <ServiceZones />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/tickets"
+          element={
+            <ProtectedRoute>
+              <SupportTickets />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/tickets/:id"
+          element={
+            <ProtectedRoute>
+              <TicketDetails />
             </ProtectedRoute>
           }
         />

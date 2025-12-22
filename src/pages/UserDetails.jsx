@@ -85,7 +85,7 @@ const UserDetails = () => {
       <Layout>
         <div className="flex items-center justify-center h-64">
           <div className="flex flex-col items-center space-y-4">
-            <div className="w-12 h-12 border-4 border-blue-600 border-t-transparent rounded-full animate-spin"></div>
+            <div className="w-12 h-12 border-4 border-[#2BB673] border-t-transparent rounded-full animate-spin"></div>
             <div className="text-gray-500 font-medium">Loading user details...</div>
           </div>
         </div>
@@ -101,7 +101,7 @@ const UserDetails = () => {
           <p className="text-gray-500 text-lg font-medium mb-4">User not found</p>
           <button
             onClick={() => navigate('/users')}
-            className="px-6 py-2.5 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-lg hover:from-blue-700 hover:to-indigo-700 transition-all duration-200 shadow-lg font-semibold"
+            className="px-6 py-2.5 bg-gradient-to-r from-[#0B2C4D] to-[#254f7a] text-white rounded-lg hover:from-[#091E3A] hover:to-[#1a3a5a] transition-all duration-200 shadow-lg font-semibold"
           >
             Back to Users
           </button>
@@ -118,7 +118,7 @@ const UserDetails = () => {
           <div>
             <button
               onClick={() => navigate('/users')}
-              className="text-blue-600 hover:text-blue-900 font-semibold flex items-center space-x-2 transition-colors group mb-2"
+              className="text-[#0B2C4D] hover:text-[#2BB673] font-semibold flex items-center space-x-2 transition-colors group mb-2"
             >
               <span className="material-icons-outlined text-lg group-hover:-translate-x-1 transition-transform">arrow_back</span>
               <span>Back to Users</span>
@@ -130,11 +130,10 @@ const UserDetails = () => {
             <button
               onClick={handleBlock}
               disabled={actionLoading}
-              className={`px-4 sm:px-6 py-2.5 sm:py-3 rounded-lg sm:rounded-xl font-semibold transition-all duration-200 shadow-lg flex items-center justify-center space-x-2 text-sm sm:text-base ${
-                user.isBlocked
-                  ? 'bg-gradient-to-r from-green-600 to-emerald-600 text-white hover:from-green-700 hover:to-emerald-700'
+              className={`px-4 sm:px-6 py-2.5 sm:py-3 rounded-lg sm:rounded-xl font-semibold transition-all duration-200 shadow-lg flex items-center justify-center space-x-2 text-sm sm:text-base ${user.isBlocked
+                  ? 'bg-gradient-to-r from-[#2BB673] to-[#239960] text-white hover:from-[#239960] hover:to-[#1a7548]'
                   : 'bg-gradient-to-r from-red-600 to-red-700 text-white hover:from-red-700 hover:to-red-800'
-              }`}
+                }`}
             >
               {actionLoading ? (
                 <>
@@ -196,7 +195,7 @@ const UserDetails = () => {
                     className="w-24 h-24 sm:w-32 sm:h-32 rounded-full object-cover mx-auto mb-3 sm:mb-4 shadow-lg"
                   />
                 ) : (
-                  <div className="w-24 h-24 sm:w-32 sm:h-32 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-full flex items-center justify-center text-white text-3xl sm:text-4xl font-bold mx-auto mb-3 sm:mb-4 shadow-lg">
+                  <div className="w-24 h-24 sm:w-32 sm:h-32 bg-gradient-to-br from-[#0B2C4D] to-[#254f7a] rounded-full flex items-center justify-center text-white text-3xl sm:text-4xl font-bold mx-auto mb-3 sm:mb-4 shadow-lg">
                     {user.name?.charAt(0)?.toUpperCase() || 'U'}
                   </div>
                 )}
@@ -204,11 +203,10 @@ const UserDetails = () => {
                 <p className="text-sm sm:text-base text-gray-500 mt-1 break-words">{user.email || 'N/A'}</p>
                 <div className="mt-4 space-y-2">
                   <span
-                    className={`px-4 py-2 inline-flex items-center text-sm font-semibold rounded-full ${
-                      user.isActive
+                    className={`px-4 py-2 inline-flex items-center text-sm font-semibold rounded-full ${user.isActive
                         ? 'bg-green-100 text-green-800'
                         : 'bg-red-100 text-red-800'
-                    }`}
+                      }`}
                   >
                     <span className="material-icons-outlined text-sm mr-1">
                       {user.isActive ? 'check_circle' : 'cancel'}
@@ -232,7 +230,7 @@ const UserDetails = () => {
           <div className="lg:col-span-2">
             <div className="bg-white rounded-xl sm:rounded-2xl shadow-sm border border-gray-200 p-4 sm:p-6 animate-fade-in" style={{ animationDelay: '150ms' }}>
               <h3 className="text-lg sm:text-xl font-bold text-gray-900 mb-4 sm:mb-6 flex items-center">
-                <span className="material-icons-outlined text-xl mr-2 text-blue-600">person</span>
+                <span className="material-icons-outlined text-xl mr-2 text-[#0B2C4D]">person</span>
                 User Information
               </h3>
 
@@ -254,7 +252,7 @@ const UserDetails = () => {
                     <label className="block text-sm font-medium text-gray-500 mb-1">Phone Verified</label>
                     <p className="text-gray-800 font-medium">
                       {user.isPhoneVerified ? (
-                        <span className="text-green-600 flex items-center">
+                        <span className="text-[#2BB673] flex items-center">
                           <span className="material-icons-outlined text-sm mr-1">check_circle</span>
                           Verified
                         </span>
@@ -283,7 +281,7 @@ const UserDetails = () => {
                 {user.address && (
                   <div className="mt-4 sm:mt-6 pt-4 sm:pt-6 border-t border-gray-200">
                     <h4 className="text-base sm:text-lg font-semibold text-gray-800 mb-3 sm:mb-4 flex items-center space-x-2">
-                      <span className="material-icons-outlined text-blue-600 text-lg sm:text-xl">location_on</span>
+                      <span className="material-icons-outlined text-[#0B2C4D] text-lg sm:text-xl">location_on</span>
                       <span>Address</span>
                     </h4>
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">

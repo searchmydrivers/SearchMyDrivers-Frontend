@@ -63,11 +63,11 @@ const ResetPassword = () => {
 
   if (success) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 p-4 sm:p-6 lg:p-8">
+      <div className="min-h-screen flex items-center justify-center bg-gray-50 p-4 sm:p-6 lg:p-8">
         <div className="w-full max-w-md animate-fade-in">
           <div className="bg-white rounded-xl sm:rounded-2xl shadow-2xl border border-gray-200/50 p-6 sm:p-8 text-center">
             <div className="w-14 h-14 sm:w-16 sm:h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-3 sm:mb-4">
-              <span className="material-icons-outlined text-green-600 text-3xl sm:text-4xl">check_circle</span>
+              <span className="material-icons-outlined text-[#2BB673] text-3xl sm:text-4xl">check_circle</span>
             </div>
             <h2 className="text-xl sm:text-2xl font-bold text-gray-900 mb-2">Password Reset Successful!</h2>
             <p className="text-sm sm:text-base text-gray-600 mb-4 sm:mb-6">Your password has been reset successfully.</p>
@@ -79,16 +79,19 @@ const ResetPassword = () => {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 p-4 sm:p-6 lg:p-8">
+    <div className="min-h-screen flex items-center justify-center bg-gray-50 p-4 sm:p-6 lg:p-8">
       <div className="w-full max-w-md animate-fade-in">
         <div className="bg-white rounded-xl sm:rounded-2xl shadow-2xl border border-gray-200/50 overflow-hidden">
           {/* Header */}
-          <div className="bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 p-6 sm:p-8 text-center">
-            <div className="w-16 h-16 sm:w-20 sm:h-20 bg-white/20 backdrop-blur-sm rounded-xl sm:rounded-2xl flex items-center justify-center mx-auto mb-3 sm:mb-4 shadow-lg">
-              <span className="material-icons-outlined text-white text-3xl sm:text-4xl">lock</span>
+          <div className="bg-[#0B2C4D] p-6 sm:p-8 text-center relative overflow-hidden">
+            {/* Decorative circle */}
+            <div className="absolute top-0 right-0 -mr-10 -mt-10 w-40 h-40 rounded-full bg-white/5 blur-3xl"></div>
+
+            <div className="w-16 h-16 sm:w-20 sm:h-20 bg-white/10 backdrop-blur-sm rounded-xl sm:rounded-2xl flex items-center justify-center mx-auto mb-3 sm:mb-4 shadow-lg border border-white/10">
+              <span className="material-icons-outlined text-[#2BB673] text-3xl sm:text-4xl">lock</span>
             </div>
             <h1 className="text-2xl sm:text-3xl font-bold text-white mb-1 sm:mb-2 tracking-tight">Reset Password</h1>
-            <p className="text-blue-100 font-medium text-sm sm:text-base">Enter your new password</p>
+            <p className="text-gray-300 font-medium text-sm sm:text-base">Enter your new password</p>
           </div>
 
           {/* Form */}
@@ -102,7 +105,7 @@ const ResetPassword = () => {
               )}
 
               <div>
-                <label htmlFor="password" className="label flex items-center">
+                <label htmlFor="password" className="label flex items-center text-gray-700 font-bold text-sm mb-2">
                   <span className="material-icons-outlined text-gray-400 mr-2 text-lg">lock</span>
                   New Password
                 </label>
@@ -110,7 +113,7 @@ const ResetPassword = () => {
                   <input
                     type={showPassword ? 'text' : 'password'}
                     id="password"
-                    className="input-field pl-12 pr-12"
+                    className="w-full pl-11 pr-12 py-3 bg-gray-50 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#2BB673]/20 focus:border-[#2BB673] transition-all font-medium"
                     placeholder="Enter new password"
                     value={formData.password}
                     onChange={(e) => setFormData({ ...formData, password: e.target.value })}
@@ -121,7 +124,7 @@ const ResetPassword = () => {
                   <button
                     type="button"
                     onClick={() => setShowPassword(!showPassword)}
-                    className="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
+                    className="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-[#2BB673] transition-colors"
                   >
                     <span className="material-icons-outlined text-xl">
                       {showPassword ? 'visibility_off' : 'visibility'}
@@ -131,7 +134,7 @@ const ResetPassword = () => {
               </div>
 
               <div>
-                <label htmlFor="confirmPassword" className="label flex items-center">
+                <label htmlFor="confirmPassword" className="label flex items-center text-gray-700 font-bold text-sm mb-2">
                   <span className="material-icons-outlined text-gray-400 mr-2 text-lg">lock</span>
                   Confirm Password
                 </label>
@@ -139,7 +142,7 @@ const ResetPassword = () => {
                   <input
                     type={showConfirmPassword ? 'text' : 'password'}
                     id="confirmPassword"
-                    className="input-field pl-12 pr-12"
+                    className="w-full pl-11 pr-12 py-3 bg-gray-50 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#2BB673]/20 focus:border-[#2BB673] transition-all font-medium"
                     placeholder="Confirm new password"
                     value={formData.confirmPassword}
                     onChange={(e) => setFormData({ ...formData, confirmPassword: e.target.value })}
@@ -150,7 +153,7 @@ const ResetPassword = () => {
                   <button
                     type="button"
                     onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                    className="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
+                    className="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-[#2BB673] transition-colors"
                   >
                     <span className="material-icons-outlined text-xl">
                       {showConfirmPassword ? 'visibility_off' : 'visibility'}
@@ -162,11 +165,11 @@ const ResetPassword = () => {
               <button
                 type="submit"
                 disabled={loading || !token}
-                className="w-full btn-primary py-3 text-base font-semibold flex items-center justify-center"
+                className="w-full py-3 text-base font-bold text-white bg-gradient-to-r from-[#2BB673] to-[#239960] hover:from-[#239960] hover:to-[#1a7548] rounded-xl shadow-lg shadow-green-900/20 transition-all duration-300 flex items-center justify-center transform active:scale-[0.98]"
               >
                 {loading ? (
                   <>
-                    <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin mr-2"></div>
+                    <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin mr-2"></div>
                     <span>Resetting...</span>
                   </>
                 ) : (
@@ -180,7 +183,7 @@ const ResetPassword = () => {
               <div className="text-center">
                 <Link
                   to="/login"
-                  className="text-blue-600 hover:text-blue-800 font-medium flex items-center justify-center space-x-1"
+                  className="text-[#2BB673] hover:text-[#239960] font-bold text-sm flex items-center justify-center space-x-1 transition-colors"
                 >
                   <span className="material-icons-outlined text-lg">arrow_back</span>
                   <span>Back to Login</span>

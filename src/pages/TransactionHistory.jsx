@@ -84,7 +84,7 @@ const TransactionHistory = () => {
     <Layout>
       <div className="space-y-4 sm:space-y-6 animate-fade-in">
         {/* Header */}
-        
+
 
         {/* Summary Cards */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
@@ -107,15 +107,15 @@ const TransactionHistory = () => {
               <span className="material-icons-outlined text-red-600 text-3xl sm:text-4xl">trending_down</span>
             </div>
           </div>
-          <div className="bg-gradient-to-br from-purple-50 to-purple-100 rounded-xl shadow-sm border border-purple-200 p-4 sm:p-6">
+          <div className="bg-gradient-to-br from-blue-50 to-blue-100 rounded-xl shadow-sm border border-blue-200 p-4 sm:p-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-purple-700 mb-1">Admin Wallet</p>
-                <p className="text-2xl sm:text-3xl font-bold text-purple-800">
+                <p className="text-sm font-medium text-[#0B2C4D] mb-1">Admin Wallet</p>
+                <p className="text-2xl sm:text-3xl font-bold text-[#0B2C4D]">
                   {formatAmount(summary.totalAdminCommission)}
                 </p>
               </div>
-              <span className="material-icons-outlined text-purple-600 text-3xl sm:text-4xl">account_balance_wallet</span>
+              <span className="material-icons-outlined text-[#0B2C4D] text-3xl sm:text-4xl">account_balance_wallet</span>
             </div>
           </div>
         </div>
@@ -123,7 +123,7 @@ const TransactionHistory = () => {
         {/* Filters */}
         <div className="bg-white rounded-xl sm:rounded-2xl shadow-sm border border-gray-200 p-4 sm:p-6 animate-fade-in" style={{ animationDelay: '100ms' }}>
           <h2 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
-            <span className="material-icons-outlined text-xl mr-2 text-blue-600">filter_list</span>
+            <span className="material-icons-outlined text-xl mr-2 text-[#0B2C4D]">filter_list</span>
             Filters
           </h2>
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
@@ -132,7 +132,7 @@ const TransactionHistory = () => {
               <select
                 value={filters.type}
                 onChange={(e) => handleFilterChange('type', e.target.value)}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#0B2C4D]/20 focus:border-[#0B2C4D]"
               >
                 <option value="">All Types</option>
                 <option value="credit">Credit</option>
@@ -145,7 +145,7 @@ const TransactionHistory = () => {
                 type="date"
                 value={filters.startDate}
                 onChange={(e) => handleFilterChange('startDate', e.target.value)}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#0B2C4D]/20 focus:border-[#0B2C4D]"
               />
             </div>
             <div>
@@ -154,7 +154,7 @@ const TransactionHistory = () => {
                 type="date"
                 value={filters.endDate}
                 onChange={(e) => handleFilterChange('endDate', e.target.value)}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#0B2C4D]/20 focus:border-[#0B2C4D]"
               />
             </div>
           </div>
@@ -162,9 +162,9 @@ const TransactionHistory = () => {
 
         {/* Transactions Table */}
         <div className="bg-white rounded-xl sm:rounded-2xl shadow-sm border border-gray-200 overflow-hidden animate-fade-in" style={{ animationDelay: '200ms' }}>
-          <div className="px-4 sm:px-6 py-4 border-b border-gray-200 bg-gradient-to-r from-gray-50 to-gray-100">
+          <div className="px-4 sm:px-6 py-4 border-b border-gray-200 bg-gray-50">
             <h2 className="text-lg font-semibold text-gray-900 flex items-center">
-              <span className="material-icons-outlined text-xl mr-2 text-indigo-600">receipt_long</span>
+              <span className="material-icons-outlined text-xl mr-2 text-[#0B2C4D]">receipt_long</span>
               Transactions
             </h2>
           </div>
@@ -172,13 +172,13 @@ const TransactionHistory = () => {
           {loading ? (
             <div className="flex items-center justify-center py-12">
               <div className="flex flex-col items-center space-y-4">
-                <div className="w-12 h-12 border-4 border-blue-600 border-t-transparent rounded-full animate-spin"></div>
+                <div className="w-12 h-12 border-4 border-[#2BB673] border-t-transparent rounded-full animate-spin"></div>
                 <div className="text-gray-500 font-medium">Loading transactions...</div>
               </div>
             </div>
           ) : transactions.length === 0 ? (
             <div className="text-center py-12">
-              <span className="material-icons-outlined text-6xl text-gray-300 mb-4 block">receipt_long</span>
+              <span className="material-icons-outlined text-gray-300 text-6xl mb-4 block">receipt_long</span>
               <p className="text-gray-500 font-medium">No transactions found</p>
             </div>
           ) : (
@@ -186,16 +186,16 @@ const TransactionHistory = () => {
               {/* Desktop Table */}
               <div className="hidden md:block overflow-x-auto">
                 <table className="min-w-full divide-y divide-gray-200">
-                  <thead className="bg-gradient-to-r from-gray-50 to-gray-100">
+                  <thead className="bg-[#0B2C4D]">
                     <tr>
-                      <th className="px-6 py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">Date</th>
-                      <th className="px-6 py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">Type</th>
-                      <th className="px-6 py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">User</th>
-                      <th className="px-6 py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">Description</th>
-                      <th className="px-6 py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">Trip</th>
-                      <th className="px-6 py-4 text-right text-xs font-bold text-gray-700 uppercase tracking-wider">Driver Amount</th>
-                      <th className="px-6 py-4 text-right text-xs font-bold text-gray-700 uppercase tracking-wider">Admin Commission</th>
-                      <th className="px-6 py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">Status</th>
+                      <th className="px-6 py-4 text-left text-xs font-bold text-white uppercase tracking-wider">Date</th>
+                      <th className="px-6 py-4 text-left text-xs font-bold text-white uppercase tracking-wider">Type</th>
+                      <th className="px-6 py-4 text-left text-xs font-bold text-white uppercase tracking-wider">User</th>
+                      <th className="px-6 py-4 text-left text-xs font-bold text-white uppercase tracking-wider">Description</th>
+                      <th className="px-6 py-4 text-left text-xs font-bold text-white uppercase tracking-wider">Trip</th>
+                      <th className="px-6 py-4 text-right text-xs font-bold text-white uppercase tracking-wider">Driver Amount</th>
+                      <th className="px-6 py-4 text-right text-xs font-bold text-white uppercase tracking-wider">Admin Commission</th>
+                      <th className="px-6 py-4 text-left text-xs font-bold text-white uppercase tracking-wider">Status</th>
                     </tr>
                   </thead>
                   <tbody className="bg-white divide-y divide-gray-200">
@@ -206,11 +206,10 @@ const TransactionHistory = () => {
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap">
                           <span
-                            className={`px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${
-                              transaction.type === 'credit'
+                            className={`px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${transaction.type === 'credit'
                                 ? 'bg-green-100 text-green-800'
                                 : 'bg-red-100 text-red-800'
-                            }`}
+                              }`}
                           >
                             {transaction.type.toUpperCase()}
                           </span>
@@ -237,7 +236,7 @@ const TransactionHistory = () => {
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-semibold">
                           {transaction.driverAmount > 0 ? (
-                            <span className="text-blue-600">
+                            <span className="text-[#0B2C4D]">
                               {formatAmount(transaction.driverAmount)}
                             </span>
                           ) : (
@@ -246,7 +245,7 @@ const TransactionHistory = () => {
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-semibold">
                           {transaction.adminCommission > 0 ? (
-                            <span className="text-purple-600">
+                            <span className="text-[#2BB673]">
                               {formatAmount(transaction.adminCommission)}
                             </span>
                           ) : (
@@ -255,13 +254,12 @@ const TransactionHistory = () => {
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap">
                           <span
-                            className={`px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${
-                              transaction.status === 'completed'
+                            className={`px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${transaction.status === 'completed'
                                 ? 'bg-green-100 text-green-800'
                                 : transaction.status === 'pending'
-                                ? 'bg-yellow-100 text-yellow-800'
-                                : 'bg-red-100 text-red-800'
-                            }`}
+                                  ? 'bg-yellow-100 text-yellow-800'
+                                  : 'bg-red-100 text-red-800'
+                              }`}
                           >
                             {transaction.status}
                           </span>
@@ -280,22 +278,20 @@ const TransactionHistory = () => {
                       <div className="flex-1">
                         <div className="flex items-center space-x-2 mb-1">
                           <span
-                            className={`px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${
-                              transaction.type === 'credit'
+                            className={`px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${transaction.type === 'credit'
                                 ? 'bg-green-100 text-green-800'
                                 : 'bg-red-100 text-red-800'
-                            }`}
+                              }`}
                           >
                             {transaction.type.toUpperCase()}
                           </span>
                           <span
-                            className={`px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${
-                              transaction.status === 'completed'
+                            className={`px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${transaction.status === 'completed'
                                 ? 'bg-green-100 text-green-800'
                                 : transaction.status === 'pending'
-                                ? 'bg-yellow-100 text-yellow-800'
-                                : 'bg-red-100 text-red-800'
-                            }`}
+                                  ? 'bg-yellow-100 text-yellow-800'
+                                  : 'bg-red-100 text-red-800'
+                              }`}
                           >
                             {transaction.status}
                           </span>
@@ -306,12 +302,12 @@ const TransactionHistory = () => {
                       </div>
                       <div className="text-right">
                         {transaction.driverAmount > 0 && (
-                          <p className="text-sm font-semibold text-blue-600 mb-1">
+                          <p className="text-sm font-semibold text-[#0B2C4D] mb-1">
                             Driver: {formatAmount(transaction.driverAmount)}
                           </p>
                         )}
                         {transaction.adminCommission > 0 && (
-                          <p className="text-sm font-semibold text-purple-600">
+                          <p className="text-sm font-semibold text-[#2BB673]">
                             Admin: {formatAmount(transaction.adminCommission)}
                           </p>
                         )}
@@ -354,11 +350,10 @@ const TransactionHistory = () => {
                   <button
                     onClick={() => handlePageChange(pagination.page - 1)}
                     disabled={pagination.page === 1}
-                    className={`px-3 sm:px-4 py-2 rounded-lg font-semibold transition-all duration-300 text-xs sm:text-sm flex items-center space-x-1 ${
-                      pagination.page === 1
+                    className={`px-3 sm:px-4 py-2 rounded-lg font-semibold transition-all duration-300 text-xs sm:text-sm flex items-center space-x-1 ${pagination.page === 1
                         ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
                         : 'bg-white text-gray-700 hover:bg-gray-50 border border-gray-300'
-                    }`}
+                      }`}
                   >
                     <span className="material-icons-outlined text-base sm:text-lg">chevron_left</span>
                     <span className="hidden sm:inline">Previous</span>
@@ -379,11 +374,10 @@ const TransactionHistory = () => {
                         <button
                           key={pageNum}
                           onClick={() => handlePageChange(pageNum)}
-                          className={`px-3 sm:px-4 py-2 rounded-lg font-semibold transition-all duration-300 text-xs sm:text-sm ${
-                            pagination.page === pageNum
-                              ? 'bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-lg'
+                          className={`px-3 sm:px-4 py-2 rounded-lg font-semibold transition-all duration-300 text-xs sm:text-sm ${pagination.page === pageNum
+                              ? 'bg-gradient-to-r from-[#0B2C4D] to-[#254f7a] text-white shadow-lg'
                               : 'bg-white text-gray-700 hover:bg-gray-50 border border-gray-300'
-                          }`}
+                            }`}
                         >
                           {pageNum}
                         </button>
@@ -393,11 +387,10 @@ const TransactionHistory = () => {
                   <button
                     onClick={() => handlePageChange(pagination.page + 1)}
                     disabled={pagination.page === pagination.totalPages}
-                    className={`px-3 sm:px-4 py-2 rounded-lg font-semibold transition-all duration-300 text-xs sm:text-sm flex items-center space-x-1 ${
-                      pagination.page === pagination.totalPages
+                    className={`px-3 sm:px-4 py-2 rounded-lg font-semibold transition-all duration-300 text-xs sm:text-sm flex items-center space-x-1 ${pagination.page === pagination.totalPages
                         ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
                         : 'bg-white text-gray-700 hover:bg-gray-50 border border-gray-300'
-                    }`}
+                      }`}
                   >
                     <span className="hidden sm:inline">Next</span>
                     <span className="material-icons-outlined text-base sm:text-lg">chevron_right</span>

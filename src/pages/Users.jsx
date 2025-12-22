@@ -28,11 +28,11 @@ const Users = () => {
         page: pagination.page,
         limit: 10,
       };
-      
+
       if (searchTerm) {
         params.search = searchTerm;
       }
-      
+
       if (statusFilter !== 'all') {
         params.status = statusFilter;
       }
@@ -55,12 +55,12 @@ const Users = () => {
 
   const handleSearch = (e) => {
     setSearchTerm(e.target.value);
-    setPagination(prev => ({ ...prev, page: 1 })); // Reset to page 1 on search
+    setPagination(prev => ({ ...prev, page: 1 }));
   };
 
   const handleStatusFilter = (status) => {
     setStatusFilter(status);
-    setPagination(prev => ({ ...prev, page: 1 })); // Reset to page 1 on filter change
+    setPagination(prev => ({ ...prev, page: 1 }));
   };
 
   const handlePageChange = (newPage) => {
@@ -91,12 +91,22 @@ const Users = () => {
     }
   };
 
+  const getDisplayName = (user) => {
+    if (user.name) return user.name;
+    return 'Guest User';
+  };
+
+  const getDisplayEmail = (user) => {
+    if (user.email) return user.email;
+    return 'No email provided';
+  };
+
   if (loading && users.length === 0) {
     return (
       <Layout>
-        <div className="flex items-center justify-center h-64">
+        <div className="flex items-center justify-center h-[80vh]">
           <div className="flex flex-col items-center space-y-4">
-            <div className="w-12 h-12 border-4 border-blue-600 border-t-transparent rounded-full animate-spin"></div>
+            <div className="w-12 h-12 border-4 border-[#0B2C4D] border-t-transparent rounded-full animate-spin"></div>
             <div className="text-gray-500 font-medium">Loading users...</div>
           </div>
         </div>
@@ -106,203 +116,157 @@ const Users = () => {
 
   return (
     <Layout>
-      <div className="space-y-4 sm:space-y-6 animate-fade-in">
-          {/* Header */}
-          
-
+      <div className="space-y-6 animate-fade-in">
         {/* Search and Filters */}
-        <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
-          <div className="relative flex-1">
+        <div className="bg-white p-4 rounded-xl shadow-sm border border-gray-100 flex flex-col md:flex-row gap-4 justify-between items-center">
+          <div className="relative w-full md:w-96">
             <input
               type="text"
-              placeholder="Search by name, email, or phone..."
+              placeholder="Search users..."
               value={searchTerm}
               onChange={handleSearch}
-              className="pl-10 sm:pl-12 pr-4 py-2 sm:py-2.5 border border-gray-300 rounded-lg sm:rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent w-full text-sm"
+              className="w-full pl-10 pr-4 py-2.5 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#0B2C4D]/20 focus:border-[#0B2C4D] transition-all"
             />
-            <span className="material-icons-outlined absolute left-3 sm:left-4 top-1/2 transform -translate-y-1/2 text-gray-400 text-lg sm:text-xl">search</span>
+            <span className="material-icons-outlined absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">search</span>
           </div>
-          <div className="flex flex-wrap items-center gap-2">
-            <button
-              onClick={() => handleStatusFilter('all')}
-              className={`px-3 sm:px-4 py-2 sm:py-2.5 rounded-lg sm:rounded-xl font-semibold transition-all duration-300 text-xs sm:text-sm ${
-                statusFilter === 'all'
-                  ? 'bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-lg'
-                  : 'bg-white text-gray-700 hover:bg-gray-50 border border-gray-300'
-              }`}
-            >
-              All
-            </button>
-            <button
-              onClick={() => handleStatusFilter('active')}
-              className={`px-3 sm:px-4 py-2 sm:py-2.5 rounded-lg sm:rounded-xl font-semibold transition-all duration-300 text-xs sm:text-sm ${
-                statusFilter === 'active'
-                  ? 'bg-gradient-to-r from-green-500 to-green-600 text-white shadow-lg'
-                  : 'bg-white text-gray-700 hover:bg-gray-50 border border-gray-300'
-              }`}
-            >
-              Active
-            </button>
-            <button
-              onClick={() => handleStatusFilter('inactive')}
-              className={`px-3 sm:px-4 py-2 sm:py-2.5 rounded-lg sm:rounded-xl font-semibold transition-all duration-300 text-xs sm:text-sm ${
-                statusFilter === 'inactive'
-                  ? 'bg-gradient-to-r from-gray-500 to-gray-600 text-white shadow-lg'
-                  : 'bg-white text-gray-700 hover:bg-gray-50 border border-gray-300'
-              }`}
-            >
-              Inactive
-            </button>
-            <button
-              onClick={() => handleStatusFilter('blocked')}
-              className={`px-3 sm:px-4 py-2 sm:py-2.5 rounded-lg sm:rounded-xl font-semibold transition-all duration-300 text-xs sm:text-sm ${
-                statusFilter === 'blocked'
-                  ? 'bg-gradient-to-r from-red-500 to-red-600 text-white shadow-lg'
-                  : 'bg-white text-gray-700 hover:bg-gray-50 border border-gray-300'
-              }`}
-            >
-              Blocked
-            </button>
-            <button
-              onClick={() => handleStatusFilter('phone-not-verified')}
-              className={`px-3 sm:px-4 py-2 sm:py-2.5 rounded-lg sm:rounded-xl font-semibold transition-all duration-300 text-xs sm:text-sm ${
-                statusFilter === 'phone-not-verified'
-                  ? 'bg-gradient-to-r from-yellow-500 to-yellow-600 text-white shadow-lg'
-                  : 'bg-white text-gray-700 hover:bg-gray-50 border border-gray-300'
-              }`}
-            >
-              Phone Not Verified
-            </button>
+
+          <div className="flex flex-wrap gap-2 w-full md:w-auto justify-start md:justify-end">
+            {[
+              { id: 'all', label: 'All Users' },
+              { id: 'active', label: 'Active' },
+              { id: 'inactive', label: 'Inactive' },
+              { id: 'blocked', label: 'Blocked' },
+            ].map((filter) => (
+              <button
+                key={filter.id}
+                onClick={() => handleStatusFilter(filter.id)}
+                className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${statusFilter === filter.id
+                    ? 'bg-[#0B2C4D] text-white shadow-md shadow-[#0B2C4D]/20'
+                    : 'bg-gray-50 text-gray-600 hover:bg-gray-100'
+                  }`}
+              >
+                {filter.label}
+              </button>
+            ))}
           </div>
         </div>
 
         {/* Desktop Table View */}
-        <div className="hidden lg:block bg-white rounded-xl sm:rounded-2xl shadow-sm border border-gray-200 overflow-hidden animate-fade-in" style={{ animationDelay: '200ms' }}>
+        <div className="hidden lg:block bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
           <div className="overflow-x-auto">
-            <table className="min-w-full divide-y divide-gray-200">
-              <thead className="bg-gradient-to-r from-gray-50 to-gray-100">
+            <table className="min-w-full divide-y divide-gray-100">
+              <thead className="bg-[#F8FAFC]">
                 <tr>
-                  <th className="px-6 py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">
-                    User
+                  <th className="px-6 py-4 text-left text-xs font-bold text-[#0B2C4D] uppercase tracking-wider">
+                    User Details
                   </th>
-                  <th className="px-6 py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">
-                    Contact
+                  <th className="px-6 py-4 text-left text-xs font-bold text-[#0B2C4D] uppercase tracking-wider">
+                    Contact Info
                   </th>
-                  <th className="px-6 py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">
+                  <th className="px-6 py-4 text-left text-xs font-bold text-[#0B2C4D] uppercase tracking-wider">
                     Status
                   </th>
-                  <th className="px-6 py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">
-                    Registered
+                  <th className="px-6 py-4 text-left text-xs font-bold text-[#0B2C4D] uppercase tracking-wider">
+                    Registered On
                   </th>
-                  <th className="px-6 py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">
+                  <th className="px-6 py-4 text-right text-xs font-bold text-[#0B2C4D] uppercase tracking-wider">
                     Actions
                   </th>
                 </tr>
               </thead>
-              <tbody className="bg-white divide-y divide-gray-200">
+              <tbody className="bg-white divide-y divide-gray-100">
                 {users.length === 0 ? (
                   <tr>
-                    <td colSpan="5" className="px-6 py-12 text-center">
-                      <div className="flex flex-col items-center space-y-3">
-                        <span className="material-icons-outlined text-6xl text-gray-300">inbox</span>
-                        <p className="text-gray-500 font-medium">No users found</p>
+                    <td colSpan="5" className="px-6 py-12 text-center text-gray-500">
+                      <div className="flex flex-col items-center">
+                        <span className="material-icons-outlined text-4xl text-gray-300 mb-2">person_off</span>
+                        <p>No users found matching your criteria</p>
                       </div>
                     </td>
                   </tr>
                 ) : (
-                  users.map((user, index) => (
-                    <tr 
-                      key={user._id} 
-                      className="hover:bg-gray-50 transition-colors duration-200 animate-fade-in"
-                      style={{ animationDelay: `${index * 50}ms` }}
+                  users.map((user) => (
+                    <tr
+                      key={user._id}
+                      className="hover:bg-gray-50/50 transition-colors duration-150 group"
                     >
-                      <td className="px-6 py-4 whitespace-nowrap">
+                      <td className="px-6 py-4">
                         <div className="flex items-center">
-                          {user.profilePicture ? (
-                            <img
-                              src={user.profilePicture}
-                              alt={user.name}
-                              className="w-12 h-12 rounded-full object-cover shadow-lg mr-4"
-                            />
-                          ) : (
-                            <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-full flex items-center justify-center text-white font-bold shadow-lg mr-4">
-                              {user.name?.charAt(0)?.toUpperCase() || 'U'}
+                          <div className="flex-shrink-0 h-10 w-10">
+                            {user.profilePicture ? (
+                              <img
+                                className="h-10 w-10 rounded-full object-cover ring-2 ring-white shadow-sm"
+                                src={user.profilePicture}
+                                alt=""
+                              />
+                            ) : (
+                              <div className="h-10 w-10 rounded-full bg-gradient-to-br from-[#0B2C4D] to-[#254f7a] flex items-center justify-center text-white text-sm font-bold shadow-sm">
+                                {getDisplayName(user).charAt(0).toUpperCase()}
+                              </div>
+                            )}
+                          </div>
+                          <div className="ml-4">
+                            <div className="text-sm font-semibold text-gray-900 group-hover:text-[#0B2C4D] transition-colors">
+                              {getDisplayName(user)}
                             </div>
-                          )}
-                          <div>
-                            <div className="text-sm font-semibold text-gray-900">{user.name || 'N/A'}</div>
-                            <div className="text-sm text-gray-500">{user.email || 'N/A'}</div>
+                            <div className="text-xs text-gray-500">{user._id}</div>
                           </div>
                         </div>
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap">
-                        <div className="flex items-center text-sm text-gray-900">
-                          <span className="material-icons-outlined text-gray-400 mr-2 text-lg">phone</span>
-                          {user.phone || 'N/A'}
+                      <td className="px-6 py-4">
+                        <div className="flex flex-col space-y-1">
+                          <div className="flex items-center text-sm text-gray-600">
+                            <span className="material-icons-outlined text-xs mr-2 text-gray-400">email</span>
+                            {getDisplayEmail(user)}
+                          </div>
+                          <div className="flex items-center text-sm text-gray-600">
+                            <span className="material-icons-outlined text-xs mr-2 text-gray-400">phone</span>
+                            {user.phone}
+                          </div>
                         </div>
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap">
-                        <div className="flex flex-col space-y-1">
+                      <td className="px-6 py-4">
+                        <div className="flex flex-col items-start gap-1">
                           <span
-                            className={`px-3 py-1.5 inline-flex items-center text-xs leading-5 font-semibold rounded-full ${
-                              user.isActive
-                                ? 'bg-green-100 text-green-800'
-                                : 'bg-red-100 text-red-800'
-                            }`}
+                            className={`px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${user.isActive
+                                ? 'bg-green-50 text-[#2BB673] border border-green-100'
+                                : 'bg-red-50 text-red-600 border border-red-100'
+                              }`}
                           >
-                            <span className="material-icons-outlined text-sm mr-1">
-                              {user.isActive ? 'check_circle' : 'cancel'}
-                            </span>
                             {user.isActive ? 'Active' : 'Inactive'}
                           </span>
                           {user.isBlocked && (
-                            <span className="px-3 py-1.5 inline-flex items-center text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">
-                              <span className="material-icons-outlined text-sm mr-1">block</span>
+                            <span className="px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-50 text-red-600 border border-red-100">
                               Blocked
-                            </span>
-                          )}
-                          {!user.isPhoneVerified && (
-                            <span className="px-3 py-1.5 inline-flex items-center text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800">
-                              <span className="material-icons-outlined text-sm mr-1">phone_disabled</span>
-                              Phone Not Verified
                             </span>
                           )}
                         </div>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                        {user.createdAt ? new Date(user.createdAt).toLocaleDateString() : 'N/A'}
+                        {new Date(user.createdAt).toLocaleDateString()}
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                        <button
-                          onClick={() => navigate(`/users/${user._id}`)}
-                          className="text-blue-600 hover:text-blue-900 mr-3 font-semibold flex items-center space-x-1 transition-colors"
-                        >
-                          <span className="material-icons-outlined text-lg">visibility</span>
-                          <span>View</span>
-                        </button>
-                        <button
-                          onClick={() => handleBlock(user._id, user.isBlocked)}
-                          disabled={actionLoading[user._id]}
-                          className={`font-semibold flex items-center space-x-1 transition-colors ${
-                            user.isBlocked
-                              ? 'text-green-600 hover:text-green-900'
-                              : 'text-red-600 hover:text-red-900'
-                          }`}
-                        >
-                          {actionLoading[user._id] ? (
-                            <>
-                              <div className="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin"></div>
-                              <span>Processing...</span>
-                            </>
-                          ) : (
-                            <>
-                              <span className="material-icons-outlined text-lg">
-                                {user.isBlocked ? 'check_circle' : 'block'}
-                              </span>
-                              <span>{user.isBlocked ? 'Unblock' : 'Block'}</span>
-                            </>
-                          )}
-                        </button>
+                      <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                        <div className="flex items-center justify-end space-x-2">
+                          <button
+                            onClick={() => navigate(`/users/${user._id}`)}
+                            className="p-1.5 text-gray-400 hover:text-[#0B2C4D] hover:bg-gray-100 rounded-lg transition-all"
+                            title="View Details"
+                          >
+                            <span className="material-icons-outlined text-lg">visibility</span>
+                          </button>
+                          <button
+                            onClick={() => handleBlock(user._id, user.isBlocked)}
+                            className={`p-1.5 rounded-lg transition-all ${user.isBlocked
+                                ? 'text-green-600 hover:bg-green-50'
+                                : 'text-red-500 hover:bg-red-50'
+                              }`}
+                            title={user.isBlocked ? 'Unblock User' : 'Block User'}
+                          >
+                            <span className="material-icons-outlined text-lg">
+                              {user.isBlocked ? 'check_circle' : 'block'}
+                            </span>
+                          </button>
+                        </div>
                       </td>
                     </tr>
                   ))
@@ -313,178 +277,123 @@ const Users = () => {
         </div>
 
         {/* Mobile/Tablet Card View */}
-        <div className="lg:hidden space-y-3 sm:space-y-4 animate-fade-in" style={{ animationDelay: '200ms' }}>
-          {users.length === 0 ? (
-            <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-12 text-center">
-              <div className="flex flex-col items-center space-y-3">
-                <span className="material-icons-outlined text-6xl text-gray-300">inbox</span>
-                <p className="text-gray-500 font-medium">No users found</p>
+        <div className="lg:hidden grid grid-cols-1 sm:grid-cols-2 gap-4">
+          {users.map((user) => (
+            <div key={user._id} className="bg-white rounded-xl p-5 shadow-sm border border-gray-100">
+              <div className="flex items-start justify-between mb-4">
+                <div className="flex items-center gap-3">
+                  {user.profilePicture ? (
+                    <img
+                      className="h-10 w-10 rounded-full object-cover ring-2 ring-white shadow-sm"
+                      src={user.profilePicture}
+                      alt=""
+                    />
+                  ) : (
+                    <div className="h-10 w-10 rounded-full bg-gradient-to-br from-[#0B2C4D] to-[#254f7a] flex items-center justify-center text-white text-sm font-bold shadow-sm">
+                      {getDisplayName(user).charAt(0).toUpperCase()}
+                    </div>
+                  )}
+                  <div>
+                    <h4 className="font-semibold text-gray-900">{getDisplayName(user)}</h4>
+                    <p className="text-xs text-gray-500">{user.phone}</p>
+                  </div>
+                </div>
+                <span
+                  className={`px-2 py-1 text-xs font-semibold rounded-full ${user.isActive
+                      ? 'bg-green-50 text-[#2BB673] border border-green-100'
+                      : 'bg-red-50 text-red-600 border border-red-100'
+                    }`}
+                >
+                  {user.isActive ? 'Active' : 'Inactive'}
+                </span>
+              </div>
+
+              <div className="space-y-2 mb-4">
+                <div className="flex items-center text-sm text-gray-600">
+                  <span className="material-icons-outlined text-base mr-2 text-gray-400">email</span>
+                  <span className="truncate">{getDisplayEmail(user)}</span>
+                </div>
+                <div className="flex items-center text-sm text-gray-600">
+                  <span className="material-icons-outlined text-base mr-2 text-gray-400">calendar_today</span>
+                  <span>Joined {new Date(user.createdAt).toLocaleDateString()}</span>
+                </div>
+              </div>
+
+              <div className="flex items-center justify-between pt-4 border-t border-gray-50">
+                <button
+                  onClick={() => navigate(`/users/${user._id}`)}
+                  className="text-sm font-medium text-[#0B2C4D] hover:text-[#2BB673] transition-colors"
+                >
+                  View Details
+                </button>
+                <button
+                  onClick={() => handleBlock(user._id, user.isBlocked)}
+                  className={`text-sm font-medium ${user.isBlocked ? 'text-[#2BB673]' : 'text-red-500'
+                    }`}
+                >
+                  {user.isBlocked ? 'Unblock' : 'Block Access'}
+                </button>
               </div>
             </div>
-          ) : (
-            users.map((user, index) => (
-              <div
-                key={user._id}
-                className="bg-white rounded-xl shadow-sm border border-gray-200 p-4 sm:p-5 hover:shadow-md transition-shadow duration-200 animate-fade-in"
-                style={{ animationDelay: `${index * 50}ms` }}
-              >
-                <div className="flex items-start justify-between mb-3">
-                  <div className="flex items-center flex-1 min-w-0">
-                    {user.profilePicture ? (
-                      <img
-                        src={user.profilePicture}
-                        alt={user.name}
-                        className="w-12 h-12 sm:w-14 sm:h-14 rounded-full object-cover shadow-lg mr-3 sm:mr-4 flex-shrink-0"
-                      />
-                    ) : (
-                      <div className="w-12 h-12 sm:w-14 sm:h-14 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-full flex items-center justify-center text-white font-bold shadow-lg mr-3 sm:mr-4 flex-shrink-0 text-lg sm:text-xl">
-                        {user.name?.charAt(0)?.toUpperCase() || 'U'}
-                      </div>
-                    )}
-                    <div className="flex-1 min-w-0">
-                      <div className="text-sm sm:text-base font-semibold text-gray-900 truncate">{user.name || 'N/A'}</div>
-                      <div className="text-xs sm:text-sm text-gray-500 truncate">{user.email || 'N/A'}</div>
-                      <div className="flex items-center text-xs sm:text-sm text-gray-600 mt-1">
-                        <span className="material-icons-outlined text-gray-400 mr-1 text-base">phone</span>
-                        {user.phone || 'N/A'}
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div className="flex flex-wrap items-center gap-2 mb-3">
-                  <span
-                    className={`px-2.5 sm:px-3 py-1 sm:py-1.5 inline-flex items-center text-xs leading-5 font-semibold rounded-full ${
-                      user.isActive
-                        ? 'bg-green-100 text-green-800'
-                        : 'bg-red-100 text-red-800'
-                    }`}
-                  >
-                    <span className="material-icons-outlined text-xs sm:text-sm mr-1">
-                      {user.isActive ? 'check_circle' : 'cancel'}
-                    </span>
-                    {user.isActive ? 'Active' : 'Inactive'}
-                  </span>
-                  {user.isBlocked && (
-                    <span className="px-2.5 sm:px-3 py-1 sm:py-1.5 inline-flex items-center text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">
-                      <span className="material-icons-outlined text-xs sm:text-sm mr-1">block</span>
-                      Blocked
-                    </span>
-                  )}
-                  {!user.isPhoneVerified && (
-                    <span className="px-2.5 sm:px-3 py-1 sm:py-1.5 inline-flex items-center text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800">
-                      <span className="material-icons-outlined text-xs sm:text-sm mr-1">phone_disabled</span>
-                      Phone Not Verified
-                    </span>
-                  )}
-                </div>
-                <div className="flex items-center justify-between pt-3 border-t border-gray-100">
-                  <div className="text-xs sm:text-sm text-gray-500">
-                    Registered: {user.createdAt ? new Date(user.createdAt).toLocaleDateString() : 'N/A'}
-                  </div>
-                  <div className="flex items-center space-x-2 sm:space-x-3">
-                    <button
-                      onClick={() => navigate(`/users/${user._id}`)}
-                      className="text-blue-600 hover:text-blue-900 font-semibold flex items-center space-x-1 transition-colors text-xs sm:text-sm"
-                    >
-                      <span className="material-icons-outlined text-base sm:text-lg">visibility</span>
-                      <span className="hidden sm:inline">View</span>
-                    </button>
-                    <button
-                      onClick={() => handleBlock(user._id, user.isBlocked)}
-                      disabled={actionLoading[user._id]}
-                      className={`font-semibold flex items-center space-x-1 transition-colors text-xs sm:text-sm ${
-                        user.isBlocked
-                          ? 'text-green-600 hover:text-green-900'
-                          : 'text-red-600 hover:text-red-900'
-                      }`}
-                    >
-                      {actionLoading[user._id] ? (
-                        <>
-                          <div className="w-3 h-3 sm:w-4 sm:h-4 border-2 border-current border-t-transparent rounded-full animate-spin"></div>
-                          <span className="hidden sm:inline">Processing...</span>
-                        </>
-                      ) : (
-                        <>
-                          <span className="material-icons-outlined text-base sm:text-lg">
-                            {user.isBlocked ? 'check_circle' : 'block'}
-                          </span>
-                          <span className="hidden sm:inline">{user.isBlocked ? 'Unblock' : 'Block'}</span>
-                        </>
-                      )}
-                    </button>
-                  </div>
-                </div>
-              </div>
-            ))
-          )}
+          ))}
         </div>
 
         {/* Pagination */}
         {pagination.totalPages > 1 && (
-          <div className="flex flex-col sm:flex-row items-center justify-between gap-4 bg-white rounded-xl shadow-sm border border-gray-200 p-4 sm:p-6">
-            <div className="text-xs sm:text-sm text-gray-600 font-medium">
+          <div className="flex flex-col sm:flex-row items-center justify-between gap-4 bg-white rounded-xl shadow-sm border border-gray-100 p-4">
+            <div className="text-sm text-gray-500">
               Showing {((pagination.page - 1) * pagination.limit) + 1} to {Math.min(pagination.page * pagination.limit, pagination.total)} of {pagination.total} users
             </div>
-            <div className="flex items-center space-x-2">
+            <div className="flex items-center gap-2">
               <button
                 onClick={() => handlePageChange(pagination.page - 1)}
                 disabled={pagination.page === 1}
-                className={`px-3 sm:px-4 py-2 rounded-lg font-semibold transition-all duration-300 text-xs sm:text-sm flex items-center space-x-1 ${
-                  pagination.page === 1
-                    ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
-                    : 'bg-white text-gray-700 hover:bg-gray-50 border border-gray-300'
-                }`}
+                className={`w-9 h-9 flex items-center justify-center rounded-lg border transition-all ${pagination.page === 1
+                    ? 'border-gray-200 text-gray-300 cursor-not-allowed'
+                    : 'border-gray-300 text-gray-600 hover:bg-gray-50'
+                  }`}
               >
-                <span className="material-icons-outlined text-base sm:text-lg">chevron_left</span>
-                <span className="hidden sm:inline">Previous</span>
+                <span className="material-icons-outlined text-sm">chevron_left</span>
               </button>
-              <div className="flex items-center space-x-1">
-                {Array.from({ length: Math.min(5, pagination.totalPages) }, (_, i) => {
-                  let pageNum;
-                  if (pagination.totalPages <= 5) {
-                    pageNum = i + 1;
-                  } else if (pagination.page <= 3) {
-                    pageNum = i + 1;
-                  } else if (pagination.page >= pagination.totalPages - 2) {
-                    pageNum = pagination.totalPages - 4 + i;
-                  } else {
+
+              {Array.from({ length: Math.min(5, pagination.totalPages) }, (_, i) => {
+                let pageNum = i + 1;
+                if (pagination.totalPages > 5) {
+                  if (pagination.page > 3) {
                     pageNum = pagination.page - 2 + i;
                   }
-                  return (
-                    <button
-                      key={pageNum}
-                      onClick={() => handlePageChange(pageNum)}
-                      className={`px-3 sm:px-4 py-2 rounded-lg font-semibold transition-all duration-300 text-xs sm:text-sm ${
-                        pagination.page === pageNum
-                          ? 'bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-lg'
-                          : 'bg-white text-gray-700 hover:bg-gray-50 border border-gray-300'
+                  if (pageNum > pagination.totalPages) pageNum = pagination.totalPages - (4 - i);
+                }
+
+                // Guard to allow basic 1-5 if logic gets complex, simplest is just limited set or smart scrolling
+                // Simplified logic for this view:
+                if (pagination.totalPages <= 5) pageNum = i + 1;
+
+                return (
+                  <button
+                    key={pageNum}
+                    onClick={() => handlePageChange(pageNum)}
+                    className={`w-9 h-9 flex items-center justify-center rounded-lg text-sm font-medium transition-all ${pagination.page === pageNum
+                        ? 'bg-[#0B2C4D] text-white shadow-md shadow-[#0B2C4D]/20'
+                        : 'text-gray-600 hover:bg-gray-50'
                       }`}
-                    >
-                      {pageNum}
-                    </button>
-                  );
-                })}
-              </div>
+                  >
+                    {pageNum}
+                  </button>
+                );
+              })}
+
               <button
                 onClick={() => handlePageChange(pagination.page + 1)}
                 disabled={pagination.page === pagination.totalPages}
-                className={`px-3 sm:px-4 py-2 rounded-lg font-semibold transition-all duration-300 text-xs sm:text-sm flex items-center space-x-1 ${
-                  pagination.page === pagination.totalPages
-                    ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
-                    : 'bg-white text-gray-700 hover:bg-gray-50 border border-gray-300'
-                }`}
+                className={`w-9 h-9 flex items-center justify-center rounded-lg border transition-all ${pagination.page === pagination.totalPages
+                    ? 'border-gray-200 text-gray-300 cursor-not-allowed'
+                    : 'border-gray-300 text-gray-600 hover:bg-gray-50'
+                  }`}
               >
-                <span className="hidden sm:inline">Next</span>
-                <span className="material-icons-outlined text-base sm:text-lg">chevron_right</span>
+                <span className="material-icons-outlined text-sm">chevron_right</span>
               </button>
             </div>
-          </div>
-        )}
-
-        {/* Footer */}
-        {pagination.totalPages <= 1 && (
-          <div className="text-xs sm:text-sm text-gray-500 font-medium animate-fade-in" style={{ animationDelay: '300ms' }}>
-            Showing {users.length} of {pagination.total} users
           </div>
         )}
       </div>

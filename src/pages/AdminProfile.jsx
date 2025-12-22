@@ -95,7 +95,7 @@ const AdminProfile = () => {
           <div className="lg:col-span-1 flex">
             <div className="bg-white rounded-xl sm:rounded-2xl shadow-sm border border-gray-200 p-4 sm:p-6 w-full flex flex-col animate-fade-in" style={{ animationDelay: '100ms' }}>
               <div className="text-center flex-1 flex flex-col justify-center">
-                <div className="w-20 h-20 sm:w-24 sm:h-24 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-full flex items-center justify-center text-white text-2xl sm:text-3xl font-bold mx-auto mb-3 sm:mb-4 shadow-lg">
+                <div className="w-20 h-20 sm:w-24 sm:h-24 bg-gradient-to-br from-[#0B2C4D] to-[#254f7a] rounded-full flex items-center justify-center text-white text-2xl sm:text-3xl font-bold mx-auto mb-3 sm:mb-4 shadow-lg">
                   {admin?.name?.charAt(0)?.toUpperCase() || 'A'}
                 </div>
                 <h2 className="text-lg sm:text-xl font-bold text-gray-800">{admin?.name || 'Admin'}</h2>
@@ -114,13 +114,13 @@ const AdminProfile = () => {
             <div className="bg-white rounded-xl sm:rounded-2xl shadow-sm border border-gray-200 p-4 sm:p-6 w-full flex flex-col animate-fade-in" style={{ animationDelay: '150ms' }}>
               <div className="flex justify-between items-center mb-4 sm:mb-6">
                 <h3 className="text-xl sm:text-2xl font-bold text-gray-900 flex items-center">
-                  <span className="material-icons-outlined text-xl mr-2 text-blue-600">person</span>
+                  <span className="material-icons-outlined text-xl mr-2 text-[#0B2C4D]">person</span>
                   Profile Information
                 </h3>
                 {!editing && (
                   <button
                     onClick={() => setEditing(true)}
-                    className="px-4 sm:px-6 py-2.5 sm:py-3 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-lg sm:rounded-xl hover:from-blue-700 hover:to-indigo-700 transition-all duration-200 shadow-lg font-semibold flex items-center space-x-2 text-sm sm:text-base"
+                    className="px-4 sm:px-6 py-2.5 sm:py-3 bg-gradient-to-r from-[#0B2C4D] to-[#254f7a] text-white rounded-lg sm:rounded-xl hover:from-[#091E3A] hover:to-[#1a3a5a] transition-all duration-200 shadow-lg font-semibold flex items-center space-x-2 text-sm sm:text-base"
                   >
                     <span className="material-icons-outlined text-lg">edit</span>
                     <span>Edit Profile</span>
@@ -136,7 +136,7 @@ const AdminProfile = () => {
                       type="text"
                       value={formData.name}
                       onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#0B2C4D]/20 focus:border-[#0B2C4D]"
                       required
                     />
                   </div>
@@ -146,14 +146,14 @@ const AdminProfile = () => {
                       type="email"
                       value={formData.email}
                       onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#0B2C4D]/20 focus:border-[#0B2C4D]"
                       required
                     />
                   </div>
                   <div className="flex space-x-3 pt-4">
                     <button
                       type="submit"
-                      className="px-6 py-2.5 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-lg hover:from-blue-700 hover:to-indigo-700 transition-all duration-200 shadow-lg font-semibold flex items-center space-x-2"
+                      className="px-6 py-2.5 bg-gradient-to-r from-[#0B2C4D] to-[#254f7a] text-white rounded-lg hover:from-[#091E3A] hover:to-[#1a3a5a] transition-all duration-200 shadow-lg font-semibold flex items-center space-x-2"
                     >
                       <span className="material-icons-outlined text-lg">save</span>
                       <span>Save Changes</span>

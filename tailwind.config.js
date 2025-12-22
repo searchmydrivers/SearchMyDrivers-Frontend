@@ -27,6 +27,14 @@ export default {
           800: '#075985',
           900: '#0c4a6e',
         },
+        admin: {
+          navy: '#0B2C4D',
+          darkBlue: '#123E6B',
+          green: '#2BB673',
+          gold: '#B58B2E',
+          bg: '#F5F7FA',
+          text: '#1F2937',
+        }
       },
     },
   },

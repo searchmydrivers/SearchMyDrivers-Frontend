@@ -147,7 +147,7 @@ const DriverDetails = () => {
       <Layout>
         <div className="flex items-center justify-center h-64">
           <div className="flex flex-col items-center space-y-4">
-            <div className="w-12 h-12 border-4 border-blue-600 border-t-transparent rounded-full animate-spin"></div>
+            <div className="w-12 h-12 border-4 border-[#2BB673] border-t-transparent rounded-full animate-spin"></div>
             <div className="text-gray-500 font-medium">Loading driver details...</div>
           </div>
         </div>
@@ -171,7 +171,7 @@ const DriverDetails = () => {
       <div className="space-y-4 sm:space-y-6 animate-fade-in">
         <button
           onClick={() => navigate('/drivers')}
-          className="text-blue-600 hover:text-blue-900 font-semibold flex items-center space-x-2 transition-colors group"
+          className="text-[#0B2C4D] hover:text-[#2BB673] font-semibold flex items-center space-x-2 transition-colors group"
         >
           <span className="material-icons-outlined text-lg group-hover:-translate-x-1 transition-transform">arrow_back</span>
           <span>Back to Drivers</span>
@@ -187,7 +187,7 @@ const DriverDetails = () => {
                   alt={driver.name}
                 />
               ) : (
-                <div className="h-20 w-20 sm:h-24 sm:w-24 rounded-full bg-gradient-to-br from-indigo-500 to-indigo-600 flex items-center justify-center mr-4 sm:mr-6 flex-shrink-0 shadow-lg border-4 border-white">
+                <div className="h-20 w-20 sm:h-24 sm:w-24 rounded-full bg-gradient-to-br from-[#0B2C4D] to-[#254f7a] flex items-center justify-center mr-4 sm:mr-6 flex-shrink-0 shadow-lg border-4 border-white">
                   <span className="text-white font-bold text-2xl sm:text-3xl">
                     {driver.name?.charAt(0).toUpperCase()}
                   </span>
@@ -210,17 +210,16 @@ const DriverDetails = () => {
             </div>
             <div>
               <span
-                className={`px-4 py-2 inline-flex items-center text-sm leading-5 font-semibold rounded-full ${
-                  driver.verificationStatus === 'pending'
+                className={`px-4 py-2 inline-flex items-center text-sm leading-5 font-semibold rounded-full ${driver.verificationStatus === 'pending'
                     ? 'bg-yellow-100 text-yellow-800'
                     : driver.verificationStatus === 'documents-uploaded'
-                    ? 'bg-blue-100 text-blue-800'
-                    : driver.verificationStatus === 'otp-verified'
-                    ? 'bg-purple-100 text-purple-800'
-                    : driver.verificationStatus === 'verified'
-                    ? 'bg-green-100 text-green-800'
-                    : 'bg-red-100 text-red-800'
-                }`}
+                      ? 'bg-gray-100 text-[#0B2C4D]'
+                      : driver.verificationStatus === 'otp-verified'
+                        ? 'bg-purple-100 text-purple-800'
+                        : driver.verificationStatus === 'verified'
+                          ? 'bg-green-100 text-[#2BB673]'
+                          : 'bg-red-100 text-red-800'
+                  }`}
               >
                 <span className="material-icons-outlined text-sm mr-1">
                   {driver.verificationStatus === 'verified' ? 'check_circle' : driver.verificationStatus === 'rejected' ? 'cancel' : 'schedule'}
@@ -283,11 +282,10 @@ const DriverDetails = () => {
                 <button
                   onClick={handleSuspend}
                   disabled={actionLoading}
-                  className={`px-4 sm:px-6 py-2.5 sm:py-3 rounded-lg sm:rounded-xl font-semibold transition-all duration-200 shadow-lg flex items-center justify-center space-x-2 text-sm sm:text-base ${
-                    driver.isSuspended
-                      ? 'bg-gradient-to-r from-green-600 to-emerald-600 text-white hover:from-green-700 hover:to-emerald-700'
+                  className={`px-4 sm:px-6 py-2.5 sm:py-3 rounded-lg sm:rounded-xl font-semibold transition-all duration-200 shadow-lg flex items-center justify-center space-x-2 text-sm sm:text-base ${driver.isSuspended
+                      ? 'bg-gradient-to-r from-[#2BB673] to-[#239960] text-white hover:from-[#239960] hover:to-[#1a7548]'
                       : 'bg-gradient-to-r from-red-600 to-red-700 text-white hover:from-red-700 hover:to-red-800'
-                  }`}
+                    }`}
                 >
                   {actionLoading ? (
                     <>
@@ -378,7 +376,7 @@ const DriverDetails = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
           <div className="bg-white rounded-xl sm:rounded-2xl shadow-sm border border-gray-200 p-4 sm:p-6 animate-fade-in" style={{ animationDelay: '200ms' }}>
             <h2 className="text-lg sm:text-xl font-bold text-gray-900 mb-4 sm:mb-6 flex items-center">
-              <span className="material-icons-outlined text-xl mr-2 text-blue-600">person</span>
+              <span className="material-icons-outlined text-xl mr-2 text-[#0B2C4D]">person</span>
               Personal Information
             </h2>
             <div className="space-y-3">
@@ -419,7 +417,7 @@ const DriverDetails = () => {
 
           <div className="bg-white rounded-xl sm:rounded-2xl shadow-sm border border-gray-200 p-4 sm:p-6 animate-fade-in" style={{ animationDelay: '250ms' }}>
             <h2 className="text-lg sm:text-xl font-bold text-gray-900 mb-4 sm:mb-6 flex items-center">
-              <span className="material-icons-outlined text-xl mr-2 text-indigo-600">description</span>
+              <span className="material-icons-outlined text-xl mr-2 text-[#2BB673]">description</span>
               Document Numbers
             </h2>
             <div className="space-y-3">
@@ -449,7 +447,7 @@ const DriverDetails = () => {
 
           <div className="bg-white rounded-xl sm:rounded-2xl shadow-sm border border-gray-200 p-4 sm:p-6 md:col-span-2 animate-fade-in" style={{ animationDelay: '300ms' }}>
             <h2 className="text-lg sm:text-xl font-bold text-gray-900 mb-4 sm:mb-6 flex items-center">
-              <span className="material-icons-outlined text-xl mr-2 text-purple-600">folder</span>
+              <span className="material-icons-outlined text-xl mr-2 text-[#0B2C4D]">folder</span>
               Verification Documents
             </h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 sm:gap-4">
@@ -538,7 +536,7 @@ const DriverDetails = () => {
 
           <div className="bg-white rounded-xl sm:rounded-2xl shadow-sm border border-gray-200 p-4 sm:p-6 md:col-span-2 animate-fade-in" style={{ animationDelay: '350ms' }}>
             <h2 className="text-lg sm:text-xl font-bold text-gray-900 mb-4 sm:mb-6 flex items-center">
-              <span className="material-icons-outlined text-xl mr-2 text-green-600">location_on</span>
+              <span className="material-icons-outlined text-xl mr-2 text-[#0B2C4D]">location_on</span>
               Work Location
             </h2>
             <div className="space-y-3">
@@ -546,7 +544,7 @@ const DriverDetails = () => {
                 <label className="text-sm text-gray-500">Work Location</label>
                 <p className="font-medium">
                   {driver.workLocation ? (
-                    <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-semibold bg-blue-100 text-blue-800">
+                    <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-semibold bg-gray-100 text-[#0B2C4D]">
                       <span className="material-icons-outlined text-base mr-1">location_on</span>
                       {driver.workLocation}
                     </span>
@@ -560,7 +558,7 @@ const DriverDetails = () => {
 
           <div className="bg-white rounded-xl sm:rounded-2xl shadow-sm border border-gray-200 p-4 sm:p-6 md:col-span-2 animate-fade-in" style={{ animationDelay: '400ms' }}>
             <h2 className="text-lg sm:text-xl font-bold text-gray-900 mb-4 sm:mb-6 flex items-center">
-              <span className="material-icons-outlined text-xl mr-2 text-teal-600">schedule</span>
+              <span className="material-icons-outlined text-xl mr-2 text-[#2BB673]">schedule</span>
               Registration Timeline
             </h2>
             <div className="space-y-2">

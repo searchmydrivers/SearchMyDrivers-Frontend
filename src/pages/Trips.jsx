@@ -28,11 +28,11 @@ const Trips = () => {
   const getStatusBadge = (status) => {
     const badges = {
       pending: { bg: 'bg-yellow-100', text: 'text-yellow-800', icon: 'schedule' },
-      'driver-assigned': { bg: 'bg-blue-100', text: 'text-blue-800', icon: 'person_add' },
+      'driver-assigned': { bg: 'bg-[#0B2C4D]/10', text: 'text-[#0B2C4D]', icon: 'person_add' },
       'in-progress': { bg: 'bg-purple-100', text: 'text-purple-800', icon: 'directions_car' },
-      completed: { bg: 'bg-green-100', text: 'text-green-800', icon: 'check_circle' },
+      completed: { bg: 'bg-[#2BB673]/10', text: 'text-[#2BB673]', icon: 'check_circle' },
       cancelled: { bg: 'bg-red-100', text: 'text-red-800', icon: 'cancel' },
-      'payment-completed': { bg: 'bg-green-100', text: 'text-green-800', icon: 'payment' },
+      'payment-completed': { bg: 'bg-[#2BB673]/20', text: 'text-[#2BB673]', icon: 'payment' },
     };
     return badges[status] || { bg: 'bg-gray-100', text: 'text-gray-800', icon: 'help' };
   };
@@ -65,7 +65,7 @@ const Trips = () => {
       <Layout>
         <div className="flex items-center justify-center h-64">
           <div className="flex flex-col items-center space-y-4">
-            <div className="w-12 h-12 border-4 border-blue-600 border-t-transparent rounded-full animate-spin"></div>
+            <div className="w-12 h-12 border-4 border-[#2BB673] border-t-transparent rounded-full animate-spin"></div>
             <div className="text-gray-500 font-medium">Loading trips...</div>
           </div>
         </div>
@@ -92,58 +92,53 @@ const Trips = () => {
               placeholder="Search by trip ID, user name, phone, or driver name..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="pl-10 sm:pl-12 pr-4 py-2 sm:py-2.5 border border-gray-300 rounded-lg sm:rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent w-full text-sm"
+              className="pl-10 sm:pl-12 pr-4 py-2 sm:py-2.5 border border-gray-300 rounded-lg sm:rounded-xl focus:ring-2 focus:ring-[#0B2C4D] focus:border-transparent w-full text-sm"
             />
             <span className="material-icons-outlined absolute left-3 sm:left-4 top-1/2 transform -translate-y-1/2 text-gray-400 text-lg sm:text-xl">search</span>
           </div>
           <div className="flex flex-wrap items-center gap-2">
             <button
               onClick={() => setStatusFilter('all')}
-              className={`px-3 sm:px-4 py-2 sm:py-2.5 rounded-lg sm:rounded-xl font-semibold transition-all duration-300 text-xs sm:text-sm ${
-                statusFilter === 'all'
-                  ? 'bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-lg'
-                  : 'bg-white text-gray-700 hover:bg-gray-50 border border-gray-300'
-              }`}
+              className={`px-3 sm:px-4 py-2 sm:py-2.5 rounded-lg sm:rounded-xl font-semibold transition-all duration-300 text-xs sm:text-sm ${statusFilter === 'all'
+                ? 'bg-gradient-to-r from-[#0B2C4D] to-[#254f7a] text-white shadow-lg'
+                : 'bg-white text-gray-700 hover:bg-gray-50 border border-gray-300'
+                }`}
             >
               All
             </button>
             <button
               onClick={() => setStatusFilter('pending')}
-              className={`px-3 sm:px-4 py-2 sm:py-2.5 rounded-lg sm:rounded-xl font-semibold transition-all duration-300 text-xs sm:text-sm ${
-                statusFilter === 'pending'
-                  ? 'bg-gradient-to-r from-yellow-500 to-yellow-600 text-white shadow-lg'
-                  : 'bg-white text-gray-700 hover:bg-gray-50 border border-gray-300'
-              }`}
+              className={`px-3 sm:px-4 py-2 sm:py-2.5 rounded-lg sm:rounded-xl font-semibold transition-all duration-300 text-xs sm:text-sm ${statusFilter === 'pending'
+                ? 'bg-gradient-to-r from-yellow-500 to-yellow-600 text-white shadow-lg'
+                : 'bg-white text-gray-700 hover:bg-gray-50 border border-gray-300'
+                }`}
             >
               Pending
             </button>
             <button
               onClick={() => setStatusFilter('in-progress')}
-              className={`px-3 sm:px-4 py-2 sm:py-2.5 rounded-lg sm:rounded-xl font-semibold transition-all duration-300 text-xs sm:text-sm ${
-                statusFilter === 'in-progress'
-                  ? 'bg-gradient-to-r from-purple-500 to-purple-600 text-white shadow-lg'
-                  : 'bg-white text-gray-700 hover:bg-gray-50 border border-gray-300'
-              }`}
+              className={`px-3 sm:px-4 py-2 sm:py-2.5 rounded-lg sm:rounded-xl font-semibold transition-all duration-300 text-xs sm:text-sm ${statusFilter === 'in-progress'
+                ? 'bg-gradient-to-r from-purple-500 to-purple-600 text-white shadow-lg'
+                : 'bg-white text-gray-700 hover:bg-gray-50 border border-gray-300'
+                }`}
             >
               In Progress
             </button>
             <button
               onClick={() => setStatusFilter('payment-completed')}
-              className={`px-3 sm:px-4 py-2 sm:py-2.5 rounded-lg sm:rounded-xl font-semibold transition-all duration-300 text-xs sm:text-sm ${
-                statusFilter === 'payment-completed'
-                  ? 'bg-gradient-to-r from-green-500 to-green-600 text-white shadow-lg'
-                  : 'bg-white text-gray-700 hover:bg-gray-50 border border-gray-300'
-              }`}
+              className={`px-3 sm:px-4 py-2 sm:py-2.5 rounded-lg sm:rounded-xl font-semibold transition-all duration-300 text-xs sm:text-sm ${statusFilter === 'payment-completed'
+                ? 'bg-gradient-to-r from-[#2BB673] to-[#239960] text-white shadow-lg'
+                : 'bg-white text-gray-700 hover:bg-gray-50 border border-gray-300'
+                }`}
             >
               Completed
             </button>
             <button
               onClick={() => setStatusFilter('cancelled')}
-              className={`px-3 sm:px-4 py-2 sm:py-2.5 rounded-lg sm:rounded-xl font-semibold transition-all duration-300 text-xs sm:text-sm ${
-                statusFilter === 'cancelled'
-                  ? 'bg-gradient-to-r from-red-500 to-red-600 text-white shadow-lg'
-                  : 'bg-white text-gray-700 hover:bg-gray-50 border border-gray-300'
-              }`}
+              className={`px-3 sm:px-4 py-2 sm:py-2.5 rounded-lg sm:rounded-xl font-semibold transition-all duration-300 text-xs sm:text-sm ${statusFilter === 'cancelled'
+                ? 'bg-gradient-to-r from-red-500 to-red-600 text-white shadow-lg'
+                : 'bg-white text-gray-700 hover:bg-gray-50 border border-gray-300'
+                }`}
             >
               Cancelled
             </button>
@@ -154,30 +149,30 @@ const Trips = () => {
         <div className="hidden lg:block bg-white rounded-xl sm:rounded-2xl shadow-sm border border-gray-200 overflow-hidden animate-fade-in" style={{ animationDelay: '200ms' }}>
           <div className="overflow-x-auto">
             <table className="min-w-full divide-y divide-gray-200">
-              <thead className="bg-gradient-to-r from-gray-50 to-gray-100">
+              <thead className="bg-[#0B2C4D]">
                 <tr>
-                  <th className="px-6 py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">
+                  <th className="px-6 py-4 text-left text-xs font-bold text-white uppercase tracking-wider">
                     Trip ID
                   </th>
-                  <th className="px-6 py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">
+                  <th className="px-6 py-4 text-left text-xs font-bold text-white uppercase tracking-wider">
                     User
                   </th>
-                  <th className="px-6 py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">
+                  <th className="px-6 py-4 text-left text-xs font-bold text-white uppercase tracking-wider">
                     Driver
                   </th>
-                  <th className="px-6 py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">
+                  <th className="px-6 py-4 text-left text-xs font-bold text-white uppercase tracking-wider">
                     Type
                   </th>
-                  <th className="px-6 py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">
+                  <th className="px-6 py-4 text-left text-xs font-bold text-white uppercase tracking-wider">
                     Amount
                   </th>
-                  <th className="px-6 py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">
+                  <th className="px-6 py-4 text-left text-xs font-bold text-white uppercase tracking-wider">
                     Status
                   </th>
-                  <th className="px-6 py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">
+                  <th className="px-6 py-4 text-left text-xs font-bold text-white uppercase tracking-wider">
                     Date
                   </th>
-                  <th className="px-6 py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">
+                  <th className="px-6 py-4 text-left text-xs font-bold text-white uppercase tracking-wider">
                     Actions
                   </th>
                 </tr>
@@ -208,7 +203,7 @@ const Trips = () => {
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap">
                           <div className="flex items-center">
-                            <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-full flex items-center justify-center text-white font-bold shadow-lg mr-3">
+                            <div className="w-10 h-10 bg-gradient-to-br from-[#0B2C4D] to-[#1a3a5a] rounded-full flex items-center justify-center text-white font-bold shadow-lg mr-3">
                               {trip.user?.name?.charAt(0)?.toUpperCase() || 'U'}
                             </div>
                             <div>
@@ -220,7 +215,7 @@ const Trips = () => {
                         <td className="px-6 py-4 whitespace-nowrap">
                           {trip.driver ? (
                             <div className="flex items-center">
-                              <div className="w-10 h-10 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-full flex items-center justify-center text-white font-bold shadow-lg mr-3">
+                              <div className="w-10 h-10 bg-gradient-to-br from-[#2BB673] to-[#239960] rounded-full flex items-center justify-center text-white font-bold shadow-lg mr-3">
                                 {trip.driver.name?.charAt(0)?.toUpperCase() || 'D'}
                               </div>
                               <div className="text-sm font-semibold text-gray-900">{trip.driver.name}</div>
@@ -230,7 +225,7 @@ const Trips = () => {
                           )}
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap">
-                          <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-indigo-100 text-indigo-800">
+                          <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-[#0B2C4D]/10 text-[#0B2C4D]">
                             <span className="material-icons-outlined text-sm mr-1">route</span>
                             {trip.tripType || 'N/A'}
                           </span>
@@ -252,7 +247,7 @@ const Trips = () => {
                         <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
                           <Link
                             to={`/trips/${trip._id}`}
-                            className="text-blue-600 hover:text-blue-900 font-semibold flex items-center space-x-1 group"
+                            className="text-[#0B2C4D] hover:text-[#254f7a] font-semibold flex items-center space-x-1 group"
                           >
                             <span>View</span>
                             <span className="material-icons-outlined text-lg group-hover:translate-x-1 transition-transform">arrow_forward</span>
@@ -301,7 +296,7 @@ const Trips = () => {
                   </div>
                   <div className="space-y-2 text-xs sm:text-sm mb-3">
                     <div className="flex items-center">
-                      <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-full flex items-center justify-center text-white font-bold shadow-lg mr-2 text-xs">
+                      <div className="w-8 h-8 bg-gradient-to-br from-[#0B2C4D] to-[#1a3a5a] rounded-full flex items-center justify-center text-white font-bold shadow-lg mr-2 text-xs">
                         {trip.user?.name?.charAt(0)?.toUpperCase() || 'U'}
                       </div>
                       <div>
@@ -315,7 +310,7 @@ const Trips = () => {
                     <div className="flex items-center">
                       {trip.driver ? (
                         <>
-                          <div className="w-8 h-8 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-full flex items-center justify-center text-white font-bold shadow-lg mr-2 text-xs">
+                          <div className="w-8 h-8 bg-gradient-to-br from-[#2BB673] to-[#239960] rounded-full flex items-center justify-center text-white font-bold shadow-lg mr-2 text-xs">
                             {trip.driver.name?.charAt(0)?.toUpperCase() || 'D'}
                           </div>
                           <div>
@@ -329,7 +324,7 @@ const Trips = () => {
                     </div>
                     <div>
                       <span className="font-medium text-gray-700">Type: </span>
-                      <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-semibold bg-indigo-100 text-indigo-800">
+                      <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-semibold bg-[#0B2C4D]/10 text-[#0B2C4D]">
                         {trip.tripType || 'N/A'}
                       </span>
                     </div>
@@ -341,7 +336,7 @@ const Trips = () => {
                   <div className="flex items-center justify-end pt-3 border-t border-gray-100">
                     <Link
                       to={`/trips/${trip._id}`}
-                      className="text-blue-600 hover:text-blue-900 font-semibold flex items-center space-x-1 group text-xs sm:text-sm"
+                      className="text-[#0B2C4D] hover:text-[#254f7a] font-semibold flex items-center space-x-1 group text-xs sm:text-sm"
                     >
                       <span>View Details</span>
                       <span className="material-icons-outlined text-base sm:text-lg group-hover:translate-x-1 transition-transform">arrow_forward</span>
