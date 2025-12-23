@@ -28,7 +28,9 @@ const SubAdmins = lazy(() => import('./pages/SubAdmins'));
 const ServiceZones = lazy(() => import('./pages/ServiceZones'));
 const SupportTickets = lazy(() => import('./pages/SupportTickets'));
 const TicketDetails = lazy(() => import('./pages/TicketDetails'));
-const Referrals = lazy(() => import('./pages/Referrals'));
+const DriverReferrals = lazy(() => import('./pages/DriverReferrals'));
+
+
 
 function App() {
   return (
@@ -46,14 +48,7 @@ function App() {
               </ProtectedRoute>
             }
           />
-          <Route
-            path="/referrals"
-            element={
-              <ProtectedRoute>
-                <Referrals />
-              </ProtectedRoute>
-            }
-          />
+
           <Route
             path="/users"
             element={
@@ -94,6 +89,15 @@ function App() {
               </ProtectedRoute>
             }
           />
+          <Route
+            path="/driver-referrals"
+            element={
+              <ProtectedRoute>
+                <DriverReferrals />
+              </ProtectedRoute>
+            }
+          />
+
           <Route
             path="/drivers/rejected"
             element={
