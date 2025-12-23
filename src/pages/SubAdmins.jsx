@@ -159,8 +159,8 @@ const SubAdmins = () => {
       <Layout>
         <div className="flex items-center justify-center h-64">
           <div className="flex flex-col items-center space-y-4">
-            <div className="w-12 h-12 border-4 border-[#2BB673] border-t-transparent rounded-full animate-spin"></div>
-            <div className="text-gray-500 font-medium">Loading sub-admins...</div>
+            <div className="w-8 h-8 border-4 border-[#2BB673] border-t-transparent rounded-full animate-spin"></div>
+            <div className="text-gray-500 font-medium text-xs">Loading sub-admins...</div>
           </div>
         </div>
       </Layout>
@@ -169,10 +169,9 @@ const SubAdmins = () => {
 
   return (
     <Layout>
-      <div className="space-y-4 sm:space-y-6 animate-fade-in">
+      <div className="space-y-4 animate-fade-in">
         {/* Header */}
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
           <button
             onClick={() => {
               setShowCreateModal(true);
@@ -180,66 +179,68 @@ const SubAdmins = () => {
               setError('');
               setSuccess('');
             }}
-            className="px-4 sm:px-6 py-2.5 sm:py-3 bg-gradient-to-r from-[#0B2C4D] to-[#254f7a] text-white rounded-lg sm:rounded-xl hover:from-[#091E3A] hover:to-[#1a3a5a] transition-all duration-200 shadow-lg font-semibold flex items-center justify-center space-x-2 text-sm sm:text-base"
+            className="px-4 py-2 bg-[#0B2C4D] text-white rounded hover:bg-[#091E3A] transition-all duration-200 shadow-sm font-semibold flex items-center justify-center space-x-1.5 text-xs uppercase tracking-wide"
           >
-            <span className="material-icons-outlined text-lg sm:text-xl">add</span>
+            <span className="material-icons-outlined text-sm">add</span>
             <span>Create Sub-Admin</span>
           </button>
         </div>
 
         {/* Success/Error Messages */}
         {success && (
-          <div className="bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-lg flex items-center animate-fade-in">
-            <span className="material-icons-outlined mr-2">check_circle</span>
+          <div className="bg-green-50 border border-green-200 text-green-700 px-3 py-2 rounded-lg flex items-center animate-fade-in text-xs">
+            <span className="material-icons-outlined mr-2 text-sm">check_circle</span>
             {success}
           </div>
         )}
         {error && (
-          <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg flex items-center animate-fade-in">
-            <span className="material-icons-outlined mr-2">error_outline</span>
+          <div className="bg-red-50 border border-red-200 text-red-700 px-3 py-2 rounded-lg flex items-center animate-fade-in text-xs">
+            <span className="material-icons-outlined mr-2 text-sm">error_outline</span>
             {error}
           </div>
         )}
 
         {/* Sub-Admins List */}
         {subAdmins.length === 0 ? (
-          <div className="bg-white rounded-xl sm:rounded-2xl shadow-sm border border-gray-200 text-center py-12 animate-fade-in">
-            <span className="material-icons-outlined text-gray-300 text-6xl mb-4 block">admin_panel_settings</span>
-            <p className="text-gray-500 text-lg font-medium">No sub-admins found</p>
-            <p className="text-gray-400 text-sm mt-2">Create your first sub-admin to get started</p>
+          <div className="bg-white rounded-xl shadow-sm border border-gray-200 text-center py-8 animate-fade-in">
+            <div className="flex flex-col items-center space-y-2">
+              <span className="material-icons-outlined text-gray-300 text-3xl">admin_panel_settings</span>
+              <p className="text-gray-500 font-medium text-sm">No sub-admins found</p>
+              <p className="text-gray-400 text-[10px]">Create your first sub-admin to get started</p>
+            </div>
           </div>
         ) : (
-          <div className="bg-white rounded-xl sm:rounded-2xl shadow-sm border border-gray-200 overflow-hidden animate-fade-in" style={{ animationDelay: '100ms' }}>
+          <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden animate-fade-in" style={{ animationDelay: '100ms' }}>
             <div className="overflow-x-auto">
               <table className="min-w-full divide-y divide-gray-200">
                 <thead className="bg-[#0B2C4D]">
                   <tr>
-                    <th className="px-6 py-4 text-left text-xs font-bold text-white uppercase tracking-wider">Name</th>
-                    <th className="px-6 py-4 text-left text-xs font-bold text-white uppercase tracking-wider">Email</th>
-                    <th className="px-6 py-4 text-left text-xs font-bold text-white uppercase tracking-wider">Work Location</th>
-                    <th className="px-6 py-4 text-left text-xs font-bold text-white uppercase tracking-wider">Status</th>
-                    <th className="px-6 py-4 text-left text-xs font-bold text-white uppercase tracking-wider">Created</th>
-                    <th className="px-6 py-4 text-right text-xs font-bold text-white uppercase tracking-wider">Actions</th>
+                    <th className="px-4 py-2.5 text-left text-[10px] font-bold text-white uppercase tracking-wider">Name</th>
+                    <th className="px-4 py-2.5 text-left text-[10px] font-bold text-white uppercase tracking-wider">Email</th>
+                    <th className="px-4 py-2.5 text-left text-[10px] font-bold text-white uppercase tracking-wider">Work Location</th>
+                    <th className="px-4 py-2.5 text-left text-[10px] font-bold text-white uppercase tracking-wider">Status</th>
+                    <th className="px-4 py-2.5 text-left text-[10px] font-bold text-white uppercase tracking-wider">Created</th>
+                    <th className="px-4 py-2.5 text-right text-[10px] font-bold text-white uppercase tracking-wider">Actions</th>
                   </tr>
                 </thead>
                 <tbody className="bg-white divide-y divide-gray-200">
                   {subAdmins.map((subAdmin, index) => (
                     <tr key={subAdmin._id} className="hover:bg-gray-50 transition-colors duration-200 animate-fade-in" style={{ animationDelay: `${index * 50}ms` }}>
-                      <td className="px-6 py-4 whitespace-nowrap">
-                        <div className="text-sm font-medium text-gray-900">{subAdmin.name}</div>
+                      <td className="px-4 py-2.5 whitespace-nowrap">
+                        <div className="text-xs font-bold text-gray-900">{subAdmin.name}</div>
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap">
-                        <div className="text-sm text-gray-500">{subAdmin.email}</div>
+                      <td className="px-4 py-2.5 whitespace-nowrap">
+                        <div className="text-xs text-gray-500">{subAdmin.email}</div>
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap">
-                        <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-blue-50 text-[#0B2C4D] border border-blue-100">
-                          <span className="material-icons-outlined text-sm mr-1">location_on</span>
+                      <td className="px-4 py-2.5 whitespace-nowrap">
+                        <span className="inline-flex items-center px-2 py-0.5 rounded text-[9px] font-bold bg-blue-50 text-[#0B2C4D] border border-blue-100 uppercase tracking-wide">
+                          <span className="material-icons-outlined text-[10px] mr-1">location_on</span>
                           {subAdmin.workLocation}
                         </span>
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap">
+                      <td className="px-4 py-2.5 whitespace-nowrap">
                         <span
-                          className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold ${subAdmin.isActive
+                          className={`inline-flex items-center px-1.5 py-0.5 rounded text-[9px] font-bold uppercase tracking-wide ${subAdmin.isActive
                             ? 'bg-green-100 text-green-800'
                             : 'bg-red-100 text-red-800'
                             }`}
@@ -247,17 +248,17 @@ const SubAdmins = () => {
                           {subAdmin.isActive ? 'Active' : 'Inactive'}
                         </span>
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                      <td className="px-4 py-2.5 whitespace-nowrap text-xs text-gray-500">
                         {new Date(subAdmin.createdAt).toLocaleDateString()}
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                      <td className="px-4 py-2.5 whitespace-nowrap text-right text-xs font-medium">
                         <div className="flex items-center justify-end space-x-2">
                           <button
                             onClick={() => handleEdit(subAdmin)}
                             className="text-[#0B2C4D] hover:text-[#254f7a]"
                             title="Edit"
                           >
-                            <span className="material-icons-outlined">edit</span>
+                            <span className="material-icons-outlined text-base">edit</span>
                           </button>
                           <button
                             onClick={() => handleToggleActive(subAdmin)}
@@ -268,7 +269,7 @@ const SubAdmins = () => {
                               }`}
                             title={subAdmin.isActive ? 'Deactivate' : 'Activate'}
                           >
-                            <span className="material-icons-outlined">
+                            <span className="material-icons-outlined text-lg">
                               {subAdmin.isActive ? 'toggle_on' : 'toggle_off'}
                             </span>
                           </button>
@@ -278,7 +279,7 @@ const SubAdmins = () => {
                             className="text-red-600 hover:text-red-900"
                             title="Delete"
                           >
-                            <span className="material-icons-outlined">delete</span>
+                            <span className="material-icons-outlined text-base">delete</span>
                           </button>
                         </div>
                       </td>
@@ -293,37 +294,37 @@ const SubAdmins = () => {
         {/* Create Modal */}
         {showCreateModal && (
           <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-            <div className="bg-white rounded-xl sm:rounded-2xl shadow-2xl max-w-md w-full p-6 animate-fade-in">
-              <h2 className="text-xl sm:text-2xl font-bold text-gray-900 mb-4 sm:mb-6 flex items-center">
-                <span className="material-icons-outlined text-xl mr-2 text-[#0B2C4D]">person_add</span>
+            <div className="bg-white rounded-xl shadow-2xl max-w-sm w-full p-5 animate-fade-in">
+              <h2 className="text-sm font-bold text-gray-900 mb-4 flex items-center border-b border-gray-100 pb-2">
+                <span className="material-icons-outlined text-lg mr-2 text-[#0B2C4D]">person_add</span>
                 Create Sub-Admin
               </h2>
-              <form onSubmit={handleCreate} className="space-y-4">
+              <form onSubmit={handleCreate} className="space-y-3">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Name</label>
+                  <label className="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-1">Name</label>
                   <input
                     type="text"
-                    className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#0B2C4D]/20 focus:border-[#0B2C4D]"
+                    className="w-full px-3 py-2 border border-gray-300 rounded focus:ring-1 focus:ring-[#0B2C4D] focus:border-[#0B2C4D] text-xs outline-none transition-all"
                     value={formData.name}
                     onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                     required
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Email</label>
+                  <label className="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-1">Email</label>
                   <input
                     type="email"
-                    className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#0B2C4D]/20 focus:border-[#0B2C4D]"
+                    className="w-full px-3 py-2 border border-gray-300 rounded focus:ring-1 focus:ring-[#0B2C4D] focus:border-[#0B2C4D] text-xs outline-none transition-all"
                     value={formData.email}
                     onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                     required
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Password</label>
+                  <label className="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-1">Password</label>
                   <input
                     type="password"
-                    className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#0B2C4D]/20 focus:border-[#0B2C4D]"
+                    className="w-full px-3 py-2 border border-gray-300 rounded focus:ring-1 focus:ring-[#0B2C4D] focus:border-[#0B2C4D] text-xs outline-none transition-all"
                     value={formData.password}
                     onChange={(e) => setFormData({ ...formData, password: e.target.value })}
                     required
@@ -331,9 +332,9 @@ const SubAdmins = () => {
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Work Location</label>
+                  <label className="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-1">Work Location</label>
                   <select
-                    className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#0B2C4D]/20 focus:border-[#0B2C4D]"
+                    className="w-full px-3 py-2 border border-gray-300 rounded focus:ring-1 focus:ring-[#0B2C4D] focus:border-[#0B2C4D] text-xs outline-none transition-all"
                     value={formData.workLocation}
                     onChange={(e) => setFormData({ ...formData, workLocation: e.target.value })}
                     required
@@ -346,10 +347,10 @@ const SubAdmins = () => {
                     ))}
                   </select>
                 </div>
-                {error && <div className="text-red-600 text-sm flex items-center"><span className="material-icons-outlined text-sm mr-1">error_outline</span>{error}</div>}
-                <div className="flex space-x-3 pt-4">
-                  <button type="submit" className="flex-1 px-4 py-2.5 bg-gradient-to-r from-[#0B2C4D] to-[#254f7a] text-white rounded-lg hover:from-[#091E3A] hover:to-[#1a3a5a] transition-all duration-200 font-semibold flex items-center justify-center space-x-2">
-                    <span className="material-icons-outlined text-lg">add</span>
+                {error && <div className="text-red-600 text-[10px] flex items-center"><span className="material-icons-outlined text-sm mr-1">error_outline</span>{error}</div>}
+                <div className="flex space-x-2 pt-2">
+                  <button type="submit" className="flex-1 px-4 py-2 bg-gradient-to-r from-[#0B2C4D] to-[#254f7a] text-white rounded hover:from-[#091E3A] hover:to-[#1a3a5a] transition-all duration-200 font-semibold text-xs flex items-center justify-center space-x-1 uppercase tracking-wide">
+                    <span className="material-icons-outlined text-sm">add</span>
                     <span>Create</span>
                   </button>
                   <button
@@ -358,7 +359,7 @@ const SubAdmins = () => {
                       setShowCreateModal(false);
                       setError('');
                     }}
-                    className="flex-1 px-4 py-2.5 bg-white text-gray-700 border border-gray-300 rounded-lg hover:bg-gray-50 transition-all duration-200 font-semibold"
+                    className="flex-1 px-4 py-2 bg-white text-gray-700 border border-gray-300 rounded hover:bg-gray-50 transition-all duration-200 font-semibold text-xs uppercase tracking-wide"
                   >
                     Cancel
                   </button>
@@ -371,46 +372,46 @@ const SubAdmins = () => {
         {/* Edit Modal */}
         {showEditModal && selectedSubAdmin && (
           <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-            <div className="bg-white rounded-xl sm:rounded-2xl shadow-2xl max-w-md w-full p-6 animate-fade-in">
-              <h2 className="text-xl sm:text-2xl font-bold text-gray-900 mb-4 sm:mb-6 flex items-center">
-                <span className="material-icons-outlined text-xl mr-2 text-[#0B2C4D]">edit</span>
+            <div className="bg-white rounded-xl shadow-2xl max-w-sm w-full p-5 animate-fade-in">
+              <h2 className="text-sm font-bold text-gray-900 mb-4 flex items-center border-b border-gray-100 pb-2">
+                <span className="material-icons-outlined text-lg mr-2 text-[#0B2C4D]">edit</span>
                 Edit Sub-Admin
               </h2>
-              <form onSubmit={handleUpdate} className="space-y-4">
+              <form onSubmit={handleUpdate} className="space-y-3">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Name</label>
+                  <label className="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-1">Name</label>
                   <input
                     type="text"
-                    className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#0B2C4D]/20 focus:border-[#0B2C4D]"
+                    className="w-full px-3 py-2 border border-gray-300 rounded focus:ring-1 focus:ring-[#0B2C4D] focus:border-[#0B2C4D] text-xs outline-none transition-all"
                     value={formData.name}
                     onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                     required
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Email</label>
+                  <label className="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-1">Email</label>
                   <input
                     type="email"
-                    className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#0B2C4D]/20 focus:border-[#0B2C4D]"
+                    className="w-full px-3 py-2 border border-gray-300 rounded focus:ring-1 focus:ring-[#0B2C4D] focus:border-[#0B2C4D] text-xs outline-none transition-all"
                     value={formData.email}
                     onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                     required
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Password (leave blank to keep current)</label>
+                  <label className="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-1">Password (Leave blank to keep current)</label>
                   <input
                     type="password"
-                    className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#0B2C4D]/20 focus:border-[#0B2C4D]"
+                    className="w-full px-3 py-2 border border-gray-300 rounded focus:ring-1 focus:ring-[#0B2C4D] focus:border-[#0B2C4D] text-xs outline-none transition-all"
                     value={formData.password}
                     onChange={(e) => setFormData({ ...formData, password: e.target.value })}
                     minLength={6}
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Work Location</label>
+                  <label className="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-1">Work Location</label>
                   <select
-                    className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#0B2C4D]/20 focus:border-[#0B2C4D]"
+                    className="w-full px-3 py-2 border border-gray-300 rounded focus:ring-1 focus:ring-[#0B2C4D] focus:border-[#0B2C4D] text-xs outline-none transition-all"
                     value={formData.workLocation}
                     onChange={(e) => setFormData({ ...formData, workLocation: e.target.value })}
                     required
@@ -423,10 +424,10 @@ const SubAdmins = () => {
                     ))}
                   </select>
                 </div>
-                {error && <div className="text-red-600 text-sm flex items-center"><span className="material-icons-outlined text-sm mr-1">error_outline</span>{error}</div>}
-                <div className="flex space-x-3 pt-4">
-                  <button type="submit" className="flex-1 px-4 py-2.5 bg-gradient-to-r from-[#0B2C4D] to-[#254f7a] text-white rounded-lg hover:from-[#091E3A] hover:to-[#1a3a5a] transition-all duration-200 font-semibold flex items-center justify-center space-x-2">
-                    <span className="material-icons-outlined text-lg">save</span>
+                {error && <div className="text-red-600 text-[10px] flex items-center"><span className="material-icons-outlined text-sm mr-1">error_outline</span>{error}</div>}
+                <div className="flex space-x-2 pt-2">
+                  <button type="submit" className="flex-1 px-4 py-2 bg-gradient-to-r from-[#0B2C4D] to-[#254f7a] text-white rounded hover:from-[#091E3A] hover:to-[#1a3a5a] transition-all duration-200 font-semibold text-xs flex items-center justify-center space-x-1 uppercase tracking-wide">
+                    <span className="material-icons-outlined text-sm">save</span>
                     <span>Update</span>
                   </button>
                   <button
@@ -436,7 +437,7 @@ const SubAdmins = () => {
                       setSelectedSubAdmin(null);
                       setError('');
                     }}
-                    className="flex-1 px-4 py-2.5 bg-white text-gray-700 border border-gray-300 rounded-lg hover:bg-gray-50 transition-all duration-200 font-semibold"
+                    className="flex-1 px-4 py-2 bg-white text-gray-700 border border-gray-300 rounded hover:bg-gray-50 transition-all duration-200 font-semibold text-xs uppercase tracking-wide"
                   >
                     Cancel
                   </button>
@@ -451,4 +452,3 @@ const SubAdmins = () => {
 };
 
 export default SubAdmins;
-

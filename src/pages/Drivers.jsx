@@ -107,20 +107,20 @@ const Drivers = () => {
 
   return (
     <Layout>
-      <div className="space-y-4 sm:space-y-6 animate-fade-in">
-        <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 tracking-tight">Drivers Management</h1>
+      <div className="space-y-4 animate-fade-in">
+        <h1 className="text-xl sm:text-2xl font-bold text-gray-900 tracking-tight">Drivers Management</h1>
 
         {/* Search and Filters */}
-        <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
+        <div className="flex flex-col sm:flex-row gap-3">
           <div className="relative flex-1">
             <input
               type="text"
-              placeholder="Search by name, email, or phone..."
+              placeholder="Search by ID, name, email, or phone..."
               value={searchTerm}
               onChange={handleSearch}
-              className="pl-10 sm:pl-12 pr-4 py-2 sm:py-2.5 border border-gray-300 rounded-lg sm:rounded-xl focus:ring-2 focus:ring-[#0B2C4D]/20 focus:border-[#0B2C4D] w-full text-sm sm:text-base transition-all shadow-sm"
+              className="pl-9 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-1 focus:ring-[#0B2C4D] focus:border-[#0B2C4D] w-full text-sm transition-all shadow-sm"
             />
-            <span className="material-icons-outlined absolute left-3 sm:left-4 top-1/2 transform -translate-y-1/2 text-gray-400 text-lg sm:text-xl">search</span>
+            <span className="material-icons-outlined absolute left-2.5 top-1/2 transform -translate-y-1/2 text-gray-400 text-lg">search</span>
           </div>
           <div className="flex flex-wrap items-center gap-2">
             {[
@@ -133,7 +133,7 @@ const Drivers = () => {
               <button
                 key={filter.id}
                 onClick={() => handleStatusFilter(filter.id)}
-                className={`px-3 sm:px-4 py-2 sm:py-2.5 rounded-lg sm:rounded-xl font-semibold transition-all duration-300 text-xs sm:text-sm shadow-sm ${statusFilter === filter.id
+                className={`px-3 py-1.5 rounded-lg font-semibold transition-all duration-300 text-xs shadow-sm ${statusFilter === filter.id
                   ? `bg-gradient-to-r ${filter.activeClass} text-white shadow-md transform scale-[1.02]`
                   : 'bg-white text-gray-700 hover:bg-gray-50 border border-gray-300'
                   }`}
@@ -145,29 +145,29 @@ const Drivers = () => {
         </div>
 
         {/* Desktop Table View */}
-        <div className="hidden lg:block bg-white rounded-xl sm:rounded-2xl shadow-sm border border-gray-200 overflow-hidden animate-fade-in" style={{ animationDelay: '200ms' }}>
+        <div className="hidden lg:block bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden animate-fade-in" style={{ animationDelay: '200ms' }}>
           <div className="overflow-x-auto">
             <table className="min-w-full divide-y divide-gray-200">
               <thead className="bg-[#0B2C4D]">
                 <tr>
-                  <th className="px-6 py-4 text-left text-xs font-bold text-white uppercase tracking-wider">Driver</th>
-                  <th className="px-6 py-4 text-left text-xs font-bold text-white uppercase tracking-wider">Contact</th>
-                  <th className="px-6 py-4 text-left text-xs font-bold text-white uppercase tracking-wider">Work Location</th>
-                  <th className="px-6 py-4 text-left text-xs font-bold text-white uppercase tracking-wider">Rating</th>
-                  <th className="px-6 py-4 text-left text-xs font-bold text-white uppercase tracking-wider">Documents</th>
-                  <th className="px-6 py-4 text-left text-xs font-bold text-white uppercase tracking-wider">Status</th>
-                  <th className="px-6 py-4 text-left text-xs font-bold text-white uppercase tracking-wider">Registered</th>
-                  <th className="px-6 py-4 text-right text-xs font-bold text-white uppercase tracking-wider">Actions</th>
+                  <th className="px-4 py-3 text-left text-xs font-bold text-white uppercase tracking-wider">ID</th>
+                  <th className="px-4 py-3 text-left text-xs font-bold text-white uppercase tracking-wider">Driver</th>
+                  <th className="px-4 py-3 text-left text-xs font-bold text-white uppercase tracking-wider">Contact</th>
+                  <th className="px-4 py-3 text-left text-xs font-bold text-white uppercase tracking-wider">Work Location</th>
+                  <th className="px-4 py-3 text-left text-xs font-bold text-white uppercase tracking-wider">Rating</th>
+                  <th className="px-4 py-3 text-left text-xs font-bold text-white uppercase tracking-wider">Documents</th>
+                  <th className="px-4 py-3 text-left text-xs font-bold text-white uppercase tracking-wider">Status</th>
+                  <th className="px-4 py-3 text-left text-xs font-bold text-white uppercase tracking-wider">Registered</th>
+                  <th className="px-4 py-3 text-right text-xs font-bold text-white uppercase tracking-wider">Actions</th>
                 </tr>
               </thead>
               <tbody className="bg-white divide-y divide-gray-200">
                 {drivers.length === 0 ? (
                   <tr>
-                    <td colSpan="8" className="px-6 py-12 text-center">
-                      <div className="flex flex-col items-center space-y-3">
-                        <span className="material-icons-outlined text-6xl text-gray-300">inbox</span>
-                        <p className="text-lg font-medium text-gray-600">No drivers found</p>
-                        <p className="text-sm text-gray-400">Try adjusting your filters</p>
+                    <td colSpan="9" className="px-4 py-8 text-center">
+                      <div className="flex flex-col items-center space-y-2">
+                        <span className="material-icons-outlined text-4xl text-gray-300">inbox</span>
+                        <p className="text-sm font-medium text-gray-600">No drivers found</p>
                       </div>
                     </td>
                   </tr>
@@ -178,11 +178,14 @@ const Drivers = () => {
                       <tr
                         key={driver._id}
                         className="hover:bg-gray-50 transition-colors duration-200 animate-fade-in group"
-                        style={{ animationDelay: `${index * 50}ms` }}
+                        style={{ animationDelay: `${index * 30}ms` }}
                       >
-                        <td className="px-6 py-4 whitespace-nowrap">
+                        <td className="px-4 py-3 whitespace-nowrap text-xs text-gray-900 font-mono">
+                          #{driver.driverId || '---'}
+                        </td>
+                        <td className="px-4 py-3 whitespace-nowrap">
                           <div className="flex items-center">
-                            <div className="w-10 h-10 bg-gradient-to-br from-[#0B2C4D] to-[#254f7a] rounded-full flex items-center justify-center text-white font-bold shadow-md mr-3">
+                            <div className="w-8 h-8 bg-gradient-to-br from-[#0B2C4D] to-[#254f7a] rounded-full flex items-center justify-center text-white text-xs font-bold shadow-sm mr-3">
                               {driver.name?.charAt(0)?.toUpperCase() || 'D'}
                             </div>
                             <div>
@@ -191,49 +194,49 @@ const Drivers = () => {
                             </div>
                           </div>
                         </td>
-                        <td className="px-6 py-4 whitespace-nowrap">
-                          <div className="flex items-center text-sm text-gray-600">
-                            <span className="material-icons-outlined text-gray-400 mr-2 text-base">phone</span>
+                        <td className="px-4 py-3 whitespace-nowrap">
+                          <div className="flex items-center text-xs text-gray-600">
+                            <span className="material-icons-outlined text-gray-400 mr-1.5 text-sm">phone</span>
                             {driver.phone || 'N/A'}
                           </div>
                         </td>
-                        <td className="px-6 py-4 whitespace-nowrap">
+                        <td className="px-4 py-3 whitespace-nowrap">
                           {driver.workLocation ? (
-                            <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-[#0B2C4D]">
+                            <span className="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-medium bg-gray-100 text-[#0B2C4D]">
                               {driver.workLocation}
                             </span>
                           ) : (
-                            <span className="text-sm text-gray-400 italic">Not set</span>
+                            <span className="text-xs text-gray-400 italic">Not set</span>
                           )}
                         </td>
-                        <td className="px-6 py-4 whitespace-nowrap">
+                        <td className="px-4 py-3 whitespace-nowrap">
                           <div className="flex items-center">
-                            <span className="material-icons-outlined text-yellow-500 text-lg mr-1">star</span>
+                            <span className="material-icons-outlined text-yellow-500 text-sm mr-1">star</span>
                             <span className="text-sm font-bold text-gray-900">{driver.rating ? driver.rating.toFixed(1) : '3.0'}</span>
                             <span className="text-xs text-gray-500 ml-1">({driver.totalRides || 0})</span>
                           </div>
                         </td>
-                        <td className="px-6 py-4 whitespace-nowrap">
-                          <div className="flex items-center space-x-2">
-                            {driver.verificationDocuments?.licenseFront && <span className="material-icons-outlined text-[#2BB673] text-xl" title="License">check_circle</span>}
-                            {driver.verificationDocuments?.aadharFront && <span className="material-icons-outlined text-[#2BB673] text-xl" title="Aadhar">check_circle</span>}
-                            {driver.verificationDocuments?.policeVerificationCertificate && <span className="material-icons-outlined text-indigo-500 text-xl" title="Police Verification">security</span>}
+                        <td className="px-4 py-3 whitespace-nowrap">
+                          <div className="flex items-center space-x-1.5">
+                            {driver.verificationDocuments?.licenseFront && <span className="material-icons-outlined text-[#2BB673] text-lg" title="License">check_circle</span>}
+                            {driver.verificationDocuments?.aadharFront && <span className="material-icons-outlined text-[#2BB673] text-lg" title="Aadhar">check_circle</span>}
+                            {driver.verificationDocuments?.policeVerificationCertificate && <span className="material-icons-outlined text-indigo-500 text-lg" title="Police Verification">security</span>}
                           </div>
                         </td>
-                        <td className="px-6 py-4 whitespace-nowrap">
-                          <span className={`px-2.5 py-1 inline-flex items-center text-xs leading-5 font-semibold rounded-full ${badge.bg} ${badge.text}`}>
+                        <td className="px-4 py-3 whitespace-nowrap">
+                          <span className={`px-2 py-0.5 inline-flex items-center text-[10px] uppercase font-bold tracking-wide rounded ${badge.bg} ${badge.text}`}>
                             {getStatusLabel(driver.verificationStatus)}
                           </span>
                         </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                        <td className="px-4 py-3 whitespace-nowrap text-xs text-gray-500">
                           {driver.createdAt ? new Date(driver.createdAt).toLocaleDateString() : 'N/A'}
                         </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                        <td className="px-4 py-3 whitespace-nowrap text-right text-sm font-medium">
                           <Link
                             to={`/drivers/${driver._id}`}
-                            className="text-[#0B2C4D] hover:text-[#2BB673] font-semibold flex items-center justify-end space-x-1 transition-colors p-2 rounded-full hover:bg-gray-100"
+                            className="text-[#0B2C4D] hover:text-[#2BB673] font-semibold flex items-center justify-end transition-colors p-1.5 rounded-full hover:bg-gray-100"
                           >
-                            <span className="material-icons-outlined text-xl">visibility</span>
+                            <span className="material-icons-outlined text-lg">visibility</span>
                           </Link>
                         </td>
                       </tr>
@@ -246,52 +249,52 @@ const Drivers = () => {
         </div>
 
         {/* Mobile/Tablet Card View */}
-        <div className="lg:hidden space-y-3 sm:space-y-4 animate-fade-in" style={{ animationDelay: '200ms' }}>
+        <div className="lg:hidden space-y-3 animate-fade-in" style={{ animationDelay: '200ms' }}>
           {drivers.map((driver, index) => {
             const badge = getStatusBadge(driver.verificationStatus);
             return (
               <div
                 key={driver._id}
-                className="bg-white rounded-xl shadow-sm border border-gray-200 p-4 sm:p-5 hover:shadow-md transition-shadow duration-200"
+                className="bg-white rounded-xl shadow-sm border border-gray-200 p-4 hover:shadow-md transition-shadow duration-200"
                 style={{ animationDelay: `${index * 50}ms` }}
               >
-                <div className="flex items-start justify-between mb-3">
-                  <div className="flex items-center gap-3">
-                    <div className="w-12 h-12 bg-gradient-to-br from-[#0B2C4D] to-[#254f7a] rounded-full flex items-center justify-center text-white font-bold shadow-md">
+                <div className="flex items-start justify-between mb-2.5">
+                  <div className="flex items-center gap-2.5">
+                    <div className="w-10 h-10 bg-gradient-to-br from-[#0B2C4D] to-[#254f7a] rounded-full flex items-center justify-center text-white font-bold shadow-md">
                       {driver.name?.charAt(0)?.toUpperCase() || 'D'}
                     </div>
                     <div>
-                      <div className="font-bold text-gray-900">{driver.name || 'N/A'}</div>
+                      <div className="font-bold text-gray-900 text-sm">{driver.name || 'N/A'} <span className="text-xs font-mono font-normal text-gray-500">#{driver.driverId}</span></div>
                       <div className="text-xs text-gray-500">{driver.phone}</div>
                     </div>
                   </div>
-                  <span className={`px-2 py-1 text-xs font-bold rounded-full uppercase tracking-wider ${badge.bg} ${badge.text}`}>
+                  <span className={`px-2 py-0.5 text-[10px] font-bold rounded uppercase tracking-wider ${badge.bg} ${badge.text}`}>
                     {getStatusLabel(driver.verificationStatus)}
                   </span>
                 </div>
 
-                <div className="grid grid-cols-2 gap-2 text-sm text-gray-600 mb-3 pl-1">
+                <div className="grid grid-cols-2 gap-2 text-xs text-gray-600 mb-3 pl-1">
                   <div className="flex items-center">
-                    <span className="material-icons-outlined text-gray-400 mr-2 text-base">location_on</span>
+                    <span className="material-icons-outlined text-gray-400 mr-1.5 text-sm">location_on</span>
                     {driver.workLocation || 'N/A'}
                   </div>
                   <div className="flex items-center">
-                    <span className="material-icons-outlined text-yellow-500 mr-2 text-base">star</span>
+                    <span className="material-icons-outlined text-yellow-500 mr-1.5 text-sm">star</span>
                     {driver.rating?.toFixed(1) || '3.0'} ({driver.totalRides || 0})
                   </div>
                 </div>
 
-                <div className="flex items-center justify-between pt-3 border-t border-gray-100">
+                <div className="flex items-center justify-between pt-2.5 border-t border-gray-100">
                   <div className="flex -space-x-1">
-                    {driver.verificationDocuments?.licenseFront && <span className="material-icons-outlined text-[#2BB673] bg-white rounded-full" title="License">check_circle</span>}
-                    {driver.verificationDocuments?.policeVerificationCertificate && <span className="material-icons-outlined text-indigo-500 bg-white rounded-full ml-1" title="Police Verification">security</span>}
+                    {driver.verificationDocuments?.licenseFront && <span className="material-icons-outlined text-[#2BB673] bg-white rounded-full text-lg" title="License">check_circle</span>}
+                    {driver.verificationDocuments?.policeVerificationCertificate && <span className="material-icons-outlined text-indigo-500 bg-white rounded-full ml-1 text-lg" title="Police Verification">security</span>}
                   </div>
                   <Link
                     to={`/drivers/${driver._id}`}
-                    className="text-[#0B2C4D] hover:text-[#2BB673] font-semibold flex items-center space-x-1 text-sm"
+                    className="text-[#0B2C4D] hover:text-[#2BB673] font-semibold flex items-center space-x-1 text-xs"
                   >
                     <span>View Details</span>
-                    <span className="material-icons-outlined text-lg">arrow_forward</span>
+                    <span className="material-icons-outlined text-base">arrow_forward</span>
                   </Link>
                 </div>
               </div>

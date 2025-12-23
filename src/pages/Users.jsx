@@ -118,18 +118,20 @@ const Users = () => {
 
   return (
     <Layout>
-      <div className="space-y-4 sm:space-y-6 animate-fade-in">
+      <div className="space-y-4 animate-fade-in">
+        <h1 className="text-xl sm:text-2xl font-bold text-gray-900 tracking-tight">Users Management</h1>
+
         {/* Search and Filters */}
-        <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
+        <div className="flex flex-col sm:flex-row gap-3">
           <div className="relative flex-1">
             <input
               type="text"
               placeholder="Search by name, email, or phone..."
               value={searchTerm}
               onChange={handleSearch}
-              className="pl-10 sm:pl-12 pr-4 py-2 sm:py-2.5 border border-gray-300 rounded-lg sm:rounded-xl focus:ring-2 focus:ring-[#0B2C4D]/20 focus:border-[#0B2C4D] w-full text-sm"
+              className="pl-9 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-1 focus:ring-[#0B2C4D] focus:border-[#0B2C4D] w-full text-sm transition-all shadow-sm"
             />
-            <span className="material-icons-outlined absolute left-3 sm:left-4 top-1/2 transform -translate-y-1/2 text-gray-400 text-lg sm:text-xl">search</span>
+            <span className="material-icons-outlined absolute left-2.5 top-1/2 transform -translate-y-1/2 text-gray-400 text-lg">search</span>
           </div>
           <div className="flex flex-wrap items-center gap-2">
             {[
@@ -141,8 +143,8 @@ const Users = () => {
               <button
                 key={filter.id}
                 onClick={() => handleStatusFilter(filter.id)}
-                className={`px-3 sm:px-4 py-2 sm:py-2.5 rounded-lg sm:rounded-xl font-semibold transition-all duration-300 text-xs sm:text-sm ${statusFilter === filter.id
-                  ? `bg-gradient-to-r ${filter.activeClass} text-white shadow-lg`
+                className={`px-3 py-1.5 rounded-lg font-semibold transition-all duration-300 text-xs shadow-sm ${statusFilter === filter.id
+                  ? `bg-gradient-to-r ${filter.activeClass} text-white shadow-md transform scale-[1.02]`
                   : 'bg-white text-gray-700 hover:bg-gray-50 border border-gray-300'
                   }`}
               >
@@ -153,24 +155,24 @@ const Users = () => {
         </div>
 
         {/* Desktop Table View */}
-        <div className="hidden lg:block bg-white rounded-xl sm:rounded-2xl shadow-sm border border-gray-200 overflow-hidden animate-fade-in" style={{ animationDelay: '200ms' }}>
+        <div className="hidden lg:block bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden animate-fade-in" style={{ animationDelay: '200ms' }}>
           <div className="overflow-x-auto">
             <table className="min-w-full divide-y divide-gray-200">
               <thead className="bg-[#0B2C4D]">
                 <tr>
-                  <th className="px-6 py-4 text-left text-xs font-bold text-white uppercase tracking-wider">
+                  <th className="px-4 py-3 text-left text-xs font-bold text-white uppercase tracking-wider">
                     User Details
                   </th>
-                  <th className="px-6 py-4 text-left text-xs font-bold text-white uppercase tracking-wider">
+                  <th className="px-4 py-3 text-left text-xs font-bold text-white uppercase tracking-wider">
                     Contact Info
                   </th>
-                  <th className="px-6 py-4 text-left text-xs font-bold text-white uppercase tracking-wider">
+                  <th className="px-4 py-3 text-left text-xs font-bold text-white uppercase tracking-wider">
                     Status
                   </th>
-                  <th className="px-6 py-4 text-left text-xs font-bold text-white uppercase tracking-wider">
+                  <th className="px-4 py-3 text-left text-xs font-bold text-white uppercase tracking-wider">
                     Registered On
                   </th>
-                  <th className="px-6 py-4 text-right text-xs font-bold text-white uppercase tracking-wider">
+                  <th className="px-4 py-3 text-right text-xs font-bold text-white uppercase tracking-wider">
                     Actions
                   </th>
                 </tr>
@@ -178,10 +180,10 @@ const Users = () => {
               <tbody className="bg-white divide-y divide-gray-200">
                 {users.length === 0 ? (
                   <tr>
-                    <td colSpan="5" className="px-6 py-12 text-center">
-                      <div className="flex flex-col items-center space-y-3">
-                        <span className="material-icons-outlined text-6xl text-gray-300">person_off</span>
-                        <p className="text-gray-500 font-medium">No users found</p>
+                    <td colSpan="5" className="px-4 py-8 text-center">
+                      <div className="flex flex-col items-center space-y-2">
+                        <span className="material-icons-outlined text-4xl text-gray-300">person_off</span>
+                        <p className="text-gray-500 font-medium text-sm">No users found</p>
                       </div>
                     </td>
                   </tr>
@@ -190,56 +192,56 @@ const Users = () => {
                     <tr
                       key={user._id}
                       className="hover:bg-gray-50 transition-colors duration-200 animate-fade-in"
-                      style={{ animationDelay: `${index * 50}ms` }}
+                      style={{ animationDelay: `${index * 30}ms` }}
                     >
-                      <td className="px-6 py-4 whitespace-nowrap">
+                      <td className="px-4 py-3 whitespace-nowrap">
                         <div className="flex items-center">
-                          <div className="flex-shrink-0 h-10 w-10">
+                          <div className="flex-shrink-0 h-8 w-8">
                             {user.profilePicture ? (
                               <img
-                                className="h-10 w-10 rounded-full object-cover ring-2 ring-white shadow-md"
+                                className="h-8 w-8 rounded-full object-cover ring-2 ring-white shadow-sm"
                                 src={user.profilePicture}
                                 alt=""
                               />
                             ) : (
-                              <div className="h-10 w-10 rounded-full bg-gradient-to-br from-[#0B2C4D] to-[#254f7a] flex items-center justify-center text-white text-sm font-bold shadow-md">
+                              <div className="h-8 w-8 rounded-full bg-gradient-to-br from-[#0B2C4D] to-[#254f7a] flex items-center justify-center text-white text-xs font-bold shadow-sm">
                                 {getDisplayName(user).charAt(0).toUpperCase()}
                               </div>
                             )}
                           </div>
-                          <div className="ml-4">
+                          <div className="ml-3">
                             <div className="text-sm font-bold text-gray-900 group-hover:text-[#0B2C4D] transition-colors">
                               {getDisplayName(user)}
                             </div>
-                            <div className="text-xs text-gray-400 font-mono mt-0.5">{user._id}</div>
+                            <div className="text-xs text-gray-400 font-mono">{user._id.substring(0, 8)}...</div>
                           </div>
                         </div>
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap">
-                        <div className="flex flex-col space-y-1">
-                          <div className="flex items-center text-sm text-gray-600">
-                            <span className="material-icons-outlined text-base mr-2 text-gray-400">email</span>
+                      <td className="px-4 py-3 whitespace-nowrap">
+                        <div className="flex flex-col space-y-0.5">
+                          <div className="flex items-center text-xs text-gray-600">
+                            <span className="material-icons-outlined text-sm mr-1.5 text-gray-400">email</span>
                             {getDisplayEmail(user)}
                           </div>
-                          <div className="flex items-center text-sm text-gray-600">
-                            <span className="material-icons-outlined text-base mr-2 text-gray-400">phone</span>
+                          <div className="flex items-center text-xs text-gray-600">
+                            <span className="material-icons-outlined text-sm mr-1.5 text-gray-400">phone</span>
                             {user.phone}
                           </div>
                         </div>
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap">
+                      <td className="px-4 py-3 whitespace-nowrap">
                         <div className="flex items-center space-x-2">
                           {user.isBlocked ? (
-                            <span className="px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">
-                              <span className="material-icons-outlined text-sm mr-1">block</span>
+                            <span className="px-2 py-0.5 inline-flex text-[10px] font-bold uppercase tracking-wide rounded bg-red-100 text-red-800">
+                              <span className="material-icons-outlined text-xs mr-1">block</span>
                               Blocked
                             </span>
                           ) : (
-                            <span className={`px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${user.isActive
+                            <span className={`px-2 py-0.5 inline-flex text-[10px] font-bold uppercase tracking-wide rounded ${user.isActive
                               ? 'bg-green-100 text-green-800'
                               : 'bg-gray-100 text-gray-800'
                               }`}>
-                              <span className="material-icons-outlined text-sm mr-1">
+                              <span className="material-icons-outlined text-xs mr-1">
                                 {user.isActive ? 'check_circle' : 'person_off'}
                               </span>
                               {user.isActive ? 'Active' : 'Inactive'}
@@ -247,27 +249,27 @@ const Users = () => {
                           )}
                         </div>
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                      <td className="px-4 py-3 whitespace-nowrap text-xs text-gray-500">
                         {new Date(user.createdAt).toLocaleDateString()}
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                        <div className="flex items-center justify-end space-x-2">
+                      <td className="px-4 py-3 whitespace-nowrap text-right text-sm font-medium">
+                        <div className="flex items-center justify-end space-x-1">
                           <button
                             onClick={() => navigate(`/users/${user._id}`)}
-                            className="text-[#0B2C4D] hover:text-[#2BB673] transition-colors p-2 hover:bg-[#0B2C4D]/5 rounded-full"
+                            className="text-[#0B2C4D] hover:text-[#2BB673] transition-colors p-1.5 hover:bg-[#0B2C4D]/5 rounded-full"
                             title="View Details"
                           >
-                            <span className="material-icons-outlined text-xl">visibility</span>
+                            <span className="material-icons-outlined text-lg">visibility</span>
                           </button>
                           <button
                             onClick={() => handleBlock(user._id, user.isBlocked)}
-                            className={`p-2 rounded-full transition-colors ${user.isBlocked
+                            className={`p-1.5 rounded-full transition-colors ${user.isBlocked
                               ? 'text-green-600 hover:text-green-700 hover:bg-green-50'
                               : 'text-red-500 hover:text-red-700 hover:bg-red-50'
                               }`}
                             title={user.isBlocked ? 'Unblock User' : 'Block User'}
                           >
-                            <span className="material-icons-outlined text-xl">
+                            <span className="material-icons-outlined text-lg">
                               {user.isBlocked ? 'check_circle' : 'block'}
                             </span>
                           </button>

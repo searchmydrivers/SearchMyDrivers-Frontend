@@ -169,48 +169,48 @@ const ServiceZones = () => {
 
   return (
     <Layout>
-      <div className="flex h-[calc(100vh-120px)] gap-6">
+      <div className="flex flex-col lg:flex-row h-[calc(100vh-80px)] gap-3 animate-fade-in p-2">
         {/* Left Sidebar: List */}
-        <div className="w-1/3 flex flex-col bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
-          <div className="p-4 border-b border-gray-100 flex justify-between items-center bg-gray-50/50">
-            <h2 className="font-bold text-lg text-gray-800">Service Zones</h2>
+        <div className="w-full lg:w-1/3 flex flex-col bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden h-64 lg:h-auto">
+          <div className="p-2.5 border-b border-gray-100 flex justify-between items-center bg-gray-50/50">
+            <h2 className="font-bold text-sm text-gray-800">Service Zones</h2>
             {!isCreating && !isEditing && (
               <button
                 onClick={() => setIsCreating(true)}
-                className="bg-[#0B2C4D] text-white px-3 py-1.5 rounded-lg text-sm hover:bg-[#091E3A] transition"
+                className="bg-[#0B2C4D] text-white px-3 py-1 rounded text-xs hover:bg-[#091E3A] transition font-medium"
               >
                 + New Zone
               </button>
             )}
           </div>
 
-          <div className="flex-1 overflow-y-auto p-4 space-y-3">
+          <div className="flex-1 overflow-y-auto p-2 space-y-1.5">
             {loading ? (
-              <p className="text-center text-gray-500 mt-4">Loading...</p>
+              <p className="text-center text-gray-500 mt-4 text-xs">Loading...</p>
             ) : zones.length === 0 ? (
-              <p className="text-center text-gray-400 mt-4">No zones found</p>
+              <p className="text-center text-gray-400 mt-4 text-xs">No zones found</p>
             ) : (
               zones.map((zone) => (
                 <div
                   key={zone._id}
                   onClick={() => startEdit(zone)}
-                  className={`p-4 rounded-xl border cursor-pointer transition-all ${selectedZone?._id === zone._id
+                  className={`p-2.5 rounded-lg border cursor-pointer transition-all ${selectedZone?._id === zone._id
                     ? 'border-[#2BB673] bg-green-50 shadow-sm'
                     : 'border-gray-100 hover:border-green-200 hover:shadow-sm'
                     }`}
                 >
                   <div className="flex justify-between items-start">
                     <div>
-                      <h3 className="font-bold text-gray-900">{zone.name}</h3>
-                      <p className="text-xs text-gray-500 mt-1">{zone.description || 'No description'}</p>
+                      <h3 className="font-bold text-gray-900 text-xs">{zone.name}</h3>
+                      <p className="text-[10px] text-gray-500 mt-0.5 leading-tight">{zone.description || 'No description'}</p>
                     </div>
-                    <div className="flex gap-2">
-                      <span className={`w-2 h-2 rounded-full mt-2 ${zone.isActive ? 'bg-[#2BB673]' : 'bg-gray-300'}`}></span>
+                    <div className="flex gap-1">
+                      <span className={`w-1.5 h-1.5 rounded-full mt-1.5 ${zone.isActive ? 'bg-[#2BB673]' : 'bg-gray-300'}`}></span>
                       <button
                         onClick={(e) => { e.stopPropagation(); handleDelete(zone._id); }}
-                        className="text-gray-400 hover:text-red-500"
+                        className="text-gray-400 hover:text-red-500 ml-1"
                       >
-                        <span className="material-icons-outlined text-lg">delete</span>
+                        <span className="material-icons-outlined text-sm">delete</span>
                       </button>
                     </div>
                   </div>
@@ -221,61 +221,61 @@ const ServiceZones = () => {
         </div>
 
         {/* Right Panel: Map & Form */}
-        <div className="w-2/3 flex flex-col gap-4">
+        <div className="w-full lg:w-2/3 flex flex-col gap-2 h-full">
 
           {/* Form Header (Only when creating/editing) */}
           {(isCreating || isEditing) && (
-            <div className="bg-white p-4 rounded-2xl shadow-sm border border-gray-100 animate-fade-in-down">
-              <form onSubmit={handleSubmit} className="flex gap-4 items-end">
-                <div className="flex-1">
-                  <label className="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-1">Zone Name</label>
+            <div className="bg-white p-2.5 rounded-xl shadow-sm border border-gray-100 animate-fade-in-down">
+              <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row gap-2 items-end">
+                <div className="flex-1 w-full">
+                  <label className="block text-[10px] font-bold text-gray-500 uppercase tracking-wider mb-0.5">Zone Name</label>
                   <input
                     type="text"
                     required
                     value={name}
                     onChange={(e) => setName(e.target.value)}
-                    className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-[#2BB673] outline-none"
+                    className="w-full px-2 py-1.5 border border-gray-200 rounded focus:ring-1 focus:ring-[#2BB673] outline-none text-xs"
                     placeholder="e.g. South Mumbai"
                   />
                 </div>
-                <div className="flex-1">
-                  <label className="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-1">Description</label>
+                <div className="flex-1 w-full">
+                  <label className="block text-[10px] font-bold text-gray-500 uppercase tracking-wider mb-0.5">Description</label>
                   <input
                     type="text"
                     value={description}
                     onChange={(e) => setDescription(e.target.value)}
-                    className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-[#2BB673] outline-none"
+                    className="w-full px-2 py-1.5 border border-gray-200 rounded focus:ring-1 focus:ring-[#2BB673] outline-none text-xs"
                     placeholder="Optional details"
                   />
                 </div>
-                <div className="flex gap-2">
+                <div className="flex gap-2 w-full sm:w-auto">
                   <button
                     type="button"
                     onClick={resetForm}
-                    className="px-4 py-2 text-gray-500 bg-gray-100 rounded-lg hover:bg-gray-200"
+                    className="flex-1 sm:flex-none px-3 py-1.5 text-gray-500 bg-gray-100 rounded text-xs hover:bg-gray-200 font-medium"
                   >
                     Cancel
                   </button>
                   <button
                     type="submit"
-                    className="px-6 py-2 bg-[#0B2C4D] text-white rounded-lg hover:bg-[#091E3A] shadow-lg shadow-blue-900/20"
+                    className="flex-1 sm:flex-none px-4 py-1.5 bg-[#0B2C4D] text-white rounded text-xs hover:bg-[#091E3A] shadow-sm font-medium"
                   >
-                    {isEditing ? 'Update Zone' : 'Save Zone'}
+                    {isEditing ? 'Update' : 'Save'}
                   </button>
                 </div>
               </form>
-              <p className="text-xs text-[#0B2C4D] mt-2 flex items-center">
-                <span className="material-icons-outlined text-sm mr-1">info</span>
+              <p className="text-[10px] text-[#0B2C4D] mt-1.5 flex items-center">
+                <span className="material-icons-outlined text-xs mr-1">info</span>
                 Use the drawing tools on the map to {coordinates.length > 0 ? 'redraw' : 'draw'} the zone area.
               </p>
             </div>
           )}
 
           {/* Map Container */}
-          <div className="flex-1 bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden relative">
+          <div className="flex-1 bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden relative min-h-[300px]">
             {!isLoaded ? (
               <div className="w-full h-full flex items-center justify-center bg-gray-50">
-                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#2BB673]"></div>
+                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#2BB673]"></div>
               </div>
             ) : (
               <GoogleMap
@@ -288,10 +288,12 @@ const ServiceZones = () => {
                   mapTypeControl: false,
                   streetViewControl: false,
                   fullscreenControl: true,
+                  zoomControl: true,
+                  zoomControlOptions: { position: window.google?.maps?.ControlPosition?.RIGHT_CENTER }
                 }}
               >
 
-                <div className="absolute top-4 left-4 z-10 w-80">
+                <div className="absolute top-2 left-2 z-10 w-64 max-w-[90%]">
                   <Autocomplete
                     onLoad={(autocomplete) => (autocompleteRef.current = autocomplete)}
                     onPlaceChanged={onPlaceChanged}
@@ -300,9 +302,9 @@ const ServiceZones = () => {
                       <input
                         type="text"
                         placeholder="Search location..."
-                        className="w-full px-4 py-3 pl-10 bg-white rounded-xl shadow-lg border-0 focus:ring-2 focus:ring-[#2BB673] outline-none text-sm font-medium text-gray-900"
+                        className="w-full px-3 py-1.5 pl-8 bg-white rounded-lg shadow-sm border-0 focus:ring-1 focus:ring-[#2BB673] outline-none text-xs font-medium text-gray-900"
                       />
-                      <span className="material-icons-outlined absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">
+                      <span className="material-icons-outlined absolute left-2 top-1/2 -translate-y-1/2 text-gray-400 text-sm">
                         search
                       </span>
                     </div>

@@ -138,14 +138,13 @@ const Notifications = () => {
 
   return (
     <Layout>
-      <div className="space-y-4 sm:space-y-6 animate-fade-in">
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-
-          <div className="flex items-center space-x-3">
+      <div className="space-y-4 animate-fade-in">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+          <div className="flex items-center space-x-2">
             {unreadCount > 0 && (
               <button
                 onClick={handleMarkAllAsRead}
-                className="px-4 py-2 bg-white border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition-colors text-sm font-medium"
+                className="px-3 py-1.5 bg-white border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition-colors text-xs font-medium"
               >
                 Mark All as Read
               </button>
@@ -156,28 +155,28 @@ const Notifications = () => {
                 setError('');
                 setSuccess('');
               }}
-              className="px-4 py-2 bg-gradient-to-r from-[#0B2C4D] to-[#254f7a] text-white rounded-lg hover:from-[#091E3A] hover:to-[#1a3a5a] transition-colors text-sm font-medium flex items-center space-x-2"
+              className="px-4 py-2 bg-gradient-to-r from-[#0B2C4D] to-[#254f7a] text-white rounded-lg hover:from-[#091E3A] hover:to-[#1a3a5a] transition-colors text-xs font-medium flex items-center space-x-1.5"
             >
-              <span className="material-icons-outlined text-lg">send</span>
+              <span className="material-icons-outlined text-sm">send</span>
               <span>Send Notification</span>
             </button>
           </div>
         </div>
 
         {error && (
-          <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg flex items-center animate-fade-in">
-            <span className="material-icons-outlined mr-2">error_outline</span>
+          <div className="bg-red-50 border border-red-200 text-red-700 px-3 py-2 rounded-lg flex items-center animate-fade-in text-xs">
+            <span className="material-icons-outlined mr-2 text-sm">error_outline</span>
             {error}
           </div>
         )}
 
         {success && (
-          <div className="bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-lg animate-fade-in">
-            <div className="flex items-start">
-              <span className="material-icons-outlined mr-2 mt-0.5">check_circle</span>
+          <div className="bg-green-50 border border-green-200 text-green-700 px-3 py-2 rounded-lg animate-fade-in">
+            <div className="flex items-start text-xs">
+              <span className="material-icons-outlined mr-2 mt-0.5 text-sm">check_circle</span>
               <div className="flex-1">
-                <p className="font-medium mb-2">Notification sent successfully!</p>
-                <pre className="text-sm whitespace-pre-wrap font-mono bg-green-100 p-3 rounded-lg overflow-x-auto">
+                <p className="font-medium mb-1">Notification sent successfully!</p>
+                <pre className="text-[10px] whitespace-pre-wrap font-mono bg-green-100 p-2 rounded overflow-x-auto">
                   {success}
                 </pre>
               </div>
@@ -186,27 +185,27 @@ const Notifications = () => {
         )}
 
         {/* Notifications List */}
-        <div className="bg-white rounded-xl sm:rounded-2xl shadow-sm border border-gray-200 overflow-hidden animate-fade-in" style={{ animationDelay: '100ms' }}>
-          <div className="px-6 py-4 border-b border-gray-200 bg-gradient-to-r from-gray-50 to-gray-100">
+        <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden animate-fade-in" style={{ animationDelay: '100ms' }}>
+          <div className="px-4 py-3 border-b border-gray-200 bg-gradient-to-r from-gray-50 to-gray-100">
             <div className="flex items-center justify-between">
-              <h2 className="text-lg font-bold text-gray-900 flex items-center">
-                <span className="material-icons-outlined text-xl mr-2 text-[#0B2C4D]">notifications</span>
-                All Notifications {unreadCount > 0 && <span className="text-sm font-normal text-gray-500 ml-2">({unreadCount} unread)</span>}
+              <h2 className="text-sm font-bold text-gray-900 flex items-center">
+                <span className="material-icons-outlined text-base mr-1.5 text-[#0B2C4D]">notifications</span>
+                All Notifications {unreadCount > 0 && <span className="text-xs font-normal text-gray-500 ml-1">({unreadCount} unread)</span>}
               </h2>
             </div>
           </div>
 
           {loading ? (
-            <div className="flex items-center justify-center py-12">
-              <div className="flex flex-col items-center space-y-4">
-                <div className="w-12 h-12 border-4 border-[#0B2C4D] border-t-transparent rounded-full animate-spin"></div>
-                <div className="text-gray-500 font-medium">Loading notifications...</div>
+            <div className="flex items-center justify-center py-8">
+              <div className="flex flex-col items-center space-y-3">
+                <div className="w-8 h-8 border-4 border-[#0B2C4D] border-t-transparent rounded-full animate-spin"></div>
+                <div className="text-gray-500 font-medium text-xs">Loading notifications...</div>
               </div>
             </div>
           ) : notifications.length === 0 ? (
-            <div className="text-center py-12">
-              <span className="material-icons-outlined text-6xl text-gray-300 mb-4 block">notifications_none</span>
-              <p className="text-gray-500 font-medium">No notifications found</p>
+            <div className="text-center py-8">
+              <span className="material-icons-outlined text-4xl text-gray-300 mb-2 block">notifications_none</span>
+              <p className="text-gray-500 font-medium text-sm">No notifications found</p>
             </div>
           ) : (
             <>
@@ -214,46 +213,46 @@ const Notifications = () => {
                 {notifications.map((notification, index) => (
                   <div
                     key={notification._id}
-                    className={`p-6 hover:bg-gray-50 transition-colors duration-200 animate-fade-in ${!notification.isRead ? 'bg-blue-50/50' : ''
+                    className={`p-3 hover:bg-gray-50 transition-colors duration-200 animate-fade-in ${!notification.isRead ? 'bg-blue-50/50' : ''
                       }`}
                     style={{ animationDelay: `${index * 30}ms` }}
                   >
-                    <div className="flex items-start space-x-4">
+                    <div className="flex items-start space-x-3">
                       <div
-                        className={`w-12 h-12 rounded-lg flex items-center justify-center flex-shrink-0 ${getNotificationColor(
+                        className={`w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 ${getNotificationColor(
                           notification.type
                         )}`}
                       >
-                        <span className="material-icons-outlined">
+                        <span className="material-icons-outlined text-base">
                           {getNotificationIcon(notification.type)}
                         </span>
                       </div>
                       <div className="flex-1 min-w-0">
                         <div className="flex items-start justify-between">
                           <div className="flex-1">
-                            <div className="flex items-center space-x-2 mb-1">
-                              <h3 className="text-base font-semibold text-gray-900">{notification.title}</h3>
+                            <div className="flex items-center space-x-2 mb-0.5">
+                              <h3 className="text-sm font-semibold text-gray-900">{notification.title}</h3>
                               {!notification.isRead && (
-                                <span className="w-2 h-2 bg-[#0B2C4D] rounded-full"></span>
+                                <span className="w-1.5 h-1.5 bg-[#0B2C4D] rounded-full"></span>
                               )}
                               <span
-                                className={`px-2 py-0.5 rounded-full text-xs font-medium ${getNotificationColor(
+                                className={`px-1.5 py-0.5 rounded-full text-[10px] uppercase font-bold tracking-wide ${getNotificationColor(
                                   notification.type
                                 )}`}
                               >
                                 {notification.type.replace(/-/g, ' ')}
                               </span>
                             </div>
-                            <p className="text-sm text-gray-600 mb-2">{notification.message}</p>
-                            <p className="text-xs text-gray-400">{formatDate(notification.createdAt)}</p>
+                            <p className="text-xs text-gray-600 mb-1">{notification.message}</p>
+                            <p className="text-[10px] text-gray-400">{formatDate(notification.createdAt)}</p>
                           </div>
                           {!notification.isRead && (
                             <button
                               onClick={() => handleMarkAsRead(notification._id)}
-                              className="ml-4 p-2 text-gray-400 hover:text-[#0B2C4D] transition-colors"
+                              className="ml-2 p-1 text-gray-400 hover:text-[#0B2C4D] transition-colors"
                               title="Mark as read"
                             >
-                              <span className="material-icons-outlined">check_circle</span>
+                              <span className="material-icons-outlined text-lg">check_circle</span>
                             </button>
                           )}
                         </div>
@@ -265,32 +264,29 @@ const Notifications = () => {
 
               {/* Pagination */}
               {pagination.totalPages > 1 && (
-                <div className="px-6 py-4 border-t border-gray-200 bg-gray-50">
+                <div className="px-4 py-3 border-t border-gray-200 bg-gray-50">
                   <div className="flex items-center justify-between">
-                    <div className="text-sm text-gray-600">
-                      Showing {((pagination.page - 1) * pagination.limit) + 1} to{' '}
-                      {Math.min(pagination.page * pagination.limit, pagination.total)} of {pagination.total} notifications
+                    <div className="text-[10px] sm:text-xs text-gray-600">
+                      Page {pagination.page} of {pagination.totalPages}
                     </div>
                     <div className="flex items-center space-x-2">
                       <button
                         onClick={() => setPagination((prev) => ({ ...prev, page: prev.page - 1 }))}
                         disabled={pagination.page === 1}
-                        className={`px-3 py-2 rounded-lg font-medium text-sm ${pagination.page === 1
-                            ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
-                            : 'bg-white text-gray-700 hover:bg-gray-50 border border-gray-300'
+                        className={`px-3 py-1 rounded-lg font-medium text-xs ${pagination.page === 1
+                          ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
+                          : 'bg-white text-gray-700 hover:bg-gray-50 border border-gray-300'
                           }`}
                       >
                         Previous
                       </button>
-                      <span className="px-3 py-2 text-sm text-gray-700">
-                        Page {pagination.page} of {pagination.totalPages}
-                      </span>
+
                       <button
                         onClick={() => setPagination((prev) => ({ ...prev, page: prev.page + 1 }))}
                         disabled={pagination.page === pagination.totalPages}
-                        className={`px-3 py-2 rounded-lg font-medium text-sm ${pagination.page === pagination.totalPages
-                            ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
-                            : 'bg-white text-gray-700 hover:bg-gray-50 border border-gray-300'
+                        className={`px-3 py-1 rounded-lg font-medium text-xs ${pagination.page === pagination.totalPages
+                          ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
+                          : 'bg-white text-gray-700 hover:bg-gray-50 border border-gray-300'
                           }`}
                       >
                         Next
@@ -305,16 +301,16 @@ const Notifications = () => {
 
         {/* Send Notification Modal */}
         {showModal && (
-          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-            <div className="bg-white rounded-xl shadow-2xl p-6 w-full max-w-md max-h-[90vh] overflow-y-auto">
-              <h2 className="text-xl font-bold text-gray-800 mb-4">Send Notification</h2>
-              <form onSubmit={handleSubmit}>
-                <div className="mb-4">
-                  <label className="label">Target Audience</label>
+          <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+            <div className="bg-white rounded-xl shadow-2xl p-4 w-full max-w-sm max-h-[90vh] overflow-y-auto animate-scale-in">
+              <h2 className="text-lg font-bold text-gray-800 mb-3">Send Notification</h2>
+              <form onSubmit={handleSubmit} className="space-y-3">
+                <div>
+                  <label className="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-1">Target Audience</label>
                   <select
                     value={formData.target}
                     onChange={(e) => setFormData({ ...formData, target: e.target.value })}
-                    className="input-field"
+                    className="w-full px-3 py-2 border border-gray-300 rounded focus:ring-1 focus:ring-[#0B2C4D] outline-none text-xs"
                     required
                   >
                     <option value="all">All (Users + Drivers)</option>
@@ -322,40 +318,40 @@ const Notifications = () => {
                     <option value="drivers">Drivers Only</option>
                   </select>
                 </div>
-                <div className="mb-4">
-                  <label className="label">Title *</label>
+                <div>
+                  <label className="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-1">Title *</label>
                   <input
                     type="text"
                     value={formData.title}
                     onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-                    className="input-field"
+                    className="w-full px-3 py-2 border border-gray-300 rounded focus:ring-1 focus:ring-[#0B2C4D] outline-none text-xs"
                     placeholder="Enter notification title"
                     required
                     maxLength={100}
                   />
                 </div>
-                <div className="mb-4">
-                  <label className="label">Message *</label>
+                <div>
+                  <label className="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-1">Message *</label>
                   <textarea
                     value={formData.message}
                     onChange={(e) => setFormData({ ...formData, message: e.target.value })}
-                    className="input-field h-32 resize-none"
+                    className="w-full px-3 py-2 border border-gray-300 rounded focus:ring-1 focus:ring-[#0B2C4D] outline-none text-xs h-24 resize-none"
                     placeholder="Enter notification message"
                     required
                     maxLength={500}
                   />
-                  <p className="text-xs text-gray-500 mt-1">{formData.message.length}/500 characters</p>
+                  <p className="text-[10px] text-gray-500 mt-0.5 text-right">{formData.message.length}/500</p>
                 </div>
-                <div className="flex space-x-3">
-                  <button type="submit" disabled={actionLoading} className="flex-1 btn-primary">
+                <div className="flex space-x-3 pt-2">
+                  <button type="submit" disabled={actionLoading} className="flex-1 px-4 py-2 bg-gradient-to-r from-[#0B2C4D] to-[#254f7a] text-white rounded hover:from-[#091E3A] hover:to-[#1a3a5a] transition-all duration-200 shadow-md font-semibold text-xs flex items-center justify-center">
                     {actionLoading ? (
                       <>
-                        <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin mr-2"></div>
+                        <div className="w-3 h-3 border-2 border-white border-t-transparent rounded-full animate-spin mr-1.5"></div>
                         <span>Sending...</span>
                       </>
                     ) : (
                       <>
-                        <span className="material-icons-outlined mr-2">send</span>
+                        <span className="material-icons-outlined mr-1.5 text-sm">send</span>
                         <span>Send</span>
                       </>
                     )}
@@ -368,7 +364,7 @@ const Notifications = () => {
                       setError('');
                       setSuccess('');
                     }}
-                    className="flex-1 btn-secondary"
+                    className="flex-1 px-4 py-2 bg-white text-gray-700 border border-gray-300 rounded hover:bg-gray-50 transition-all duration-200 font-semibold text-xs"
                   >
                     Cancel
                   </button>

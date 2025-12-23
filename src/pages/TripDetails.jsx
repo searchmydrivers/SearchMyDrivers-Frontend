@@ -198,7 +198,7 @@ const TripDetails = () => {
     };
     const config = statusConfig[status] || { bg: 'bg-gray-100', text: 'text-gray-800', label: status || 'Unknown' };
     return (
-      <span className={`px-3 py-1 inline-flex text-xs leading-5 font-bold rounded-full ${config.bg} ${config.text}`}>
+      <span className={`px-2 py-0.5 inline-flex text-[10px] leading-4 font-bold uppercase tracking-wide rounded-full ${config.bg} ${config.text}`}>
         {config.label}
       </span>
     );
@@ -209,8 +209,8 @@ const TripDetails = () => {
       <Layout>
         <div className="flex items-center justify-center h-64">
           <div className="flex flex-col items-center space-y-4">
-            <div className="w-12 h-12 border-4 border-[#2BB673] border-t-transparent rounded-full animate-spin"></div>
-            <div className="text-gray-500 font-medium">Loading trip details...</div>
+            <div className="w-8 h-8 border-4 border-[#2BB673] border-t-transparent rounded-full animate-spin"></div>
+            <div className="text-gray-500 font-medium text-xs">Loading trip details...</div>
           </div>
         </div>
       </Layout>
@@ -220,12 +220,12 @@ const TripDetails = () => {
   if (!trip) {
     return (
       <Layout>
-        <div className="bg-white rounded-xl shadow-sm border border-gray-200 text-center py-12">
-          <span className="material-icons-outlined text-6xl text-gray-300 mb-4 block">route</span>
-          <p className="text-gray-500 text-lg font-medium mb-4">Trip not found</p>
+        <div className="bg-white rounded-xl shadow-sm border border-gray-200 text-center py-8">
+          <span className="material-icons-outlined text-4xl text-gray-300 mb-2 block">route</span>
+          <p className="text-gray-500 text-sm font-medium mb-3">Trip not found</p>
           <button
             onClick={() => navigate('/trip-bookings')}
-            className="px-6 py-2.5 bg-gradient-to-r from-[#0B2C4D] to-[#254f7a] text-white rounded-lg hover:from-[#091E3A] hover:to-[#1a3a5a] transition-all duration-200 shadow-lg font-semibold"
+            className="px-4 py-2 bg-gradient-to-r from-[#0B2C4D] to-[#254f7a] text-white rounded hover:from-[#091E3A] hover:to-[#1a3a5a] transition-all duration-200 shadow-sm font-semibold text-xs"
           >
             Back to Trips
           </button>
@@ -236,34 +236,38 @@ const TripDetails = () => {
 
   return (
     <Layout>
-      <div className="space-y-4 sm:space-y-6 animate-fade-in">
+      <div className="space-y-4 animate-fade-in">
         {/* Header */}
-        <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4">
+        <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3">
           <div>
             <button
               onClick={() => navigate('/trip-bookings')}
-              className="text-[#0B2C4D] hover:text-[#254f7a] font-semibold flex items-center space-x-2 transition-colors group mb-2"
+              className="text-[#0B2C4D] hover:text-[#254f7a] font-semibold flex items-center space-x-1.5 transition-colors group mb-1.5 text-xs sm:text-sm"
             >
-              <span className="material-icons-outlined text-lg group-hover:-translate-x-1 transition-transform">arrow_back</span>
+              <span className="material-icons-outlined text-base group-hover:-translate-x-1 transition-transform">arrow_back</span>
               <span>Back to Trips</span>
             </button>
-            <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 tracking-tight mb-1 sm:mb-2">Trip Details</h1>
-            <p className="text-sm sm:text-base text-gray-600 font-medium">Trip ID: #{trip._id?.slice(-8)} • View complete trip information</p>
+            <h1 className="text-xl sm:text-2xl font-bold text-gray-900 tracking-tight mb-0.5">Trip Details</h1>
+            <div className="flex items-center space-x-2 text-xs text-gray-500">
+              <span className="font-medium">{trip.tripId ? `#${trip.tripId}` : `#${trip._id?.slice(-8)}`}</span>
+              <span>•</span>
+              <span className="font-medium text-gray-700">{getStatusBadge(trip.status)}</span>
+            </div>
           </div>
           {!['completed', 'payment-completed', 'cancelled'].includes(trip.status) && (
             <button
               onClick={handleCancelTrip}
               disabled={cancelling}
-              className="px-4 sm:px-6 py-2.5 sm:py-3 bg-gradient-to-r from-red-600 to-red-700 text-white rounded-lg sm:rounded-xl hover:from-red-700 hover:to-red-800 transition-all duration-200 shadow-lg font-semibold disabled:opacity-50 disabled:cursor-not-allowed flex items-center space-x-2 text-sm sm:text-base"
+              className="px-4 py-2 bg-gradient-to-r from-red-600 to-red-700 text-white rounded hover:from-red-700 hover:to-red-800 transition-all duration-200 shadow-sm font-semibold disabled:opacity-50 disabled:cursor-not-allowed flex items-center space-x-1.5 text-xs uppercase tracking-wide"
             >
               {cancelling ? (
                 <>
-                  <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                  <div className="w-3 h-3 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
                   <span>Cancelling...</span>
                 </>
               ) : (
                 <>
-                  <span className="material-icons-outlined">cancel</span>
+                  <span className="material-icons-outlined text-sm">cancel</span>
                   <span>Cancel Trip</span>
                 </>
               )}
@@ -272,167 +276,174 @@ const TripDetails = () => {
         </div>
 
         {error && (
-          <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg flex items-center animate-fade-in">
-            <span className="material-icons-outlined mr-2">error_outline</span>
+          <div className="bg-red-50 border border-red-200 text-red-700 px-3 py-2 rounded-lg flex items-center animate-fade-in text-xs">
+            <span className="material-icons-outlined mr-2 text-sm">error_outline</span>
             <span className="flex-1">{error}</span>
             <button onClick={() => setError('')} className="text-red-500 hover:text-red-700">
-              <span className="material-icons-outlined">close</span>
+              <span className="material-icons-outlined text-sm">close</span>
             </button>
           </div>
         )}
 
         {success && (
-          <div className="bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-lg flex items-center animate-fade-in">
-            <span className="material-icons-outlined mr-2">check_circle</span>
+          <div className="bg-green-50 border border-green-200 text-green-700 px-3 py-2 rounded-lg flex items-center animate-fade-in text-xs">
+            <span className="material-icons-outlined mr-2 text-sm">check_circle</span>
             <span className="flex-1">{success}</span>
             <button onClick={() => setSuccess('')} className="text-green-500 hover:text-green-700">
-              <span className="material-icons-outlined">close</span>
+              <span className="material-icons-outlined text-sm">close</span>
             </button>
           </div>
         )}
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
           {/* Trip Information */}
-          <div className="bg-white rounded-xl sm:rounded-2xl shadow-sm border border-gray-200 p-4 sm:p-6 animate-fade-in" style={{ animationDelay: '100ms' }}>
-            <h2 className="text-lg sm:text-xl font-bold text-gray-900 mb-4 sm:mb-6 flex items-center border-b border-gray-200 pb-3">
-              <span className="material-icons-outlined text-xl mr-2 text-[#0B2C4D]">info</span>
+          <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-4 animate-fade-in" style={{ animationDelay: '100ms' }}>
+            <h2 className="text-sm font-bold text-gray-900 mb-3 flex items-center border-b border-gray-100 pb-2">
+              <span className="material-icons-outlined text-lg mr-2 text-[#0B2C4D]">info</span>
               Trip Information
             </h2>
-            <div className="space-y-4">
-              <div>
-                <span className="text-sm font-medium text-gray-600">Status:</span>
-                <div className="mt-1">{getStatusBadge(trip.status)}</div>
+            <div className="space-y-2">
+              <div className="flex justify-between items-center text-xs border-b border-gray-50 pb-1">
+                <span className="text-gray-500 font-medium">Trip ID</span>
+                <p className="text-gray-900 font-bold">{trip.tripId ? `#${trip.tripId}` : (trip._id || 'N/A')}</p>
               </div>
-              <div>
-                <span className="text-sm font-medium text-gray-600">Module:</span>
-                <p className="text-sm text-gray-900 capitalize">{trip.module || 'N/A'}</p>
+              <div className="flex justify-between items-center text-xs border-b border-gray-50 pb-1">
+                <span className="text-gray-500 font-medium">Status</span>
+                <div>{getStatusBadge(trip.status)}</div>
               </div>
-              <div>
-                <span className="text-sm font-medium text-gray-600">Trip Type:</span>
-                <p className="text-sm text-gray-900 capitalize">{trip.tripType || 'N/A'}</p>
+              <div className="flex justify-between items-center text-xs border-b border-gray-50 pb-1">
+                <span className="text-gray-500 font-medium">Module</span>
+                <p className="text-gray-900 capitalize font-medium">{trip.module || 'N/A'}</p>
               </div>
-              <div>
-                <span className="text-sm font-medium text-gray-600">Scheduled Time:</span>
-                <p className="text-sm text-gray-900">
+              <div className="flex justify-between items-center text-xs border-b border-gray-50 pb-1">
+                <span className="text-gray-500 font-medium">Trip Type</span>
+                <p className="text-gray-900 capitalize font-medium">{trip.tripType || 'N/A'}</p>
+              </div>
+              <div className="flex justify-between items-center text-xs border-b border-gray-50 pb-1">
+                <span className="text-gray-500 font-medium">Scheduled Time</span>
+                <p className="text-gray-900 font-medium">
                   {trip.scheduledTime ? new Date(trip.scheduledTime).toLocaleString() : 'N/A'}
                 </p>
               </div>
-              <div>
-                <span className="text-sm font-medium text-gray-600">Created At:</span>
-                <p className="text-sm text-gray-900">
+              <div className="flex justify-between items-center text-xs border-b border-gray-50 pb-1">
+                <span className="text-gray-500 font-medium">Created At</span>
+                <p className="text-gray-900 font-medium">
                   {trip.createdAt ? new Date(trip.createdAt).toLocaleString() : 'N/A'}
                 </p>
               </div>
               {trip.tripStartTime && (
-                <div>
-                  <span className="text-sm font-medium text-gray-600">Trip Start Time:</span>
-                  <p className="text-sm text-gray-900">{new Date(trip.tripStartTime).toLocaleString()}</p>
+                <div className="flex justify-between items-center text-xs border-b border-gray-50 pb-1">
+                  <span className="text-gray-500 font-medium">Start Time</span>
+                  <p className="text-gray-900 font-medium">{new Date(trip.tripStartTime).toLocaleString()}</p>
                 </div>
               )}
               {trip.tripEndTime && (
-                <div>
-                  <span className="text-sm font-medium text-gray-600">Trip End Time:</span>
-                  <p className="text-sm text-gray-900">{new Date(trip.tripEndTime).toLocaleString()}</p>
+                <div className="flex justify-between items-center text-xs">
+                  <span className="text-gray-500 font-medium">End Time</span>
+                  <p className="text-gray-900 font-medium">{new Date(trip.tripEndTime).toLocaleString()}</p>
                 </div>
               )}
             </div>
           </div>
 
           {/* User & Driver Information */}
-          <div className="bg-white rounded-xl sm:rounded-2xl shadow-sm border border-gray-200 p-4 sm:p-6 animate-fade-in" style={{ animationDelay: '150ms' }}>
-            <h2 className="text-lg sm:text-xl font-bold text-gray-900 mb-4 sm:mb-6 flex items-center border-b border-gray-200 pb-3">
-              <span className="material-icons-outlined text-xl mr-2 text-[#0B2C4D]">people</span>
+          <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-4 animate-fade-in" style={{ animationDelay: '150ms' }}>
+            <h2 className="text-sm font-bold text-gray-900 mb-3 flex items-center border-b border-gray-100 pb-2">
+              <span className="material-icons-outlined text-lg mr-2 text-[#0B2C4D]">people</span>
               User & Driver
             </h2>
-            <div className="space-y-4">
-              <div>
-                <span className="text-sm font-medium text-gray-600">User:</span>
-                <p className="text-sm text-gray-900">{trip.user?.name || 'N/A'}</p>
-                <p className="text-xs text-gray-500">{trip.user?.phone || ''}</p>
-                <p className="text-xs text-gray-500">{trip.user?.email || ''}</p>
+            <div className="space-y-3">
+              <div className="flex justify-between items-start text-xs border-b border-gray-50 pb-2">
+                <span className="text-gray-500 font-medium w-20">User</span>
+                <div className="text-right">
+                  <p className="text-gray-900 font-bold">{trip.user?.name || 'N/A'}</p>
+                  <p className="text-gray-500">{trip.user?.phone || ''}</p>
+                  <p className="text-[10px] text-gray-400">{trip.user?.email || ''}</p>
+                </div>
               </div>
-              <div>
-                <span className="text-sm font-medium text-gray-600">Driver:</span>
-                {trip.driver ? (
-                  <>
-                    <p className="text-sm text-gray-900">{trip.driver.name || 'N/A'}</p>
-                    <p className="text-xs text-gray-500">{trip.driver.phone || ''}</p>
-                    <p className="text-xs text-gray-500">
-                      Rating: {trip.driver.rating || 0} • {trip.driver.workLocation || ''}
-                    </p>
-                  </>
-                ) : (
-                  <p className="text-sm text-gray-500">Not Assigned</p>
-                )}
+              <div className="flex justify-between items-start text-xs border-b border-gray-50 pb-2">
+                <span className="text-gray-500 font-medium w-20">Driver</span>
+                <div className="text-right">
+                  {trip.driver ? (
+                    <>
+                      <p className="text-gray-900 font-bold">{trip.driver.name || 'N/A'}</p>
+                      <p className="text-gray-500">{trip.driver.phone || ''}</p>
+                      <div className="flex items-center justify-end space-x-1 text-[10px] text-gray-400 mt-0.5">
+                        <span className="material-icons-outlined text-yellow-500 text-[10px]">star</span>
+                        <span>{trip.driver.rating || 0}</span>
+                        <span>• {trip.driver.workLocation || ''}</span>
+                      </div>
+                    </>
+                  ) : (
+                    <span className="text-gray-400 italic">Not Assigned</span>
+                  )}
+                </div>
               </div>
-              <div>
-                <span className="text-sm font-medium text-gray-600">Vehicle:</span>
-                <p className="text-sm text-gray-900">
-                  {trip.vehicle?.vehicleNumber || 'N/A'} • {trip.vehicle?.carBrand || ''}{' '}
-                  {trip.vehicle?.carType || ''}
-                </p>
-                <p className="text-xs text-gray-500">{trip.vehicle?.transmissionMode || ''}</p>
+              <div className="flex justify-between items-start text-xs">
+                <span className="text-gray-500 font-medium w-20">Vehicle</span>
+                <div className="text-right">
+                  <p className="text-gray-900 font-medium">
+                    {trip.vehicle?.vehicleNumber || 'N/A'}
+                  </p>
+                  <p className="text-[10px] text-gray-500">
+                    {trip.vehicle?.carBrand || ''} {trip.vehicle?.carType || ''}
+                    {trip.vehicle?.transmissionMode && ` • ${trip.vehicle.transmissionMode}`}
+                  </p>
+                </div>
               </div>
+
               {trip.driverPin && (
-                <div className="bg-blue-50 border border-blue-200 rounded-xl p-4 mt-2 mb-4 flex items-center justify-between shadow-sm">
+                <div className="bg-blue-50 border border-blue-100 rounded-lg p-3 flex items-center justify-between">
                   <div>
-                    <p className="text-xs text-blue-600 font-bold uppercase tracking-wider mb-1">Driver Verification PIN</p>
-                    <div className="flex items-center gap-3">
-                      <p className="text-3xl font-mono font-bold text-blue-900 tracking-widest">{trip.driverPin}</p>
-                      <span className={`px-2 py-0.5 rounded text-[10px] font-bold uppercase ${trip.pinVerified ? 'bg-green-100 text-green-700' : 'bg-yellow-100 text-yellow-700'}`}>
+                    <p className="text-[10px] text-blue-600 font-bold uppercase tracking-wider mb-0.5">Verification PIN</p>
+                    <div className="flex items-center gap-2">
+                      <p className="text-xl font-mono font-bold text-blue-900 tracking-widest">{trip.driverPin}</p>
+                      <span className={`px-1.5 py-0.5 rounded text-[9px] font-bold uppercase ${trip.pinVerified ? 'bg-green-100 text-green-700' : 'bg-yellow-100 text-yellow-700'}`}>
                         {trip.pinVerified ? 'Verified' : 'Pending'}
                       </span>
                     </div>
                   </div>
-                  <div className="h-10 w-10 rounded-full bg-blue-100 flex items-center justify-center">
-                    <span className="material-icons-outlined text-blue-600 text-xl">lock</span>
+                  <div className="h-8 w-8 rounded-full bg-blue-100 flex items-center justify-center">
+                    <span className="material-icons-outlined text-blue-600 text-base">lock</span>
                   </div>
                 </div>
               )}
-              <div>
-                <span className="text-sm font-medium text-gray-600">PIN Verified:</span>
-                <p className="text-sm text-gray-900">{trip.pinVerified ? 'Yes' : 'No'}</p>
-              </div>
             </div>
           </div>
 
           {/* Pickup Location */}
-          <div className="bg-white rounded-xl sm:rounded-2xl shadow-sm border border-gray-200 p-4 sm:p-6 animate-fade-in" style={{ animationDelay: '200ms' }}>
-            <h2 className="text-lg sm:text-xl font-bold text-gray-900 mb-4 sm:mb-6 flex items-center border-b border-gray-200 pb-3">
-              <span className="material-icons-outlined text-xl mr-2 text-[#2BB673]">location_on</span>
+          <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-4 animate-fade-in" style={{ animationDelay: '200ms' }}>
+            <h2 className="text-sm font-bold text-gray-900 mb-3 flex items-center border-b border-gray-100 pb-2">
+              <span className="material-icons-outlined text-lg mr-2 text-[#2BB673]">location_on</span>
               Pickup Location
             </h2>
             <div>
-              <p className="text-sm text-gray-900 font-medium">{trip.pickupLocation?.address || 'N/A'}</p>
-              <p className="text-xs text-gray-500">
-                {trip.pickupLocation?.city || ''}, {trip.pickupLocation?.state || ''}
+              <p className="text-xs text-gray-900 font-medium leading-relaxed">{trip.pickupLocation?.address || 'N/A'}</p>
+              <p className="text-[10px] text-gray-500 mt-1">
+                {trip.pickupLocation?.city || ''}, {trip.pickupLocation?.state || ''} - {trip.pickupLocation?.pincode || 'N/A'}
               </p>
-              <p className="text-xs text-gray-500">Pincode: {trip.pickupLocation?.pincode || 'N/A'}</p>
               {trip.pickupLocation?.coordinates && (
-                <p className="text-xs text-gray-400 mt-1">
-                  Lat: {trip.pickupLocation.coordinates.latitude?.toFixed(6)}, Lng:{' '}
-                  {trip.pickupLocation.coordinates.longitude?.toFixed(6)}
+                <p className="text-[9px] text-gray-400 mt-0.5 font-mono">
+                  {trip.pickupLocation.coordinates.latitude?.toFixed(6)}, {trip.pickupLocation.coordinates.longitude?.toFixed(6)}
                 </p>
               )}
             </div>
           </div>
 
           {/* Drop Location */}
-          <div className="bg-white rounded-xl sm:rounded-2xl shadow-sm border border-gray-200 p-4 sm:p-6 animate-fade-in" style={{ animationDelay: '250ms' }}>
-            <h2 className="text-lg sm:text-xl font-bold text-gray-900 mb-4 sm:mb-6 flex items-center border-b border-gray-200 pb-3">
-              <span className="material-icons-outlined text-xl mr-2 text-red-600">place</span>
+          <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-4 animate-fade-in" style={{ animationDelay: '250ms' }}>
+            <h2 className="text-sm font-bold text-gray-900 mb-3 flex items-center border-b border-gray-100 pb-2">
+              <span className="material-icons-outlined text-lg mr-2 text-red-600">place</span>
               Drop Location
             </h2>
             <div>
-              <p className="text-sm text-gray-900 font-medium">{trip.dropLocation?.address || 'N/A'}</p>
-              <p className="text-xs text-gray-500">
-                {trip.dropLocation?.city || ''}, {trip.dropLocation?.state || ''}
+              <p className="text-xs text-gray-900 font-medium leading-relaxed">{trip.dropLocation?.address || 'N/A'}</p>
+              <p className="text-[10px] text-gray-500 mt-1">
+                {trip.dropLocation?.city || ''}, {trip.dropLocation?.state || ''} - {trip.dropLocation?.pincode || 'N/A'}
               </p>
-              <p className="text-xs text-gray-500">Pincode: {trip.dropLocation?.pincode || 'N/A'}</p>
               {trip.dropLocation?.coordinates && (
-                <p className="text-xs text-gray-400 mt-1">
-                  Lat: {trip.dropLocation.coordinates.latitude?.toFixed(6)}, Lng:{' '}
-                  {trip.dropLocation.coordinates.longitude?.toFixed(6)}
+                <p className="text-[9px] text-gray-400 mt-0.5 font-mono">
+                  {trip.dropLocation.coordinates.latitude?.toFixed(6)}, {trip.dropLocation.coordinates.longitude?.toFixed(6)}
                 </p>
               )}
             </div>
@@ -440,26 +451,24 @@ const TripDetails = () => {
 
           {/* Route Information */}
           {trip.googleMapsData && (
-            <div className="bg-white rounded-xl sm:rounded-2xl shadow-sm border border-gray-200 p-4 sm:p-6 animate-fade-in" style={{ animationDelay: '300ms' }}>
-              <h2 className="text-lg sm:text-xl font-bold text-gray-900 mb-4 sm:mb-6 flex items-center border-b border-gray-200 pb-3">
-                <span className="material-icons-outlined text-xl mr-2 text-[#0B2C4D]">route</span>
+            <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-4 animate-fade-in" style={{ animationDelay: '300ms' }}>
+              <h2 className="text-sm font-bold text-gray-900 mb-3 flex items-center border-b border-gray-100 pb-2">
+                <span className="material-icons-outlined text-lg mr-2 text-[#0B2C4D]">route</span>
                 Route Information
               </h2>
-              <div className="space-y-3">
-                <div>
-                  <span className="text-sm font-medium text-gray-600">Distance:</span>
-                  <p className="text-sm text-gray-900">{trip.googleMapsData.distance?.text || 'N/A'}</p>
+              <div className="grid grid-cols-2 gap-3">
+                <div className="bg-gray-50 p-2 rounded border border-gray-100">
+                  <span className="text-[10px] font-medium text-gray-500 uppercase">Distance</span>
+                  <p className="text-sm font-bold text-gray-900">{trip.googleMapsData.distance?.text || 'N/A'}</p>
                 </div>
-                <div>
-                  <span className="text-sm font-medium text-gray-600">Duration:</span>
-                  <p className="text-sm text-gray-900">{trip.googleMapsData.duration?.text || 'N/A'}</p>
+                <div className="bg-gray-50 p-2 rounded border border-gray-100">
+                  <span className="text-[10px] font-medium text-gray-500 uppercase">Duration</span>
+                  <p className="text-sm font-bold text-gray-900">{trip.googleMapsData.duration?.text || 'N/A'}</p>
                 </div>
                 {trip.googleMapsData.roundTripDuration && (
-                  <div>
-                    <span className="text-sm font-medium text-gray-600">Round Trip Duration:</span>
-                    <p className="text-sm text-gray-900">
-                      {trip.googleMapsData.roundTripDuration.text || 'N/A'}
-                    </p>
+                  <div className="col-span-2 bg-gray-50 p-2 rounded border border-gray-100">
+                    <span className="text-[10px] font-medium text-gray-500 uppercase">Round Trip Duration</span>
+                    <p className="text-sm font-bold text-gray-900">{trip.googleMapsData.roundTripDuration.text || 'N/A'}</p>
                   </div>
                 )}
               </div>
@@ -467,47 +476,58 @@ const TripDetails = () => {
           )}
 
           {/* Fare Information */}
-          <div className="bg-white rounded-xl sm:rounded-2xl shadow-sm border border-gray-200 p-4 sm:p-6 animate-fade-in" style={{ animationDelay: '350ms' }}>
-            <h2 className="text-lg sm:text-xl font-bold text-gray-900 mb-4 sm:mb-6 flex items-center border-b border-gray-200 pb-3">
-              <span className="material-icons-outlined text-xl mr-2 text-[#0B2C4D]">attach_money</span>
+          <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-4 animate-fade-in" style={{ animationDelay: '350ms' }}>
+            <h2 className="text-sm font-bold text-gray-900 mb-3 flex items-center border-b border-gray-100 pb-2">
+              <span className="material-icons-outlined text-lg mr-2 text-[#0B2C4D]">attach_money</span>
               Fare Information
             </h2>
-            <div className="space-y-3">
-              <div>
-                <span className="text-sm font-medium text-gray-600">Estimated Fare:</span>
-                <p className="text-sm text-gray-900 font-semibold">
+            <div className="space-y-2">
+              <div className="flex justify-between items-center text-xs pb-2 border-b border-gray-50">
+                <span className="text-gray-500 font-medium">Estimated Fare</span>
+                <p className="text-gray-900 font-bold">
                   ₹{trip.totalEstimatedFare ? trip.totalEstimatedFare.toFixed(2) : '0.00'}
                 </p>
               </div>
               {trip.fareDetails?.totalAmount > 0 && (
                 <>
-                  <div>
-                    <span className="text-sm font-medium text-gray-600">Final Fare:</span>
-                    <p className="text-sm text-gray-900 font-semibold">
+                  <div className="flex justify-between items-center text-xs pb-2 border-b border-gray-50">
+                    <span className="text-gray-500 font-medium">Final Fare</span>
+                    <p className="text-green-600 font-bold text-sm">
                       ₹{trip.fareDetails.totalAmount.toFixed(2)}
                     </p>
                   </div>
-                  <div className="text-xs text-gray-500 space-y-1 pt-2 border-t">
-                    <p>Base: ₹{trip.fareDetails.baseAmount?.toFixed(2) || '0.00'}</p>
-                    <p>Distance: ₹{trip.fareDetails.distanceAmount?.toFixed(2) || '0.00'}</p>
-                    <p>
-                      Waiting Time: ₹{trip.fareDetails.waitingTimeAmount?.toFixed(2) || '0.00'} (
-                      {trip.fareDetails.waitingTimeMinutes || 0} min)
-                    </p>
-                    <p>Night Charge: ₹{trip.fareDetails.nightCharge?.toFixed(2) || '0.00'}</p>
-                    <p className="pt-2 border-t">
-                      Admin Commission: ₹{trip.fareDetails.adminCommission?.toFixed(2) || '0.00'}
-                    </p>
-                    <p className="font-semibold">
-                      Driver Amount: ₹{trip.fareDetails.driverAmount?.toFixed(2) || '0.00'}
-                    </p>
+                  <div className="text-[10px] text-gray-500 space-y-1 pt-1">
+                    <div className="flex justify-between">
+                      <span>Base</span>
+                      <span>₹{trip.fareDetails.baseAmount?.toFixed(2) || '0.00'}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span>Distance</span>
+                      <span>₹{trip.fareDetails.distanceAmount?.toFixed(2) || '0.00'}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span>Waiting Time ({trip.fareDetails.waitingTimeMinutes || 0} min)</span>
+                      <span>₹{trip.fareDetails.waitingTimeAmount?.toFixed(2) || '0.00'}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span>Night Charge</span>
+                      <span>₹{trip.fareDetails.nightCharge?.toFixed(2) || '0.00'}</span>
+                    </div>
+                    <div className="flex justify-between pt-1 border-t border-dashed border-gray-200">
+                      <span>Admin Commission</span>
+                      <span>₹{trip.fareDetails.adminCommission?.toFixed(2) || '0.00'}</span>
+                    </div>
+                    <div className="flex justify-between font-bold text-gray-700">
+                      <span>Driver Amount</span>
+                      <span>₹{trip.fareDetails.driverAmount?.toFixed(2) || '0.00'}</span>
+                    </div>
                   </div>
                 </>
               )}
               {trip.previousTripPenalty > 0 && (
-                <div>
-                  <span className="text-sm font-medium text-gray-600">Previous Trip Penalty:</span>
-                  <p className="text-sm text-red-600 font-semibold">
+                <div className="flex justify-between items-center text-xs pt-2 border-t border-gray-50">
+                  <span className="text-red-500 font-medium">Previous Penalty</span>
+                  <p className="text-red-600 font-bold">
                     ₹{trip.previousTripPenalty.toFixed(2)}
                   </p>
                 </div>
@@ -517,54 +537,44 @@ const TripDetails = () => {
 
           {/* Cancellation Penalty */}
           {trip.cancellationPenalty?.penaltyApplied && (
-            <div className="bg-white rounded-xl sm:rounded-2xl shadow-sm border border-red-200 p-4 sm:p-6 animate-fade-in" style={{ animationDelay: '400ms' }}>
-              <h2 className="text-lg sm:text-xl font-bold text-red-800 mb-4 sm:mb-6 flex items-center border-b border-red-200 pb-3">
-                <span className="material-icons-outlined text-xl mr-2 text-red-600">cancel</span>
+            <div className="bg-white rounded-xl shadow-sm border border-red-200 p-4 animate-fade-in" style={{ animationDelay: '400ms' }}>
+              <h2 className="text-sm font-bold text-red-800 mb-3 flex items-center border-b border-red-200 pb-2">
+                <span className="material-icons-outlined text-lg mr-2 text-red-600">cancel</span>
                 Cancellation Penalty
               </h2>
-              <div className="space-y-3">
-                <div>
-                  <span className="text-sm font-medium text-gray-600">Cancelled By:</span>
-                  <p className="text-sm text-gray-900 capitalize">
-                    {trip.cancellationPenalty.cancelledBy || 'N/A'}
-                  </p>
+              <div className="space-y-2 text-xs">
+                <div className="flex justify-between">
+                  <span className="text-gray-600 font-medium">Cancelled By</span>
+                  <span className="text-gray-900 capitalize font-medium">{trip.cancellationPenalty.cancelledBy || 'N/A'}</span>
                 </div>
                 {trip.cancellationPenalty.cancelledAt && (
-                  <div>
-                    <span className="text-sm font-medium text-gray-600">Cancelled At:</span>
-                    <p className="text-sm text-gray-900">
-                      {new Date(trip.cancellationPenalty.cancelledAt).toLocaleString()}
-                    </p>
+                  <div className="flex justify-between">
+                    <span className="text-gray-600 font-medium">Cancelled At</span>
+                    <span className="text-gray-900">{new Date(trip.cancellationPenalty.cancelledAt).toLocaleString()}</span>
                   </div>
                 )}
                 {trip.cancellationPenalty.userPenaltyAmount > 0 && (
-                  <div>
-                    <span className="text-sm font-medium text-gray-600">User Penalty:</span>
-                    <p className="text-sm text-red-600 font-semibold">
-                      ₹{trip.cancellationPenalty.userPenaltyAmount.toFixed(2)}
-                    </p>
+                  <div className="flex justify-between">
+                    <span className="text-gray-600 font-medium">User Penalty</span>
+                    <span className="text-red-600 font-bold">₹{trip.cancellationPenalty.userPenaltyAmount.toFixed(2)}</span>
                   </div>
                 )}
                 {trip.cancellationPenalty.driverPenaltyAmount > 0 && (
-                  <div>
-                    <span className="text-sm font-medium text-gray-600">Driver Penalty:</span>
-                    <p className="text-sm text-red-600 font-semibold">
-                      ₹{trip.cancellationPenalty.driverPenaltyAmount.toFixed(2)}
-                    </p>
+                  <div className="flex justify-between">
+                    <span className="text-gray-600 font-medium">Driver Penalty</span>
+                    <span className="text-red-600 font-bold">₹{trip.cancellationPenalty.driverPenaltyAmount.toFixed(2)}</span>
                   </div>
                 )}
                 {trip.cancellationPenalty.driverCompensationAmount > 0 && (
-                  <div>
-                    <span className="text-sm font-medium text-gray-600">Driver Compensation:</span>
-                    <p className="text-sm text-green-600 font-semibold">
-                      ₹{trip.cancellationPenalty.driverCompensationAmount.toFixed(2)}
-                    </p>
+                  <div className="flex justify-between">
+                    <span className="text-gray-600 font-medium">Driver Compensation</span>
+                    <span className="text-green-600 font-bold">₹{trip.cancellationPenalty.driverCompensationAmount.toFixed(2)}</span>
                   </div>
                 )}
                 {trip.cancellationPenalty.penaltyReason && (
-                  <div>
-                    <span className="text-sm font-medium text-gray-600">Reason:</span>
-                    <p className="text-xs text-gray-600">{trip.cancellationPenalty.penaltyReason}</p>
+                  <div className="pt-2 mt-2 border-t border-red-100">
+                    <span className="text-[10px] text-gray-500 block uppercase font-bold mb-0.5">Reason</span>
+                    <p className="text-gray-600">{trip.cancellationPenalty.penaltyReason}</p>
                   </div>
                 )}
               </div>
@@ -573,20 +583,20 @@ const TripDetails = () => {
 
           {/* Payment Information */}
           {trip.razorpayOrderId && (
-            <div className="bg-white rounded-xl sm:rounded-2xl shadow-sm border border-gray-200 p-4 sm:p-6 animate-fade-in" style={{ animationDelay: '450ms' }}>
-              <h2 className="text-lg sm:text-xl font-bold text-gray-900 mb-4 sm:mb-6 flex items-center border-b border-gray-200 pb-3">
-                <span className="material-icons-outlined text-xl mr-2 text-[#0B2C4D]">payment</span>
+            <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-4 animate-fade-in" style={{ animationDelay: '450ms' }}>
+              <h2 className="text-sm font-bold text-gray-900 mb-3 flex items-center border-b border-gray-100 pb-2">
+                <span className="material-icons-outlined text-lg mr-2 text-[#0B2C4D]">payment</span>
                 Payment Information
               </h2>
-              <div className="space-y-3">
+              <div className="space-y-2 text-xs">
                 <div>
-                  <span className="text-sm font-medium text-gray-600">Razorpay Order ID:</span>
-                  <p className="text-sm text-gray-900 font-mono text-xs">{trip.razorpayOrderId}</p>
+                  <span className="text-gray-500 font-medium block mb-0.5">Razorpay Order ID</span>
+                  <p className="text-gray-900 font-mono bg-gray-50 px-2 py-1 rounded border border-gray-100 text-[10px]">{trip.razorpayOrderId}</p>
                 </div>
                 {trip.razorpayPaymentId && (
                   <div>
-                    <span className="text-sm font-medium text-gray-600">Razorpay Payment ID:</span>
-                    <p className="text-sm text-gray-900 font-mono text-xs">{trip.razorpayPaymentId}</p>
+                    <span className="text-gray-500 font-medium block mb-0.5">Razorpay Payment ID</span>
+                    <p className="text-gray-900 font-mono bg-gray-50 px-2 py-1 rounded border border-gray-100 text-[10px]">{trip.razorpayPaymentId}</p>
                   </div>
                 )}
               </div>
@@ -594,28 +604,27 @@ const TripDetails = () => {
           )}
 
           {/* Driver Location Section */}
-          {/* Driver Location Section - Always visible now as per requirement */}
-          <div className="bg-white rounded-xl sm:rounded-2xl shadow-sm border border-gray-200 p-4 sm:p-6 lg:col-span-2 animate-fade-in" style={{ animationDelay: '500ms' }}>
-            <div className="flex items-center justify-between border-b border-gray-200 pb-3 mb-4">
-              <h2 className="text-lg sm:text-xl font-bold text-gray-900 flex items-center">
-                <span className="material-icons-outlined text-xl mr-2 text-[#0B2C4D]">my_location</span>
+          <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-4 lg:col-span-2 animate-fade-in" style={{ animationDelay: '500ms' }}>
+            <div className="flex items-center justify-between border-b border-gray-200 pb-2 mb-3">
+              <h2 className="text-sm font-bold text-gray-900 flex items-center">
+                <span className="material-icons-outlined text-lg mr-2 text-[#0B2C4D]">my_location</span>
                 Driver Current Location
               </h2>
               {trip.driver && (
                 <button
                   onClick={handleRequestDriverLocation}
                   disabled={loadingLocation}
-                  className="px-4 sm:px-6 py-2.5 sm:py-3 bg-gradient-to-r from-[#0B2C4D] to-[#254f7a] text-white rounded-lg sm:rounded-xl hover:from-[#091E3A] hover:to-[#1a3a5a] transition-all duration-200 shadow-lg font-semibold disabled:opacity-50 disabled:cursor-not-allowed flex items-center space-x-2 text-sm sm:text-base"
+                  className="px-3 py-1.5 bg-gradient-to-r from-[#0B2C4D] to-[#254f7a] text-white rounded hover:from-[#091E3A] hover:to-[#1a3a5a] transition-all duration-200 shadow-sm font-semibold disabled:opacity-50 disabled:cursor-not-allowed flex items-center space-x-1.5 text-xs uppercase tracking-wide"
                 >
                   {loadingLocation ? (
                     <>
-                      <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                      <div className="w-3 h-3 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
                       <span>Requesting...</span>
                     </>
                   ) : (
                     <>
-                      <span className="material-icons-outlined text-base">location_on</span>
-                      <span>Get Driver Location</span>
+                      <span className="material-icons-outlined text-sm">location_on</span>
+                      <span>Get Location</span>
                     </>
                   )}
                 </button>
@@ -625,57 +634,50 @@ const TripDetails = () => {
             {trip.driver ? (
               <>
                 {loadingLocation && (
-                  <div className="flex items-center justify-center py-8">
-                    <div className="flex flex-col items-center space-y-3">
-                      <div className="w-8 h-8 border-4 border-[#2BB673] border-t-transparent rounded-full animate-spin"></div>
-                      <p className="text-sm text-gray-600">Waiting for driver location...</p>
+                  <div className="flex items-center justify-center py-6">
+                    <div className="flex flex-col items-center space-y-2">
+                      <div className="w-6 h-6 border-2 border-[#2BB673] border-t-transparent rounded-full animate-spin"></div>
+                      <p className="text-xs text-gray-600">Waiting for driver location...</p>
                     </div>
                   </div>
                 )}
 
                 {driverLocation && !loadingLocation && (
-                  <div className="space-y-4">
-                    <div className="bg-green-50 border border-green-200 rounded-lg p-4">
+                  <div className="space-y-3">
+                    <div className="bg-green-50 border border-green-200 rounded-lg p-3">
                       <div className="flex items-start justify-between">
                         <div className="flex-1">
-                          <div className="flex items-center space-x-2 mb-3">
-                            <span className="material-icons-outlined text-[#2BB673]">location_on</span>
-                            <span className="text-sm font-semibold text-green-800">Location Received</span>
+                          <div className="flex items-center space-x-1.5 mb-2">
+                            <span className="material-icons-outlined text-[#2BB673] text-sm">location_on</span>
+                            <span className="text-xs font-bold text-green-800 uppercase tracking-wide">Location Received</span>
                           </div>
                           {driverLocationAddress ? (
-                            <div className="space-y-2">
-                              <div>
-                                <span className="text-xs font-medium text-gray-600">Address:</span>
-                                <p className="text-sm text-gray-900 font-medium mt-1">{driverLocationAddress}</p>
-                              </div>
+                            <div>
+                              <span className="text-[10px] font-medium text-gray-500 uppercase block mb-0.5">Address</span>
+                              <p className="text-xs text-gray-900 font-medium">{driverLocationAddress}</p>
                             </div>
                           ) : (
-                            <div className="space-y-1 text-sm">
-                              <p className="text-gray-500">Address not available</p>
-                            </div>
+                            <p className="text-xs text-gray-500 italic">Address not available</p>
                           )}
                           {driverLocation.lastUpdated && (
-                            <p className="text-xs text-gray-500 mt-2">
+                            <p className="text-[10px] text-gray-400 mt-1">
                               Last Updated: {new Date(driverLocation.lastUpdated).toLocaleString()}
                             </p>
                           )}
                         </div>
                         <button
                           onClick={handleShowMap}
-                          className="px-3 py-2 bg-[#0B2C4D] text-white rounded-lg hover:bg-[#254f7a] transition-colors text-sm font-medium flex items-center space-x-1 ml-4"
+                          className="px-3 py-1.5 bg-[#0B2C4D] text-white rounded hover:bg-[#254f7a] transition-colors text-xs font-semibold flex items-center space-x-1 ml-3"
                         >
-                          <span className="material-icons-outlined text-base">map</span>
-                          <span>{showMap ? 'Hide Map' : 'Show on Map'}</span>
+                          <span className="material-icons-outlined text-sm">map</span>
+                          <span>{showMap ? 'Hide Map' : 'Show Map'}</span>
                         </button>
                       </div>
                     </div>
 
                     {showMap && driverLocation && (
                       <div className="bg-white border border-gray-200 rounded-lg overflow-hidden">
-                        <div className="p-3 bg-gray-50 border-b border-gray-200">
-                          <h5 className="text-sm font-semibold text-gray-800">Driver Location on Map</h5>
-                        </div>
-                        <div className="w-full h-96">
+                        <div className="w-full h-80">
                           <iframe
                             width="100%"
                             height="100%"
@@ -692,21 +694,20 @@ const TripDetails = () => {
                 )}
 
                 {!driverLocation && !loadingLocation && (
-                  <div className="text-center py-8 text-gray-500 text-sm">
-                    <span className="material-icons-outlined text-4xl text-gray-300 mb-2 block">
+                  <div className="text-center py-6 text-gray-400">
+                    <span className="material-icons-outlined text-3xl mb-1 block opacity-50">
                       location_off
                     </span>
-                    <p>Click "Get Driver Location" to request current location from driver</p>
+                    <p className="text-xs">Click "Get Location" to request current location</p>
                   </div>
                 )}
               </>
             ) : (
-              <div className="text-center py-8 text-gray-500 text-sm">
-                <span className="material-icons-outlined text-4xl text-gray-300 mb-2 block">
+              <div className="text-center py-6 text-gray-400">
+                <span className="material-icons-outlined text-3xl mb-1 block opacity-50">
                   person_off
                 </span>
-                <p>No driver assigned to this trip yet.</p>
-                <p className="text-xs mt-1">Driver location will be available once a driver accepts the trip.</p>
+                <p className="text-xs">No driver assigned to this trip.</p>
               </div>
             )}
           </div>
@@ -717,4 +718,3 @@ const TripDetails = () => {
 };
 
 export default TripDetails;
-

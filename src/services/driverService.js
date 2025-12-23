@@ -30,9 +30,9 @@ export const driverService = {
     // Get all drivers and filter on frontend, or use a query that gets all non-verified/rejected
     const response = await api.get('/admins/drivers');
     const allDrivers = response.data?.drivers || [];
-    const pendingDrivers = allDrivers.filter(d => 
-      d.verificationStatus === 'pending' || 
-      d.verificationStatus === 'documents-uploaded' || 
+    const pendingDrivers = allDrivers.filter(d =>
+      d.verificationStatus === 'pending' ||
+      d.verificationStatus === 'documents-uploaded' ||
       d.verificationStatus === 'otp-verified'
     );
     return {
@@ -61,6 +61,16 @@ export const driverService = {
     const response = await api.put(`/admins/drivers/${driverId}/suspend`, {
       isSuspended,
       reason,
+    });
+    return response.data;
+  },
+  // Update driver details (Admin endpoint)
+  updateDriver: async (driverId, formData) => {
+    // Note: Use FormData for file uploads
+    const response = await api.put(`/admins/drivers/${driverId}`, formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
     });
     return response.data;
   },

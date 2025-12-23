@@ -22,7 +22,7 @@ const Sidebar = ({ isOpen, onClose, collapsed, toggleSidebar }) => {
     { path: '/content', label: 'Content', icon: 'description', section: 'management' },
     { path: '/banners', label: 'Banners', icon: 'image', section: 'management' },
     { path: '/incomplete-registrations', label: 'Incomplete Reg.', icon: 'pending_actions', section: 'management' },
-    { path: '/withdrawals', label: 'Withdrawals', icon: 'account_balance_wallet', section: 'management' },
+    { path: '/driver-wallet-transactions', label: 'Driver Wallet', icon: 'account_balance_wallet', section: 'management' },
     { path: '/notifications', label: 'Notifications', icon: 'notifications', section: 'management' },
     { path: '/tickets', label: 'Support Tickets', icon: 'support_agent', section: 'management' },
     { path: '/admin-profile', label: 'Profile', icon: 'account_circle', section: 'settings' },
@@ -64,10 +64,10 @@ const Sidebar = ({ isOpen, onClose, collapsed, toggleSidebar }) => {
     <div
       className={`
           overflow-hidden transition-all duration-300 ease-in-out
-          ${collapsed ? 'h-0 opacity-0 mb-0' : 'h-5 opacity-100 mb-2'}
+          ${collapsed ? 'h-0 opacity-0 mb-0' : 'h-4 opacity-100 mb-1'}
         `}
     >
-      <p className="px-6 text-xs font-bold text-gray-500 uppercase tracking-widest whitespace-nowrap">
+      <p className="px-5 text-[10px] font-bold text-gray-500 uppercase tracking-widest whitespace-nowrap">
         {title}
       </p>
     </div>
@@ -83,20 +83,20 @@ const Sidebar = ({ isOpen, onClose, collapsed, toggleSidebar }) => {
         onMouseEnter={() => setHoveredItem(item.path)}
         onMouseLeave={() => setHoveredItem(null)}
         className={`
-          relative flex items-center py-3 rounded-xl transition-all duration-300 group mb-1 overflow-hidden whitespace-nowrap box-border
+          relative flex items-center py-2.5 rounded-lg transition-all duration-300 group mb-0.5 overflow-hidden whitespace-nowrap box-border
           ${active
-            ? 'bg-gradient-to-r from-[#2BB673] to-[#239960] text-white shadow-lg shadow-green-900/20'
+            ? 'bg-gradient-to-r from-[#2BB673] to-[#239960] text-white shadow-md shadow-green-900/20'
             : 'text-gray-400 hover:bg-[#123E6B] hover:text-white'
           }
-           ${collapsed ? 'justify-center px-0' : 'px-3 pl-6'}
+           ${collapsed ? 'justify-center px-0' : 'px-3 pl-5'}
         `}
       >
-        <span className={`material-icons-outlined text-xl transition-all duration-300 flex-shrink-0 ${active ? '' : 'group-hover:scale-110'} ${!collapsed && 'mr-3'}`}>
+        <span className={`material-icons-outlined text-lg transition-all duration-300 flex-shrink-0 ${active ? '' : 'group-hover:scale-110'} ${!collapsed && 'mr-3'}`}>
           {item.icon}
         </span>
 
         <span className={`
-          font-medium tracking-wide text-[14px] transition-all duration-300 ease-in-out origin-left
+          font-medium tracking-wide text-[13px] transition-all duration-300 ease-in-out origin-left
           ${collapsed ? 'w-0 opacity-0 scale-95 hidden' : 'w-auto opacity-100 scale-100'}
         `}>
           {item.label}
@@ -130,26 +130,26 @@ const Sidebar = ({ isOpen, onClose, collapsed, toggleSidebar }) => {
           transform transition-all duration-300 ease-in-out
           lg:sticky lg:top-0 lg:h-screen lg:z-auto lg:shadow-none lg:shrink-0 lg:translate-x-0
           ${isOpen ? 'translate-x-0' : '-translate-x-full'}
-          ${collapsed ? 'w-24' : 'w-72'}
+          ${collapsed ? 'w-20' : 'w-64'}
           flex flex-col overflow-x-hidden
         `}
       >
         {/* Logo Section */}
-        <div className={`h-24 flex items-center border-b border-white/5 bg-[#0B2C4D] shrink-0 relative group touch-none transition-all duration-300 ${collapsed ? 'justify-center px-0' : 'pl-6'}`}>
+        <div className={`h-16 flex items-center border-b border-white/5 bg-[#0B2C4D] shrink-0 relative group touch-none transition-all duration-300 ${collapsed ? 'justify-center px-0' : 'pl-5'}`}>
           <Link to="/dashboard" className={`flex items-center ${collapsed ? 'justify-center w-full' : 'gap-3 w-full'} overflow-hidden`}>
             <div className="relative flex-shrink-0 flex items-center justify-center">
               <img
                 src={Logo}
                 alt="Search My Driver"
-                className={`transition-all duration-300 object-contain brightness-0 invert ${collapsed ? 'h-12 w-12' : 'h-10 w-10'}`}
+                className={`transition-all duration-300 object-contain brightness-0 invert ${collapsed ? 'h-10 w-10' : 'h-8 w-8'}`}
               />
             </div>
 
             <div className={`flex flex-col justify-center whitespace-nowrap transition-all duration-300 ease-in-out origin-left ${collapsed ? 'w-0 opacity-0 scale-95 hidden' : 'w-auto opacity-100 scale-100'}`}>
-              <span className="text-xl font-bold text-white leading-none tracking-wide group-hover:text-[#2BB673] transition-colors mb-0.5">
+              <span className="text-lg font-bold text-white leading-none tracking-wide group-hover:text-[#2BB673] transition-colors mb-0.5">
                 SearchMy
               </span>
-              <span className="text-sm font-semibold text-gray-400 tracking-wider leading-none">
+              <span className="text-xs font-semibold text-gray-400 tracking-wider leading-none">
                 Driver
               </span>
             </div>
@@ -157,12 +157,12 @@ const Sidebar = ({ isOpen, onClose, collapsed, toggleSidebar }) => {
         </div>
 
         {/* Navigation Menu */}
-        <nav className="flex-1 overflow-y-auto overflow-x-hidden py-6 px-3 sidebar-scrollbar space-y-2">
+        <nav className="flex-1 overflow-y-auto overflow-x-hidden py-4 px-2 sidebar-scrollbar space-y-2">
 
           {/* Main Section */}
           <div className="flex flex-col">
             {renderSectionHeader('Main Menu')}
-            <div className="space-y-1">
+            <div className="space-y-0.5">
               {groupedMenuItems.main.map(renderMenuItem)}
             </div>
           </div>
@@ -170,7 +170,7 @@ const Sidebar = ({ isOpen, onClose, collapsed, toggleSidebar }) => {
           {/* Management Section */}
           <div className="flex flex-col">
             {renderSectionHeader('Management')}
-            <div className="space-y-1">
+            <div className="space-y-0.5">
               {groupedMenuItems.management.map(renderMenuItem)}
             </div>
           </div>
@@ -178,7 +178,7 @@ const Sidebar = ({ isOpen, onClose, collapsed, toggleSidebar }) => {
           {/* Settings Section */}
           <div className="flex flex-col">
             {renderSectionHeader('Settings')}
-            <div className="space-y-1">
+            <div className="space-y-0.5">
               {groupedMenuItems.settings.map(renderMenuItem)}
             </div>
           </div>
@@ -186,16 +186,16 @@ const Sidebar = ({ isOpen, onClose, collapsed, toggleSidebar }) => {
         </nav>
 
         {/* User Profile / Logout Section */}
-        <div className="p-3 border-t border-white/5 bg-[#09223b] shrink-0">
+        <div className="p-2 border-t border-white/5 bg-[#09223b] shrink-0">
           <button
             onClick={handleLogout}
             className={`
-              flex items-center w-full py-3 rounded-xl text-gray-400 hover:text-white hover:bg-red-500/10 transition-all duration-300 group border border-transparent hover:border-red-500/20 overflow-hidden whitespace-nowrap
-               ${collapsed ? 'justify-center px-0' : 'pl-6'}
+              flex items-center w-full py-2.5 rounded-lg text-gray-400 hover:text-white hover:bg-red-500/10 transition-all duration-300 group border border-transparent hover:border-red-500/20 overflow-hidden whitespace-nowrap
+               ${collapsed ? 'justify-center px-0' : 'pl-5'}
             `}
             title="Logout"
           >
-            <span className="material-icons-outlined group-hover:text-red-500 transition-colors text-xl flex-shrink-0 mr-3">
+            <span className="material-icons-outlined group-hover:text-red-500 transition-colors text-lg flex-shrink-0 mr-3">
               logout
             </span>
             <span className={`font-medium text-sm transition-all duration-300 ease-in-out origin-left ${collapsed ? 'w-0 opacity-0 scale-95 hidden' : 'w-auto opacity-100 scale-100'}`}>

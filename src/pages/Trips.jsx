@@ -109,20 +109,20 @@ const Trips = () => {
 
   return (
     <Layout>
-      <div className="space-y-4 sm:space-y-6 animate-fade-in">
-        <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 tracking-tight">Trips Management</h1>
+      <div className="space-y-4 animate-fade-in">
+        <h1 className="text-xl sm:text-2xl font-bold text-gray-900 tracking-tight">Trips Management</h1>
 
         {/* Search and Filters */}
-        <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
+        <div className="flex flex-col sm:flex-row gap-3">
           <div className="relative flex-1">
             <input
               type="text"
               placeholder="Search by trip ID, user, or driver..."
               value={searchTerm}
               onChange={handleSearch}
-              className="pl-10 sm:pl-12 pr-4 py-2 sm:py-2.5 border border-gray-300 rounded-lg sm:rounded-xl focus:ring-2 focus:ring-[#0B2C4D]/20 focus:border-[#0B2C4D] w-full text-sm sm:text-base transition-all shadow-sm"
+              className="pl-9 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-1 focus:ring-[#0B2C4D] focus:border-[#0B2C4D] w-full text-sm transition-all shadow-sm"
             />
-            <span className="material-icons-outlined absolute left-3 sm:left-4 top-1/2 transform -translate-y-1/2 text-gray-400 text-lg sm:text-xl">search</span>
+            <span className="material-icons-outlined absolute left-2.5 top-1/2 transform -translate-y-1/2 text-gray-400 text-lg">search</span>
           </div>
           <div className="flex flex-wrap items-center gap-2">
             {[
@@ -135,7 +135,7 @@ const Trips = () => {
               <button
                 key={filter.id}
                 onClick={() => handleStatusFilter(filter.id)}
-                className={`px-3 sm:px-4 py-2 sm:py-2.5 rounded-lg sm:rounded-xl font-semibold transition-all duration-300 text-xs sm:text-sm shadow-sm ${statusFilter === filter.id
+                className={`px-3 py-1.5 rounded-lg font-semibold transition-all duration-300 text-xs shadow-sm ${statusFilter === filter.id
                   ? `bg-gradient-to-r ${filter.activeClass} text-white shadow-md transform scale-[1.02]`
                   : 'bg-white text-gray-700 hover:bg-gray-50 border border-gray-300'
                   }`}
@@ -147,29 +147,28 @@ const Trips = () => {
         </div>
 
         {/* Desktop Table View */}
-        <div className="hidden lg:block bg-white rounded-xl sm:rounded-2xl shadow-sm border border-gray-200 overflow-hidden animate-fade-in" style={{ animationDelay: '200ms' }}>
+        <div className="hidden lg:block bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden animate-fade-in" style={{ animationDelay: '200ms' }}>
           <div className="overflow-x-auto">
             <table className="min-w-full divide-y divide-gray-200">
               <thead className="bg-[#0B2C4D]">
                 <tr>
-                  <th className="px-6 py-4 text-left text-xs font-bold text-white uppercase tracking-wider">Trip ID</th>
-                  <th className="px-6 py-4 text-left text-xs font-bold text-white uppercase tracking-wider">User</th>
-                  <th className="px-6 py-4 text-left text-xs font-bold text-white uppercase tracking-wider">Driver</th>
-                  <th className="px-6 py-4 text-left text-xs font-bold text-white uppercase tracking-wider">Type</th>
-                  <th className="px-6 py-4 text-left text-xs font-bold text-white uppercase tracking-wider">Amount</th>
-                  <th className="px-6 py-4 text-left text-xs font-bold text-white uppercase tracking-wider">Status</th>
-                  <th className="px-6 py-4 text-left text-xs font-bold text-white uppercase tracking-wider">Date</th>
-                  <th className="px-6 py-4 text-right text-xs font-bold text-white uppercase tracking-wider">Actions</th>
+                  <th className="px-4 py-3 text-left text-xs font-bold text-white uppercase tracking-wider">Trip ID</th>
+                  <th className="px-4 py-3 text-left text-xs font-bold text-white uppercase tracking-wider">User</th>
+                  <th className="px-4 py-3 text-left text-xs font-bold text-white uppercase tracking-wider">Driver</th>
+                  <th className="px-4 py-3 text-left text-xs font-bold text-white uppercase tracking-wider">Type</th>
+                  <th className="px-4 py-3 text-left text-xs font-bold text-white uppercase tracking-wider">Amount</th>
+                  <th className="px-4 py-3 text-left text-xs font-bold text-white uppercase tracking-wider">Status</th>
+                  <th className="px-4 py-3 text-left text-xs font-bold text-white uppercase tracking-wider">Date</th>
+                  <th className="px-4 py-3 text-right text-xs font-bold text-white uppercase tracking-wider">Actions</th>
                 </tr>
               </thead>
               <tbody className="bg-white divide-y divide-gray-200">
                 {trips.length === 0 ? (
                   <tr>
-                    <td colSpan="8" className="px-6 py-12 text-center">
-                      <div className="flex flex-col items-center space-y-3">
-                        <span className="material-icons-outlined text-6xl text-gray-300">inbox</span>
-                        <p className="text-lg font-medium text-gray-600">No trips found</p>
-                        <p className="text-sm text-gray-400">Try adjusting your filters</p>
+                    <td colSpan="8" className="px-4 py-8 text-center">
+                      <div className="flex flex-col items-center space-y-2">
+                        <span className="material-icons-outlined text-4xl text-gray-300">inbox</span>
+                        <p className="text-gray-500 font-medium text-sm">No trips found</p>
                       </div>
                     </td>
                   </tr>
@@ -180,68 +179,68 @@ const Trips = () => {
                       <tr
                         key={trip._id}
                         className="hover:bg-gray-50 transition-colors duration-200 animate-fade-in group"
-                        style={{ animationDelay: `${index * 50}ms` }}
+                        style={{ animationDelay: `${index * 30}ms` }}
                       >
-                        <td className="px-6 py-4 whitespace-nowrap">
-                          <div className="text-sm font-bold text-gray-900 font-mono">
-                            {trip._id.substring(0, 8)}...
+                        <td className="px-4 py-3 whitespace-nowrap">
+                          <div className="text-xs font-bold text-gray-900 font-mono">
+                            {trip.tripId ? `#${trip.tripId}` : trip._id.substring(0, 8) + '...'}
                           </div>
                         </td>
-                        <td className="px-6 py-4 whitespace-nowrap">
+                        <td className="px-4 py-3 whitespace-nowrap">
                           <div className="flex items-center">
-                            <div className="w-10 h-10 bg-gradient-to-br from-[#0B2C4D] to-[#1a3a5a] rounded-full flex items-center justify-center text-white font-bold shadow-md mr-3">
+                            <div className="w-8 h-8 bg-gradient-to-br from-[#0B2C4D] to-[#1a3a5a] rounded-full flex items-center justify-center text-white text-xs font-bold shadow-sm mr-2.5">
                               {trip.user?.name?.charAt(0)?.toUpperCase() || 'U'}
                             </div>
-                            <div>
-                              <div className="text-sm font-bold text-gray-900 group-hover:text-[#0B2C4D] transition-colors">{trip.user?.name || 'Unknown'}</div>
-                              <div className="text-xs text-gray-500">{trip.user?.phone || 'N/A'}</div>
+                            <div className="min-w-0">
+                              <div className="text-xs font-bold text-gray-900 group-hover:text-[#0B2C4D] transition-colors truncate max-w-[100px]">{trip.user?.name || 'Unknown'}</div>
+                              <div className="text-[10px] text-gray-500 truncate max-w-[100px]">{trip.user?.phone || 'N/A'}</div>
                             </div>
                           </div>
                         </td>
-                        <td className="px-6 py-4 whitespace-nowrap">
+                        <td className="px-4 py-3 whitespace-nowrap">
                           {trip.driver ? (
                             <div className="flex items-center">
-                              <div className="w-10 h-10 bg-gradient-to-br from-[#2BB673] to-[#239960] rounded-full flex items-center justify-center text-white font-bold shadow-md mr-3">
+                              <div className="w-8 h-8 bg-gradient-to-br from-[#2BB673] to-[#239960] rounded-full flex items-center justify-center text-white text-xs font-bold shadow-sm mr-2.5">
                                 {trip.driver.name?.charAt(0)?.toUpperCase() || 'D'}
                               </div>
-                              <div>
-                                <div className="text-sm font-bold text-gray-900">{trip.driver.name}</div>
-                                <div className="text-xs text-gray-500">{trip.driver?.phone || ''}</div>
+                              <div className="min-w-0">
+                                <div className="text-xs font-bold text-gray-900 truncate max-w-[100px]">{trip.driver.name}</div>
+                                <div className="text-[10px] text-gray-500 truncate max-w-[100px]">{trip.driver?.phone || ''}</div>
                               </div>
                             </div>
                           ) : (
-                            <span className="text-sm text-gray-400 italic flex items-center">
+                            <span className="text-xs text-gray-400 italic flex items-center">
                               <span className="material-icons-outlined text-sm mr-1">person_off</span>
                               Unassigned
                             </span>
                           )}
                         </td>
-                        <td className="px-6 py-4 whitespace-nowrap">
-                          <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-[#0B2C4D]">
-                            <span className="material-icons-outlined text-sm mr-1">route</span>
+                        <td className="px-4 py-3 whitespace-nowrap">
+                          <span className="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-medium bg-gray-100 text-[#0B2C4D]">
+                            <span className="material-icons-outlined text-xs mr-1">route</span>
                             {trip.tripType || 'N/A'}
                           </span>
                         </td>
-                        <td className="px-6 py-4 whitespace-nowrap">
-                          <div className="text-sm font-bold text-gray-900">
+                        <td className="px-4 py-3 whitespace-nowrap">
+                          <div className="text-xs font-bold text-gray-900">
                             ₹{trip.fareDetails?.totalAmount || trip.totalEstimatedFare || 0}
                           </div>
                         </td>
-                        <td className="px-6 py-4 whitespace-nowrap">
-                          <span className={`px-2.5 py-1 inline-flex items-center text-xs leading-5 font-semibold rounded-full ${badge.bg} ${badge.text}`}>
-                            <span className="material-icons-outlined text-sm mr-1">{badge.icon}</span>
+                        <td className="px-4 py-3 whitespace-nowrap">
+                          <span className={`px-2 py-0.5 inline-flex items-center text-[10px] uppercase font-bold tracking-wide rounded ${badge.bg} ${badge.text}`}>
+                            <span className="material-icons-outlined text-xs mr-1">{badge.icon}</span>
                             {getStatusLabel(trip.status)}
                           </span>
                         </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                        <td className="px-4 py-3 whitespace-nowrap text-xs text-gray-500">
                           {new Date(trip.createdAt).toLocaleDateString()}
                         </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                        <td className="px-4 py-3 whitespace-nowrap text-right text-sm font-medium">
                           <Link
                             to={`/trips/${trip._id}`}
-                            className="text-[#0B2C4D] hover:text-[#2BB673] font-semibold flex items-center justify-end space-x-1 transition-colors p-2 rounded-full hover:bg-gray-100"
+                            className="text-[#0B2C4D] hover:text-[#2BB673] font-semibold flex items-center justify-end transition-colors p-1.5 rounded-full hover:bg-gray-100"
                           >
-                            <span className="material-icons-outlined text-xl">visibility</span>
+                            <span className="material-icons-outlined text-lg">visibility</span>
                           </Link>
                         </td>
                       </tr>
@@ -266,7 +265,7 @@ const Trips = () => {
                 <div className="flex items-start justify-between mb-3">
                   <div className="flex-1 min-w-0">
                     <div className="text-sm font-bold text-gray-900 mb-1 font-mono">
-                      #{trip._id.substring(0, 8)}...
+                      {trip.tripId ? `#${trip.tripId}` : `#${trip._id.substring(0, 8)}...`}
                     </div>
                     <div className="text-xs text-gray-500">
                       {new Date(trip.createdAt).toLocaleString()}

@@ -111,8 +111,8 @@ const Fare = () => {
       <Layout>
         <div className="flex items-center justify-center h-64">
           <div className="flex flex-col items-center space-y-4">
-            <div className="w-12 h-12 border-4 border-[#2BB673] border-t-transparent rounded-full animate-spin"></div>
-            <div className="text-gray-500 font-medium">Loading fare settings...</div>
+            <div className="w-8 h-8 border-4 border-[#2BB673] border-t-transparent rounded-full animate-spin"></div>
+            <div className="text-gray-500 font-medium text-xs">Loading fare settings...</div>
           </div>
         </div>
       </Layout>
@@ -121,8 +121,41 @@ const Fare = () => {
 
   return (
     <Layout>
-      <div className="space-y-4 sm:space-y-6 animate-fade-in">
-        <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4">
+      <div className="space-y-4 animate-fade-in">
+        <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3">
+          {/* Module Tabs */}
+          <div className="flex flex-wrap items-center gap-2">
+            <button
+              onClick={() => {
+                setActiveModule('incity');
+                setEditing(false);
+                setError('');
+                setSuccess('');
+              }}
+              className={`px-4 py-2 rounded-lg font-semibold transition-all duration-300 text-xs sm:text-sm flex items-center space-x-2 ${activeModule === 'incity'
+                ? 'bg-gradient-to-r from-[#0B2C4D] to-[#254f7a] text-white shadow-md'
+                : 'bg-white text-gray-700 hover:bg-gray-50 border border-gray-300'
+                }`}
+            >
+              <span className="material-icons-outlined text-base">location_on</span>
+              <span>InCity</span>
+            </button>
+            <button
+              onClick={() => {
+                setActiveModule('outstation');
+                setEditing(false);
+                setError('');
+                setSuccess('');
+              }}
+              className={`px-4 py-2 rounded-lg font-semibold transition-all duration-300 text-xs sm:text-sm flex items-center space-x-2 ${activeModule === 'outstation'
+                ? 'bg-gradient-to-r from-[#0B2C4D] to-[#254f7a] text-white shadow-md'
+                : 'bg-white text-gray-700 hover:bg-gray-50 border border-gray-300'
+                }`}
+            >
+              <span className="material-icons-outlined text-base">flight_takeoff</span>
+              <span>Outstation</span>
+            </button>
+          </div>
 
           {!editing && (
             <button
@@ -131,75 +164,41 @@ const Fare = () => {
                 setError('');
                 setSuccess('');
               }}
-              className="px-4 sm:px-6 py-2.5 sm:py-3 bg-gradient-to-r from-[#0B2C4D] to-[#254f7a] text-white rounded-lg sm:rounded-xl hover:from-[#091E3A] hover:to-[#1a3a5a] transition-all duration-200 shadow-lg font-semibold flex items-center justify-center space-x-2 text-sm sm:text-base"
+              className="px-4 py-2 bg-gradient-to-r from-[#0B2C4D] to-[#254f7a] text-white rounded-lg hover:from-[#091E3A] hover:to-[#1a3a5a] transition-all duration-200 shadow-md font-semibold flex items-center justify-center space-x-1.5 text-xs sm:text-sm"
             >
-              <span className="material-icons-outlined text-lg sm:text-xl">edit</span>
+              <span className="material-icons-outlined text-base">edit</span>
               <span>Edit Settings</span>
             </button>
           )}
         </div>
 
-        {/* Module Tabs */}
-        <div className="flex flex-wrap items-center gap-2 sm:gap-3 mb-6">
-          <button
-            onClick={() => {
-              setActiveModule('incity');
-              setEditing(false);
-              setError('');
-              setSuccess('');
-            }}
-            className={`px-4 sm:px-6 py-2 sm:py-2.5 rounded-lg sm:rounded-xl font-semibold transition-all duration-300 text-sm sm:text-base flex items-center space-x-2 ${activeModule === 'incity'
-                ? 'bg-gradient-to-r from-[#0B2C4D] to-[#254f7a] text-white shadow-lg'
-                : 'bg-white text-gray-700 hover:bg-gray-50 border border-gray-300'
-              }`}
-          >
-            <span className="material-icons-outlined text-lg">location_on</span>
-            <span>InCity</span>
-          </button>
-          <button
-            onClick={() => {
-              setActiveModule('outstation');
-              setEditing(false);
-              setError('');
-              setSuccess('');
-            }}
-            className={`px-4 sm:px-6 py-2 sm:py-2.5 rounded-lg sm:rounded-xl font-semibold transition-all duration-300 text-sm sm:text-base flex items-center space-x-2 ${activeModule === 'outstation'
-                ? 'bg-gradient-to-r from-[#0B2C4D] to-[#254f7a] text-white shadow-lg'
-                : 'bg-white text-gray-700 hover:bg-gray-50 border border-gray-300'
-              }`}
-          >
-            <span className="material-icons-outlined text-lg">flight_takeoff</span>
-            <span>Outstation</span>
-          </button>
-        </div>
-
         {error && (
-          <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg flex items-center animate-fade-in">
-            <span className="material-icons-outlined mr-2">error_outline</span>
+          <div className="bg-red-50 border border-red-200 text-red-700 px-3 py-2 rounded-lg flex items-center animate-fade-in text-xs">
+            <span className="material-icons-outlined mr-2 text-sm">error_outline</span>
             {error}
           </div>
         )}
 
         {success && (
-          <div className="bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-lg flex items-center animate-fade-in">
-            <span className="material-icons-outlined mr-2">check_circle</span>
+          <div className="bg-green-50 border border-green-200 text-green-700 px-3 py-2 rounded-lg flex items-center animate-fade-in text-xs">
+            <span className="material-icons-outlined mr-2 text-sm">check_circle</span>
             {success}
           </div>
         )}
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
           {/* Fare Settings */}
-          <div className="bg-white rounded-xl sm:rounded-2xl shadow-sm border border-gray-200 p-4 sm:p-6 animate-fade-in" style={{ animationDelay: '100ms' }}>
-            <h2 className="text-lg sm:text-xl font-bold text-gray-900 mb-4 sm:mb-6 flex items-center">
-              <span className="material-icons-outlined text-xl mr-2 text-[#0B2C4D]">attach_money</span>
+          <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-4 animate-fade-in" style={{ animationDelay: '100ms' }}>
+            <h2 className="text-lg font-bold text-gray-900 mb-4 flex items-center">
+              <span className="material-icons-outlined text-lg mr-2 text-[#0B2C4D]">attach_money</span>
               Fare Settings - {activeModule === 'incity' ? 'InCity' : 'Outstation'}
             </h2>
             {editing ? (
-              <form onSubmit={handleSubmit} className="space-y-4">
+              <form onSubmit={handleSubmit} className="space-y-3">
                 {activeModule === 'incity' ? (
                   <>
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                      <label className="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-1">
                         Base Price (₹)
                       </label>
                       <input
@@ -208,15 +207,15 @@ const Fare = () => {
                         onChange={(e) =>
                           setFareSettings({ ...fareSettings, basePrice: parseFloat(e.target.value) })
                         }
-                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#0B2C4D]/20 focus:border-[#0B2C4D]"
+                        className="w-full px-3 py-2 border border-gray-300 rounded focus:ring-1 focus:ring-[#0B2C4D] outline-none text-sm"
                         required
                       />
-                      <p className="text-xs text-gray-500 mt-1">
+                      <p className="text-[10px] text-gray-400 mt-0.5">
                         Base price for trips &lt; 2 hours
                       </p>
                     </div>
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                      <label className="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-1">
                         Per Kilometer Rate (₹)
                       </label>
                       <input
@@ -226,10 +225,10 @@ const Fare = () => {
                         onChange={(e) =>
                           setFareSettings({ ...fareSettings, perKmRate: parseFloat(e.target.value) })
                         }
-                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#0B2C4D]/20 focus:border-[#0B2C4D]"
+                        className="w-full px-3 py-2 border border-gray-300 rounded focus:ring-1 focus:ring-[#0B2C4D] outline-none text-sm"
                         required
                       />
-                      <p className="text-xs text-gray-500 mt-1">
+                      <p className="text-[10px] text-gray-400 mt-0.5">
                         Convenience amount for driver
                       </p>
                     </div>
@@ -237,7 +236,7 @@ const Fare = () => {
                 ) : (
                   <>
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                      <label className="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-1">
                         Base Price for 24 Hours (₹)
                       </label>
                       <input
@@ -246,15 +245,15 @@ const Fare = () => {
                         onChange={(e) =>
                           setFareSettings({ ...fareSettings, outstationBasePrice24Hrs: parseFloat(e.target.value) })
                         }
-                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#0B2C4D]/20 focus:border-[#0B2C4D]"
+                        className="w-full px-3 py-2 border border-gray-300 rounded focus:ring-1 focus:ring-[#0B2C4D] outline-none text-sm"
                         required
                       />
-                      <p className="text-xs text-gray-500 mt-1">
+                      <p className="text-[10px] text-gray-400 mt-0.5">
                         Base price for outstation trips &lt;= 24 hours
                       </p>
                     </div>
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                      <label className="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-1">
                         Per Kilometer Rate (₹)
                       </label>
                       <input
@@ -264,17 +263,17 @@ const Fare = () => {
                         onChange={(e) =>
                           setFareSettings({ ...fareSettings, perKmRate: parseFloat(e.target.value) })
                         }
-                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#0B2C4D]/20 focus:border-[#0B2C4D]"
+                        className="w-full px-3 py-2 border border-gray-300 rounded focus:ring-1 focus:ring-[#0B2C4D] outline-none text-sm"
                         required
                       />
-                      <p className="text-xs text-gray-500 mt-1">
+                      <p className="text-[10px] text-gray-400 mt-0.5">
                         Convenience amount for driver
                       </p>
                     </div>
                   </>
                 )}
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                  <label className="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-1">
                     Per Minute Rate (₹)
                   </label>
                   <input
@@ -284,15 +283,15 @@ const Fare = () => {
                     onChange={(e) =>
                       setFareSettings({ ...fareSettings, perMinuteRate: parseFloat(e.target.value) })
                     }
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#0B2C4D]/20 focus:border-[#0B2C4D]"
+                    className="w-full px-3 py-2 border border-gray-300 rounded focus:ring-1 focus:ring-[#0B2C4D] outline-none text-sm"
                     required
                   />
-                  <p className="text-xs text-gray-500 mt-1">
+                  <p className="text-[10px] text-gray-400 mt-0.5">
                     Rate per minute for trip time calculation
                   </p>
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                  <label className="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-1">
                     Waiting Time Rate (₹/min)
                   </label>
                   <input
@@ -302,16 +301,16 @@ const Fare = () => {
                     onChange={(e) =>
                       setFareSettings({ ...fareSettings, waitingTimePerMinute: parseFloat(e.target.value) })
                     }
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#0B2C4D]/20 focus:border-[#0B2C4D]"
+                    className="w-full px-3 py-2 border border-gray-300 rounded focus:ring-1 focus:ring-[#0B2C4D] outline-none text-sm"
                     required
                     min="0"
                   />
-                  <p className="text-xs text-gray-500 mt-1">
+                  <p className="text-[10px] text-gray-400 mt-0.5">
                     Rate charged per minute for waiting time
                   </p>
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                  <label className="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-1">
                     Night Charges (₹)
                   </label>
                   <input
@@ -323,18 +322,18 @@ const Fare = () => {
                         [activeModule === 'incity' ? 'nightCharge' : 'outstationNightCharge']: parseFloat(e.target.value),
                       })
                     }
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#0B2C4D]/20 focus:border-[#0B2C4D]"
+                    className="w-full px-3 py-2 border border-gray-300 rounded focus:ring-1 focus:ring-[#0B2C4D] outline-none text-sm"
                     required
                     min="0"
                   />
-                  <p className="text-xs text-gray-500 mt-1">
+                  <p className="text-[10px] text-gray-400 mt-0.5">
                     Fixed charge applied during night hours
                   </p>
                 </div>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
+                <div className="grid grid-cols-2 gap-3">
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Night Start Hour (0-23)
+                    <label className="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-1">
+                      Night Start (0-23)
                     </label>
                     <input
                       type="number"
@@ -342,18 +341,18 @@ const Fare = () => {
                       onChange={(e) =>
                         setFareSettings({ ...fareSettings, nightStartHour: parseInt(e.target.value, 10) })
                       }
-                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#0B2C4D]/20 focus:border-[#0B2C4D]"
+                      className="w-full px-3 py-2 border border-gray-300 rounded focus:ring-1 focus:ring-[#0B2C4D] outline-none text-sm"
                       required
                       min="0"
                       max="23"
                     />
-                    <p className="text-xs text-gray-500 mt-1">
+                    <p className="text-[10px] text-gray-400 mt-0.5">
                       Current: {hourToTimeString(fareSettings.nightStartHour)}
                     </p>
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Night End Hour (0-23)
+                    <label className="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-1">
+                      Night End (0-23)
                     </label>
                     <input
                       type="number"
@@ -361,19 +360,19 @@ const Fare = () => {
                       onChange={(e) =>
                         setFareSettings({ ...fareSettings, nightEndHour: parseInt(e.target.value, 10) })
                       }
-                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#0B2C4D]/20 focus:border-[#0B2C4D]"
+                      className="w-full px-3 py-2 border border-gray-300 rounded focus:ring-1 focus:ring-[#0B2C4D] outline-none text-sm"
                       required
                       min="0"
                       max="23"
                     />
-                    <p className="text-xs text-gray-500 mt-1">
+                    <p className="text-[10px] text-gray-400 mt-0.5">
                       Current: {hourToTimeString(fareSettings.nightEndHour)}
                     </p>
                   </div>
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Cancellation Penalty Amount (₹)
+                  <label className="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-1">
+                    Cancellation Penalty (₹)
                   </label>
                   <input
                     type="number"
@@ -381,28 +380,28 @@ const Fare = () => {
                     onChange={(e) =>
                       setFareSettings({ ...fareSettings, cancellationPenaltyAmount: parseFloat(e.target.value) })
                     }
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#0B2C4D]/20 focus:border-[#0B2C4D]"
+                    className="w-full px-3 py-2 border border-gray-300 rounded focus:ring-1 focus:ring-[#0B2C4D] outline-none text-sm"
                     required
                     min="0"
                   />
-                  <p className="text-xs text-gray-500 mt-1">
-                    Penalty amount charged when user or driver cancels trip less than 30 minutes before scheduled time
+                  <p className="text-[10px] text-gray-400 mt-0.5">
+                    Penalty charged when trip is cancelled less than 30 minutes before scheduled time
                   </p>
                 </div>
-                <div className="flex space-x-3 pt-4">
+                <div className="flex space-x-3 pt-2">
                   <button
                     type="submit"
                     disabled={saving}
-                    className="flex-1 px-4 py-2 bg-gradient-to-r from-[#0B2C4D] to-[#254f7a] text-white rounded-lg hover:from-[#091E3A] hover:to-[#1a3a5a] transition-all duration-200 font-medium disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center space-x-2"
+                    className="flex-1 px-4 py-2 bg-gradient-to-r from-[#0B2C4D] to-[#254f7a] text-white rounded hover:from-[#091E3A] hover:to-[#1a3a5a] transition-all duration-200 font-medium disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center space-x-1.5 text-xs"
                   >
                     {saving ? (
                       <>
-                        <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                        <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
                         <span>Saving...</span>
                       </>
                     ) : (
                       <>
-                        <span className="material-icons-outlined">save</span>
+                        <span className="material-icons-outlined text-sm">save</span>
                         <span>Save Changes</span>
                       </>
                     )}
@@ -416,103 +415,103 @@ const Fare = () => {
                       fetchFareSettings();
                     }}
                     disabled={saving}
-                    className="flex-1 px-4 py-2 bg-gray-200 text-gray-800 rounded-lg hover:bg-gray-300 transition-colors font-medium disabled:opacity-50"
+                    className="flex-1 px-4 py-2 bg-gray-100 text-gray-700 rounded hover:bg-gray-200 transition-colors font-medium disabled:opacity-50 text-xs"
                   >
                     Cancel
                   </button>
                 </div>
               </form>
             ) : (
-              <div className="space-y-4">
+              <div className="space-y-3">
                 {activeModule === 'incity' ? (
                   <>
-                    <div className="py-3 border-b border-gray-200">
+                    <div className="py-2.5 border-b border-gray-100">
                       <div className="flex justify-between items-center">
-                        <span className="text-gray-600">Base Price</span>
-                        <span className="font-semibold text-gray-800">₹{fareSettings.basePrice}</span>
+                        <span className="text-gray-600 text-sm">Base Price</span>
+                        <span className="font-bold text-gray-800 text-sm">₹{fareSettings.basePrice}</span>
                       </div>
-                      <p className="text-xs text-gray-500 mt-1">
+                      <p className="text-[10px] text-gray-400 mt-0.5">
                         Base price for trips &lt; 2 hours
                       </p>
                     </div>
-                    <div className="py-3 border-b border-gray-200">
+                    <div className="py-2.5 border-b border-gray-100">
                       <div className="flex justify-between items-center">
-                        <span className="text-gray-600">Per Kilometer Rate</span>
-                        <span className="font-semibold text-gray-800">₹{fareSettings.perKmRate}</span>
+                        <span className="text-gray-600 text-sm">Per Kilometer Rate</span>
+                        <span className="font-bold text-gray-800 text-sm">₹{fareSettings.perKmRate}</span>
                       </div>
-                      <p className="text-xs text-gray-500 mt-1">
+                      <p className="text-[10px] text-gray-400 mt-0.5">
                         Convenience amount for driver
                       </p>
                     </div>
                   </>
                 ) : (
                   <>
-                    <div className="py-3 border-b border-gray-200">
+                    <div className="py-2.5 border-b border-gray-100">
                       <div className="flex justify-between items-center">
-                        <span className="text-gray-600">Base Price (24 Hours)</span>
-                        <span className="font-semibold text-gray-800">₹{fareSettings.outstationBasePrice24Hrs}</span>
+                        <span className="text-gray-600 text-sm">Base Price (24 Hours)</span>
+                        <span className="font-bold text-gray-800 text-sm">₹{fareSettings.outstationBasePrice24Hrs}</span>
                       </div>
-                      <p className="text-xs text-gray-500 mt-1">
+                      <p className="text-[10px] text-gray-400 mt-0.5">
                         Base price for outstation trips &lt;= 24 hours
                       </p>
                     </div>
-                    <div className="py-3 border-b border-gray-200">
+                    <div className="py-2.5 border-b border-gray-100">
                       <div className="flex justify-between items-center">
-                        <span className="text-gray-600">Per Kilometer Rate</span>
-                        <span className="font-semibold text-gray-800">₹{fareSettings.perKmRate}</span>
+                        <span className="text-gray-600 text-sm">Per Kilometer Rate</span>
+                        <span className="font-bold text-gray-800 text-sm">₹{fareSettings.perKmRate}</span>
                       </div>
-                      <p className="text-xs text-gray-500 mt-1">
+                      <p className="text-[10px] text-gray-400 mt-0.5">
                         Convenience amount for driver
                       </p>
                     </div>
                   </>
                 )}
-                <div className="py-3 border-b border-gray-200">
+                <div className="py-2.5 border-b border-gray-100">
                   <div className="flex justify-between items-center">
-                    <span className="text-gray-600">Per Minute Rate</span>
-                    <span className="font-semibold text-gray-800">₹{fareSettings.perMinuteRate}</span>
+                    <span className="text-gray-600 text-sm">Per Minute Rate</span>
+                    <span className="font-bold text-gray-800 text-sm">₹{fareSettings.perMinuteRate}</span>
                   </div>
-                  <p className="text-xs text-gray-500 mt-1">
+                  <p className="text-[10px] text-gray-400 mt-0.5">
                     Rate per minute for trip time calculation
                   </p>
                 </div>
-                <div className="py-3 border-b border-gray-200">
+                <div className="py-2.5 border-b border-gray-100">
                   <div className="flex justify-between items-center">
-                    <span className="text-gray-600">Waiting Time Rate</span>
-                    <span className="font-semibold text-gray-800">₹{fareSettings.waitingTimePerMinute}/min</span>
+                    <span className="text-gray-600 text-sm">Waiting Time Rate</span>
+                    <span className="font-bold text-gray-800 text-sm">₹{fareSettings.waitingTimePerMinute}/min</span>
                   </div>
-                  <p className="text-xs text-gray-500 mt-1">
+                  <p className="text-[10px] text-gray-400 mt-0.5">
                     Rate charged per minute for waiting time
                   </p>
                 </div>
-                <div className="py-3 border-b border-gray-200">
+                <div className="py-2.5 border-b border-gray-100">
                   <div className="flex justify-between items-center">
-                    <span className="text-gray-600">Night Charges</span>
-                    <span className="font-semibold text-gray-800">
+                    <span className="text-gray-600 text-sm">Night Charges</span>
+                    <span className="font-bold text-gray-800 text-sm">
                       ₹{activeModule === 'incity' ? fareSettings.nightCharge : fareSettings.outstationNightCharge}
                     </span>
                   </div>
-                  <p className="text-xs text-gray-500 mt-1">
+                  <p className="text-[10px] text-gray-400 mt-0.5">
                     Fixed charge applied during night hours
                   </p>
                 </div>
-                <div className="py-3 border-b border-gray-200">
+                <div className="py-2.5 border-b border-gray-100">
                   <div className="flex justify-between items-center">
-                    <span className="text-gray-600">Night Time</span>
-                    <span className="font-semibold text-gray-800">
+                    <span className="text-gray-600 text-sm">Night Time</span>
+                    <span className="font-bold text-gray-800 text-sm">
                       {hourToTimeString(fareSettings.nightStartHour)} - {hourToTimeString(fareSettings.nightEndHour)}
                     </span>
                   </div>
-                  <p className="text-xs text-gray-500 mt-1">
+                  <p className="text-[10px] text-gray-400 mt-0.5">
                     Night hours when additional charges apply
                   </p>
                 </div>
-                <div className="py-3 border-b border-gray-200">
+                <div className="py-2.5 border-b border-gray-100">
                   <div className="flex justify-between items-center">
-                    <span className="text-gray-600">Cancellation Penalty</span>
-                    <span className="font-semibold text-gray-800">₹{fareSettings.cancellationPenaltyAmount}</span>
+                    <span className="text-gray-600 text-sm">Cancellation Penalty</span>
+                    <span className="font-bold text-gray-800 text-sm">₹{fareSettings.cancellationPenaltyAmount}</span>
                   </div>
-                  <p className="text-xs text-gray-500 mt-1">
+                  <p className="text-[10px] text-gray-400 mt-0.5">
                     Penalty charged when trip is cancelled less than 30 minutes before scheduled time
                   </p>
                 </div>
@@ -521,12 +520,12 @@ const Fare = () => {
           </div>
 
           {/* Commission Settings */}
-          <div className="bg-white rounded-xl sm:rounded-2xl shadow-sm border border-gray-200 p-4 sm:p-6 animate-fade-in" style={{ animationDelay: '150ms' }}>
-            <h2 className="text-lg sm:text-xl font-bold text-gray-800 mb-4 sm:mb-6">Commission Settings</h2>
+          <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-4 animate-fade-in" style={{ animationDelay: '150ms' }}>
+            <h2 className="text-lg font-bold text-gray-800 mb-4">Commission Settings</h2>
             {editing ? (
               <form onSubmit={handleSubmit} className="space-y-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                  <label className="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-1">
                     Admin Commission (%)
                   </label>
                   <input
@@ -536,46 +535,48 @@ const Fare = () => {
                     onChange={(e) =>
                       setFareSettings({ ...fareSettings, adminCommissionPercentage: parseFloat(e.target.value) })
                     }
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#0B2C4D]/20 focus:border-[#0B2C4D]"
+                    className="w-full px-3 py-2 border border-gray-300 rounded focus:ring-1 focus:ring-[#0B2C4D] outline-none text-sm"
                     required
                     min="0"
                     max="100"
                   />
-                  <p className="text-xs text-gray-500 mt-1">
+                  <p className="text-[10px] text-gray-400 mt-0.5">
                     Commission percentage deducted from each trip
                   </p>
                 </div>
-                <div className="mt-6 p-4 bg-green-50 rounded-lg">
-                  <p className="text-sm text-gray-600">
-                    <strong>Example Calculation:</strong>
+                <div className="mt-4 p-3 bg-green-50 rounded-lg border border-green-100">
+                  <p className="text-xs font-semibold text-gray-600 mb-1">
+                    Example Calculation:
                   </p>
-                  <p className="text-xs text-gray-500 mt-2">
-                    For a trip with ₹500 total fare and {fareSettings.adminCommissionPercentage}% commission:
+                  <p className="text-[10px] text-gray-500 mb-2">
+                    For a trip with ₹500 total fare:
                   </p>
-                  <p className="text-sm font-semibold text-gray-800 mt-2">
-                    Admin Commission: ₹{(500 * fareSettings.adminCommissionPercentage) / 100}
-                  </p>
-                  <p className="text-sm font-semibold text-gray-800">
-                    Driver Earnings: ₹{500 - (500 * fareSettings.adminCommissionPercentage) / 100}
-                  </p>
+                  <div className="flex justify-between text-xs border-t border-green-200 pt-2">
+                    <span className="text-gray-600">Admin Commission:</span>
+                    <span className="font-bold text-gray-800">₹{(500 * fareSettings.adminCommissionPercentage) / 100}</span>
+                  </div>
+                  <div className="flex justify-between text-xs mt-1">
+                    <span className="text-gray-600">Driver Earnings:</span>
+                    <span className="font-bold text-gray-800">₹{500 - (500 * fareSettings.adminCommissionPercentage) / 100}</span>
+                  </div>
                 </div>
               </form>
             ) : (
-              <div className="space-y-4">
-                <div className="py-3 border-b border-gray-200">
+              <div className="space-y-3">
+                <div className="py-2.5 border-b border-gray-100">
                   <div className="flex justify-between items-center">
-                    <span className="text-gray-600">Admin Commission</span>
-                    <span className="font-semibold text-gray-800">{fareSettings.adminCommissionPercentage}%</span>
+                    <span className="text-gray-600 text-sm">Admin Commission</span>
+                    <span className="font-bold text-gray-800 text-sm">{fareSettings.adminCommissionPercentage}%</span>
                   </div>
-                  <p className="text-xs text-gray-500 mt-1">
+                  <p className="text-[10px] text-gray-400 mt-0.5">
                     Commission percentage deducted from each trip
                   </p>
                 </div>
-                <div className="mt-6 p-4 bg-green-50 rounded-lg">
-                  <p className="text-sm text-gray-600 mb-2">
-                    <strong>Commission Calculation:</strong>
+                <div className="mt-4 p-3 bg-green-50 rounded-lg border border-green-100">
+                  <p className="text-xs font-semibold text-gray-600 mb-1">
+                    Commission Calculation:
                   </p>
-                  <p className="text-xs text-gray-500">
+                  <p className="text-[10px] text-gray-500">
                     {fareSettings.adminCommissionPercentage}% of total trip fare is deducted as admin commission.
                     Remaining amount is credited to driver's wallet.
                   </p>

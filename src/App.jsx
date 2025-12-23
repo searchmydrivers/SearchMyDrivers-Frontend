@@ -18,7 +18,7 @@ const TransactionHistory = lazy(() => import('./pages/TransactionHistory'));
 const ContentManagement = lazy(() => import('./pages/ContentManagement'));
 const HiringManagement = lazy(() => import('./pages/HiringManagement'));
 const IncompleteRegistrations = lazy(() => import('./pages/IncompleteRegistrations'));
-const WithdrawalManagement = lazy(() => import('./pages/WithdrawalManagement'));
+const DriverWalletTransactions = lazy(() => import('./pages/DriverWalletTransactions'));
 const Banners = lazy(() => import('./pages/Banners'));
 const AdminProfile = lazy(() => import('./pages/AdminProfile'));
 const Notifications = lazy(() => import('./pages/Notifications'));
@@ -158,10 +158,10 @@ function App() {
             }
           />
           <Route
-            path="/withdrawals"
+            path="/driver-wallet-transactions"
             element={
               <ProtectedRoute>
-                <WithdrawalManagement />
+                <DriverWalletTransactions />
               </ProtectedRoute>
             }
           />

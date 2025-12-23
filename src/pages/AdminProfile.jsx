@@ -81,7 +81,7 @@ const AdminProfile = () => {
     return (
       <Layout>
         <div className="flex items-center justify-center h-64">
-          <div className="text-gray-500">Loading profile...</div>
+          <div className="w-8 h-8 border-4 border-[#0B2C4D] border-t-transparent rounded-full animate-spin"></div>
         </div>
       </Layout>
     );
@@ -89,19 +89,19 @@ const AdminProfile = () => {
 
   return (
     <Layout>
-      <div>
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6 items-stretch">
+      <div className="animate-fade-in">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 items-stretch">
           {/* Profile Card */}
           <div className="lg:col-span-1 flex">
-            <div className="bg-white rounded-xl sm:rounded-2xl shadow-sm border border-gray-200 p-4 sm:p-6 w-full flex flex-col animate-fade-in" style={{ animationDelay: '100ms' }}>
+            <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-4 w-full flex flex-col animate-fade-in" style={{ animationDelay: '100ms' }}>
               <div className="text-center flex-1 flex flex-col justify-center">
-                <div className="w-20 h-20 sm:w-24 sm:h-24 bg-gradient-to-br from-[#0B2C4D] to-[#254f7a] rounded-full flex items-center justify-center text-white text-2xl sm:text-3xl font-bold mx-auto mb-3 sm:mb-4 shadow-lg">
+                <div className="w-20 h-20 bg-gradient-to-br from-[#0B2C4D] to-[#254f7a] rounded-full flex items-center justify-center text-white text-2xl font-bold mx-auto mb-3 shadow-lg">
                   {admin?.name?.charAt(0)?.toUpperCase() || 'A'}
                 </div>
-                <h2 className="text-lg sm:text-xl font-bold text-gray-800">{admin?.name || 'Admin'}</h2>
-                <p className="text-sm sm:text-base text-gray-500 mt-1 break-words">{admin?.email || 'admin@example.com'}</p>
+                <h2 className="text-lg font-bold text-gray-800">{admin?.name || 'Admin'}</h2>
+                <p className="text-xs sm:text-sm text-gray-500 mt-1 break-words">{admin?.email || 'admin@example.com'}</p>
                 <div className="mt-4">
-                  <span className="px-3 py-1 bg-green-100 text-green-800 text-xs font-semibold rounded-full">
+                  <span className="px-2.5 py-0.5 bg-green-100 text-green-800 text-[10px] font-bold uppercase tracking-wide rounded-full">
                     Active
                   </span>
                 </div>
@@ -111,51 +111,51 @@ const AdminProfile = () => {
 
           {/* Profile Details */}
           <div className="lg:col-span-2 flex">
-            <div className="bg-white rounded-xl sm:rounded-2xl shadow-sm border border-gray-200 p-4 sm:p-6 w-full flex flex-col animate-fade-in" style={{ animationDelay: '150ms' }}>
-              <div className="flex justify-between items-center mb-4 sm:mb-6">
-                <h3 className="text-xl sm:text-2xl font-bold text-gray-900 flex items-center">
-                  <span className="material-icons-outlined text-xl mr-2 text-[#0B2C4D]">person</span>
+            <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-4 w-full flex flex-col animate-fade-in" style={{ animationDelay: '150ms' }}>
+              <div className="flex justify-between items-center mb-4">
+                <h3 className="text-lg font-bold text-gray-900 flex items-center">
+                  <span className="material-icons-outlined text-lg mr-2 text-[#0B2C4D]">person</span>
                   Profile Information
                 </h3>
                 {!editing && (
                   <button
                     onClick={() => setEditing(true)}
-                    className="px-4 sm:px-6 py-2.5 sm:py-3 bg-gradient-to-r from-[#0B2C4D] to-[#254f7a] text-white rounded-lg sm:rounded-xl hover:from-[#091E3A] hover:to-[#1a3a5a] transition-all duration-200 shadow-lg font-semibold flex items-center space-x-2 text-sm sm:text-base"
+                    className="px-3 py-1.5 bg-gradient-to-r from-[#0B2C4D] to-[#254f7a] text-white rounded-lg hover:from-[#091E3A] hover:to-[#1a3a5a] transition-all duration-200 shadow-md font-semibold flex items-center space-x-1.5 text-xs"
                   >
-                    <span className="material-icons-outlined text-lg">edit</span>
+                    <span className="material-icons-outlined text-sm">edit</span>
                     <span>Edit Profile</span>
                   </button>
                 )}
               </div>
 
               {editing ? (
-                <form onSubmit={handleSubmit}>
-                  <div className="mb-4">
-                    <label className="block text-sm font-medium text-gray-700 mb-2">Name</label>
+                <form onSubmit={handleSubmit} className="space-y-3">
+                  <div>
+                    <label className="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-1">Name</label>
                     <input
                       type="text"
                       value={formData.name}
                       onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#0B2C4D]/20 focus:border-[#0B2C4D]"
+                      className="w-full px-3 py-2 border border-gray-300 rounded focus:ring-1 focus:ring-[#0B2C4D] outline-none text-sm"
                       required
                     />
                   </div>
-                  <div className="mb-4">
-                    <label className="block text-sm font-medium text-gray-700 mb-2">Email</label>
+                  <div>
+                    <label className="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-1">Email</label>
                     <input
                       type="email"
                       value={formData.email}
                       onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#0B2C4D]/20 focus:border-[#0B2C4D]"
+                      className="w-full px-3 py-2 border border-gray-300 rounded focus:ring-1 focus:ring-[#0B2C4D] outline-none text-sm"
                       required
                     />
                   </div>
-                  <div className="flex space-x-3 pt-4">
+                  <div className="flex space-x-3 pt-2">
                     <button
                       type="submit"
-                      className="px-6 py-2.5 bg-gradient-to-r from-[#0B2C4D] to-[#254f7a] text-white rounded-lg hover:from-[#091E3A] hover:to-[#1a3a5a] transition-all duration-200 shadow-lg font-semibold flex items-center space-x-2"
+                      className="px-4 py-2 bg-gradient-to-r from-[#0B2C4D] to-[#254f7a] text-white rounded hover:from-[#091E3A] hover:to-[#1a3a5a] transition-all duration-200 font-medium flex items-center space-x-1.5 text-xs shadow-sm"
                     >
-                      <span className="material-icons-outlined text-lg">save</span>
+                      <span className="material-icons-outlined text-sm">save</span>
                       <span>Save Changes</span>
                     </button>
                     <button
@@ -167,25 +167,25 @@ const AdminProfile = () => {
                           email: admin?.email || '',
                         });
                       }}
-                      className="px-6 py-2.5 bg-white text-gray-700 border border-gray-300 rounded-lg hover:bg-gray-50 transition-all duration-200 font-semibold"
+                      className="px-4 py-2 bg-white text-gray-700 border border-gray-300 rounded hover:bg-gray-50 transition-all duration-200 font-medium text-xs shadow-sm"
                     >
                       Cancel
                     </button>
                   </div>
                 </form>
               ) : (
-                <div className="space-y-4">
-                  <div>
-                    <label className="block text-sm font-medium text-gray-500 mb-1">Name</label>
-                    <p className="text-gray-800 font-medium">{admin?.name || 'N/A'}</p>
+                <div className="space-y-3">
+                  <div className="py-2 border-b border-gray-100">
+                    <label className="block text-[10px] font-bold text-gray-500 uppercase tracking-wider mb-0.5">Name</label>
+                    <p className="text-gray-800 font-medium text-sm">{admin?.name || 'N/A'}</p>
                   </div>
-                  <div>
-                    <label className="block text-sm font-medium text-gray-500 mb-1">Email</label>
-                    <p className="text-gray-800 font-medium">{admin?.email || 'N/A'}</p>
+                  <div className="py-2 border-b border-gray-100">
+                    <label className="block text-[10px] font-bold text-gray-500 uppercase tracking-wider mb-0.5">Email</label>
+                    <p className="text-gray-800 font-medium text-sm">{admin?.email || 'N/A'}</p>
                   </div>
-                  <div>
-                    <label className="block text-sm font-medium text-gray-500 mb-1">Role</label>
-                    <p className="text-gray-800 font-medium">Administrator</p>
+                  <div className="py-2">
+                    <label className="block text-[10px] font-bold text-gray-500 uppercase tracking-wider mb-0.5">Role</label>
+                    <p className="text-gray-800 font-medium text-sm">Administrator</p>
                   </div>
                 </div>
               )}
@@ -198,4 +198,3 @@ const AdminProfile = () => {
 };
 
 export default AdminProfile;
-
