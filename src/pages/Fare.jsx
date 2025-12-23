@@ -8,7 +8,7 @@ const Fare = () => {
     basePrice: 300,
     perKmRate: 10,
     perMinuteRate: 2,
-    waitingTimePerMinute: 5,
+
     nightCharge: 150,
     adminCommissionPercentage: 10,
     nightStartHour: 22,
@@ -41,7 +41,7 @@ const Fare = () => {
           basePrice: fare.basePrice || 300,
           perKmRate: fare.perKmRate || 10,
           perMinuteRate: fare.perMinuteRate || 2,
-          waitingTimePerMinute: fare.waitingTimePerMinute || 5,
+
           nightCharge: fare.nightCharge || 150,
           adminCommissionPercentage: fare.adminCommissionPercentage || 10,
           nightStartHour: fare.nightStartHour || 22,
@@ -70,7 +70,7 @@ const Fare = () => {
         basePrice: fareSettings.basePrice,
         perKmRate: fareSettings.perKmRate,
         perMinuteRate: fareSettings.perMinuteRate,
-        waitingTimePerMinute: fareSettings.waitingTimePerMinute,
+
         nightCharge: fareSettings.nightCharge,
         nightStartHour: fareSettings.nightStartHour,
         nightEndHour: fareSettings.nightEndHour,
@@ -289,26 +289,11 @@ const Fare = () => {
                   <p className="text-[10px] text-gray-400 mt-0.5">
                     Rate per minute for trip time calculation
                   </p>
-                </div>
-                <div>
-                  <label className="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-1">
-                    Waiting Time Rate (₹/min)
-                  </label>
-                  <input
-                    type="number"
-                    step="0.1"
-                    value={fareSettings.waitingTimePerMinute}
-                    onChange={(e) =>
-                      setFareSettings({ ...fareSettings, waitingTimePerMinute: parseFloat(e.target.value) })
-                    }
-                    className="w-full px-3 py-2 border border-gray-300 rounded focus:ring-1 focus:ring-[#0B2C4D] outline-none text-sm"
-                    required
-                    min="0"
-                  />
                   <p className="text-[10px] text-gray-400 mt-0.5">
-                    Rate charged per minute for waiting time
+                    Rate per minute for trip time calculation
                   </p>
                 </div>
+
                 <div>
                   <label className="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-1">
                     Night Charges (₹)
@@ -474,16 +459,11 @@ const Fare = () => {
                   <p className="text-[10px] text-gray-400 mt-0.5">
                     Rate per minute for trip time calculation
                   </p>
-                </div>
-                <div className="py-2.5 border-b border-gray-100">
-                  <div className="flex justify-between items-center">
-                    <span className="text-gray-600 text-sm">Waiting Time Rate</span>
-                    <span className="font-bold text-gray-800 text-sm">₹{fareSettings.waitingTimePerMinute}/min</span>
-                  </div>
                   <p className="text-[10px] text-gray-400 mt-0.5">
-                    Rate charged per minute for waiting time
+                    Rate per minute for trip time calculation
                   </p>
                 </div>
+
                 <div className="py-2.5 border-b border-gray-100">
                   <div className="flex justify-between items-center">
                     <span className="text-gray-600 text-sm">Night Charges</span>

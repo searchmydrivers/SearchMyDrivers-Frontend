@@ -3,7 +3,8 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import Sidebar from './Sidebar';
 import { authService } from '../../services/authService';
 import api from '../../config/api';
-import { Toaster } from 'react-hot-toast';
+import { requestForToken, onMessageListener } from '../../config/firebase';
+import { toast, Toaster } from 'react-hot-toast';
 
 const Layout = ({ children }) => {
   const [admin, setAdmin] = useState(null);
@@ -16,7 +17,35 @@ const Layout = ({ children }) => {
   const location = useLocation();
 
   useEffect(() => {
+    // Request FCM Token
+    const initFirebase = async () => {
+      const token = await requestForToken();
+      if (token) {
+        // Save to backend
+        try {
+          await api.put('/admins/profile', { fcmToken: token });
+        } catch (err) {
+          console.error('Failed to update FCM token', err);
+        }
+      }
+    };
+    initFirebase();
+
+    // Foreground Listener
+    onMessageListener().then(payload => {
+      setUnreadCount(prev => prev + 1);
+      fetchNotifications();
+      toast((t) => (
+        <span onClick={() => navigate('/notifications')}>
+          <b>{payload.notification.title}</b>
+          <br />
+          {payload.notification.body}
+        </span>
+      ), { duration: 5000 });
+    }).catch(err => console.log('failed: ', err));
+
     const loadAdmin = async () => {
+      // ... existing loadAdmin logic ...
       const adminData = authService.getCurrentUser();
       if (adminData) {
         setAdmin(adminData);
@@ -42,8 +71,8 @@ const Layout = ({ children }) => {
   useEffect(() => {
     if (admin) {
       fetchNotifications();
-      // Poll for new notifications every 30 seconds
-      const interval = setInterval(fetchNotifications, 30000);
+      // Poll for new notifications every 60 seconds (less frequent due to FCM)
+      const interval = setInterval(fetchNotifications, 60000);
       return () => clearInterval(interval);
     }
   }, [admin]);
@@ -51,9 +80,10 @@ const Layout = ({ children }) => {
   const fetchNotifications = async () => {
     try {
       const response = await api.get('/admins/notifications', {
-        params: { limit: 5, unreadOnly: false },
+        params: { limit: 10, unreadOnly: 'true' },
       });
       if (response.data.success) {
+        // We only show unread in the dropdown as queue
         setNotifications(response.data.data.notifications || []);
         setUnreadCount(response.data.data.unreadCount || 0);
       }
@@ -65,6 +95,32 @@ const Layout = ({ children }) => {
   const handleNotificationClick = () => {
     navigate('/notifications');
     setShowNotificationDropdown(false);
+  };
+
+  const toggleNotificationDropdown = async () => {
+    const newState = !showNotificationDropdown;
+    setShowNotificationDropdown(newState);
+
+    if (newState) {
+      // Mark top 3 as read if they are unread
+      const unreadToMark = notifications.filter(n => !n.isRead).slice(0, 3);
+      if (unreadToMark.length > 0) {
+        try {
+          Promise.all(unreadToMark.map(n => api.put(`/admins/notifications/${n._id}/read`))).catch(console.error);
+
+          const updatedNotifications = notifications.map(n => {
+            if (unreadToMark.find(u => u._id === n._id)) {
+              return { ...n, isRead: true };
+            }
+            return n;
+          });
+          setNotifications(updatedNotifications);
+          setUnreadCount(Math.max(0, unreadCount - unreadToMark.length));
+        } catch (error) {
+          console.error('Error marking notifications as read', error);
+        }
+      }
+    }
   };
 
   const handleMarkAsRead = async (notificationId, e) => {
@@ -327,7 +383,7 @@ const Layout = ({ children }) => {
               <div className="relative">
                 <button
                   id="notification-button"
-                  onClick={() => setShowNotificationDropdown(!showNotificationDropdown)}
+                  onClick={toggleNotificationDropdown}
                   className="relative w-10 h-10 flex items-center justify-center text-gray-400 hover:text-[#2BB673] hover:bg-[#2BB673]/5 rounded-xl transition-all duration-200 group"
                 >
                   <span className="material-icons-outlined text-2xl group-hover:scale-110 transition-transform duration-200">notifications</span>
@@ -360,7 +416,7 @@ const Layout = ({ children }) => {
                           <p className="text-gray-500 text-sm">You are all caught up!</p>
                         </div>
                       ) : (
-                        notifications.map((notification) => (
+                        notifications.slice(0, 3).map((notification) => (
                           <div
                             key={notification._id}
                             onClick={() => handleNotificationClick()}

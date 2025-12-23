@@ -12,6 +12,7 @@ const Users = lazy(() => import('./pages/Users'));
 const UserDetails = lazy(() => import('./pages/UserDetails'));
 const Drivers = lazy(() => import('./pages/Drivers'));
 const DriverDetails = lazy(() => import('./pages/DriverDetails'));
+const EditDriver = lazy(() => import('./pages/EditDriver'));
 const TripBookings = lazy(() => import('./pages/TripBookings'));
 const TripDetails = lazy(() => import('./pages/TripDetails'));
 const TransactionHistory = lazy(() => import('./pages/TransactionHistory'));
@@ -106,6 +107,14 @@ function App() {
             element={
               <ProtectedRoute>
                 <DriverDetails />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/drivers/:id/edit"
+            element={
+              <ProtectedRoute>
+                <EditDriver />
               </ProtectedRoute>
             }
           />
