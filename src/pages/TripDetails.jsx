@@ -2,7 +2,52 @@ import { useEffect, useState, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import Layout from '../components/Layout/Layout';
 import { tripService } from '../services/tripService';
+import { chatService } from '../services/chatService';
 import io from 'socket.io-client';
+
+const ChatHistory = ({ tripId }) => {
+  const [messages, setMessages] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetchChatHistory();
+  }, [tripId]);
+
+  const fetchChatHistory = async () => {
+    try {
+      const response = await chatService.getChatHistory(tripId);
+      if (response.success) {
+        setMessages(response.data.data);
+      }
+    } catch (error) {
+      console.error("Failed to load chats", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  if (loading) return <div className="text-xs text-gray-500 py-4 text-center">Loading chats...</div>;
+
+  if (messages.length === 0) {
+    return <div className="text-xs text-gray-400 py-4 text-center italic">No messages exchanged yet.</div>;
+  }
+
+  return (
+    <div className="space-y-3 max-h-60 overflow-y-auto pr-1">
+      {messages.map((msg) => (
+        <div key={msg._id} className={`flex ${msg.senderModel === 'Driver' ? 'justify-start' : 'justify-end'}`}>
+          <div className={`max-w-[80%] rounded-lg p-2 text-xs ${msg.senderModel === 'Driver' ? 'bg-gray-100 text-gray-800' : 'bg-blue-50 text-blue-900 border border-blue-100'}`}>
+            <div className="flex items-center gap-1 mb-0.5">
+              <span className="font-bold text-[10px] uppercase">{msg.senderModel}</span>
+              <span className="text-[9px] text-gray-400">{new Date(msg.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
+            </div>
+            <p>{msg.message}</p>
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+};
 
 const TripDetails = () => {
   const { tripId } = useParams();
@@ -602,6 +647,15 @@ const TripDetails = () => {
               </div>
             </div>
           )}
+
+          {/* Chat History Section */}
+          <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-4 lg:col-span-2 animate-fade-in" style={{ animationDelay: '480ms' }}>
+            <h2 className="text-sm font-bold text-gray-900 mb-3 flex items-center border-b border-gray-100 pb-2">
+              <span className="material-icons-outlined text-lg mr-2 text-[#0B2C4D]">chat</span>
+              Chat History
+            </h2>
+            <ChatHistory tripId={tripId} />
+          </div>
 
           {/* Driver Location Section */}
           <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-4 lg:col-span-2 animate-fade-in" style={{ animationDelay: '500ms' }}>
