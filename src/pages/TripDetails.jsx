@@ -418,6 +418,18 @@ const TripDetails = () => {
                         <span>{trip.driver.rating || 0}</span>
                         <span>• {trip.driver.workLocation || ''}</span>
                       </div>
+                      <div className="mt-1 space-y-0.5">
+                        {trip.driver.driverId && (
+                          <p className="text-[10px] text-gray-500">
+                            <span className="font-medium">ID:</span> {trip.driver.driverId}
+                          </p>
+                        )}
+                        {trip.driver.licenseNumber && (
+                          <p className="text-[10px] text-gray-500">
+                            <span className="font-medium">Lic:</span> {trip.driver.licenseNumber}
+                          </p>
+                        )}
+                      </div>
                     </>
                   ) : (
                     <span className="text-gray-400 italic">Not Assigned</span>

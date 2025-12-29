@@ -29,7 +29,7 @@ const ServiceZones = lazy(() => import('./pages/ServiceZones'));
 const SupportTickets = lazy(() => import('./pages/SupportTickets'));
 const TicketDetails = lazy(() => import('./pages/TicketDetails'));
 const DriverReferrals = lazy(() => import('./pages/DriverReferrals'));
-
+const Settings = lazy(() => import('./pages/Settings'));
 
 
 function App() {
@@ -191,6 +191,14 @@ function App() {
             element={
               <ProtectedRoute>
                 <AdminProfile />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/settings"
+            element={
+              <ProtectedRoute>
+                <Settings />
               </ProtectedRoute>
             }
           />

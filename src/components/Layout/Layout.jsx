@@ -5,6 +5,8 @@ import { authService } from '../../services/authService';
 import api from '../../config/api';
 import { requestForToken, onMessageListener } from '../../config/firebase';
 import { toast, Toaster } from 'react-hot-toast';
+import SOSAlertSystem from './SOSAlertSystem';
+import { socketService } from '../../services/socketService';
 
 const Layout = ({ children }) => {
   const [admin, setAdmin] = useState(null);
@@ -36,7 +38,13 @@ const Layout = ({ children }) => {
       setUnreadCount(prev => prev + 1);
       fetchNotifications();
       toast((t) => (
-        <span onClick={() => navigate('/notifications')}>
+        <span onClick={() => {
+          if (payload.data?.type === 'sos-alert' && payload.data?.tripId) {
+            navigate(`/trip-bookings/${payload.data.tripId}`);
+          } else {
+            navigate('/notifications');
+          }
+        }}>
           <b>{payload.notification.title}</b>
           <br />
           {payload.notification.body}
@@ -68,12 +76,17 @@ const Layout = ({ children }) => {
     loadAdmin();
   }, []);
 
+
   useEffect(() => {
     if (admin) {
+      socketService.connect(admin || {});
       fetchNotifications();
-      // Poll for new notifications every 60 seconds (less frequent due to FCM)
+      // Poll for new notifications every 60 seconds
       const interval = setInterval(fetchNotifications, 60000);
-      return () => clearInterval(interval);
+      return () => {
+        clearInterval(interval);
+        socketService.disconnect();
+      };
     }
   }, [admin]);
 
@@ -255,6 +268,10 @@ const Layout = ({ children }) => {
         breadcrumbs: [{ label: 'Dashboard', path: '/dashboard' }, { label: 'Profile' }],
         title: 'Admin Profile',
       },
+      '/settings': {
+        breadcrumbs: [{ label: 'Dashboard', path: '/dashboard' }, { label: 'Settings' }],
+        title: 'Settings',
+      },
     };
 
     // Check for nested routes
@@ -314,6 +331,7 @@ const Layout = ({ children }) => {
       )}
 
       <Toaster position="top-right" />
+      <SOSAlertSystem />
 
       {/* Sidebar */}
       <Sidebar
@@ -463,14 +481,20 @@ const Layout = ({ children }) => {
               </div>
 
               {/* Settings */}
-              <button className="w-10 h-10 flex items-center justify-center text-gray-400 hover:text-[#0B2C4D] hover:bg-[#0B2C4D]/5 rounded-xl transition-all duration-200">
+              <button
+                onClick={() => navigate('/settings')}
+                className="w-10 h-10 flex items-center justify-center text-gray-400 hover:text-[#0B2C4D] hover:bg-[#0B2C4D]/5 rounded-xl transition-all duration-200"
+              >
                 <span className="material-icons-outlined text-2xl hover:rotate-90 transition-transform duration-500">settings</span>
               </button>
 
               <div className="h-8 w-px bg-gray-200 mx-2 lg:mx-3"></div>
 
               {/* User Profile */}
-              <div className="flex items-center gap-3 pl-1 cursor-pointer group rounded-xl p-1 hover:bg-gray-50 transition-colors">
+              <div
+                onClick={() => navigate('/admin-profile')}
+                className="flex items-center gap-3 pl-1 cursor-pointer group rounded-xl p-1 hover:bg-gray-50 transition-colors"
+              >
                 <div className="text-right hidden sm:block">
                   <p className="text-sm font-bold text-[#0B2C4D] group-hover:text-[#2BB673] transition-colors">{admin?.name || 'Admin'}</p>
                   <p className="text-xs text-gray-500 font-medium">{admin?.email || 'admin@example.com'}</p>

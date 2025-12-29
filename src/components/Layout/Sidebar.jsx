@@ -1,14 +1,30 @@
 import { Link, useLocation } from 'react-router-dom';
 import { authService } from '../../services/authService';
 import Logo from '../../assets/SearchMyDriver.png';
-import { useState } from 'react';
+import { useState, useRef, useEffect, useLayoutEffect } from 'react';
 
 const Sidebar = ({ isOpen, onClose, collapsed, toggleSidebar }) => {
   const location = useLocation();
   const [hoveredItem, setHoveredItem] = useState(null);
+  const navRef = useRef(null);
 
   const adminData = JSON.parse(localStorage.getItem('adminData') || '{}');
   const isSubAdmin = adminData.adminType === 'subadmin';
+
+  // Restore scroll position on mount
+  useLayoutEffect(() => {
+    if (navRef.current) {
+      const savedScroll = sessionStorage.getItem('sidebarScrollTop');
+      if (savedScroll) {
+        navRef.current.scrollTop = parseInt(savedScroll, 10);
+      }
+    }
+  }, []);
+
+  // Save scroll position on scroll
+  const handleScroll = (e) => {
+    sessionStorage.setItem('sidebarScrollTop', e.target.scrollTop);
+  };
 
   const menuItems = [
     { path: '/dashboard', label: 'Dashboard', icon: 'dashboard', section: 'main' },
@@ -159,7 +175,11 @@ const Sidebar = ({ isOpen, onClose, collapsed, toggleSidebar }) => {
         </div>
 
         {/* Navigation Menu */}
-        <nav className="flex-1 overflow-y-auto overflow-x-hidden py-4 px-2 sidebar-scrollbar space-y-2">
+        <nav
+          ref={navRef}
+          onScroll={handleScroll}
+          className="flex-1 overflow-y-auto overflow-x-hidden py-4 px-2 sidebar-scrollbar space-y-2"
+        >
 
           {/* Main Section */}
           <div className="flex flex-col">
