@@ -6,6 +6,9 @@ import { userService } from '../services/userService';
 import { driverService } from '../services/driverService';
 
 const Notifications = () => {
+  const adminData = JSON.parse(localStorage.getItem('adminData') || '{}');
+  const isSubAdmin = adminData.adminType === 'subadmin';
+
   const [showModal, setShowModal] = useState(false);
   const [actionLoading, setActionLoading] = useState(false);
   const [notifications, setNotifications] = useState([]);
@@ -166,7 +169,7 @@ const Notifications = () => {
   const searchDrivers = async (query) => {
     try {
       setSearchLoading(true);
-      const response = await driverService.getAllDrivers(1, 10, 'verified', query);
+      const response = await driverService.getAllDrivers({ page: 1, limit: 10, verificationStatus: 'verified', search: query });
       setDrivers(response.data?.drivers || []);
     } catch (error) {
       console.error('Error searching drivers:', error);
@@ -576,12 +579,12 @@ const Notifications = () => {
                       className="w-full px-3 py-2 border border-gray-300 rounded focus:ring-1 focus:ring-[#0B2C4D] outline-none text-xs"
                       required
                     >
-                      <option value="all">All (Users + Drivers)</option>
-                      <option value="users">All Users</option>
-                      <option value="drivers">All Drivers (Verified)</option>
+                      <option value="all">{isSubAdmin ? 'All (Zone Users + Drivers)' : 'All (Users + Drivers)'}</option>
+                      <option value="users">{isSubAdmin ? 'All Users (In Zone)' : 'All Users'}</option>
+                      <option value="drivers">{isSubAdmin ? 'All Drivers (In Zone)' : 'All Drivers (Verified)'}</option>
                       <option value="specific_user">Specific User</option>
                       <option value="specific_driver">Specific Driver</option>
-                      <option value="zone_drivers">Drivers by Service Zone</option>
+                      {!isSubAdmin && <option value="zone_drivers">Drivers by Service Zone</option>}
                     </select>
                   </div>
 

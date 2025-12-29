@@ -36,14 +36,21 @@ const Sidebar = ({ isOpen, onClose, collapsed, toggleSidebar }) => {
     { path: '/trip-bookings', label: 'Bookings', icon: 'route', section: 'main' },
     { path: '/transactions', label: 'Transactions', icon: 'receipt_long', section: 'main' },
     { path: '/hiring-requests', label: 'Monthly Hiring', icon: 'work', section: 'main' },
-    { path: '/zones', label: 'Service Zones', icon: 'map', section: 'management' },
-    { path: '/content', label: 'Content', icon: 'description', section: 'management' },
-    { path: '/banners', label: 'Banners', icon: 'image', section: 'management' },
+
+    // Global Management - Hidden for Sub-Admins
+    ...(isSubAdmin ? [] : [
+      { path: '/zones', label: 'Service Zones', icon: 'map', section: 'management' },
+      { path: '/content', label: 'Content', icon: 'description', section: 'management' },
+      { path: '/banners', label: 'Banners', icon: 'image', section: 'management' },
+    ]),
+
     { path: '/incomplete-registrations', label: 'Incomplete Reg.', icon: 'pending_actions', section: 'management' },
     { path: '/driver-wallet-transactions', label: 'Driver Wallet', icon: 'account_balance_wallet', section: 'management' },
     { path: '/notifications', label: 'Notifications', icon: 'notifications', section: 'management' },
     { path: '/tickets', label: 'Support Tickets', icon: 'support_agent', section: 'management' },
     { path: '/admin-profile', label: 'Profile', icon: 'account_circle', section: 'settings' },
+
+    // Settings - Hidden for Sub-Admins
     ...(isSubAdmin ? [] : [
       { path: '/fare', label: 'Fare Setup', icon: 'payments', section: 'management' },
       { path: '/subadmins', label: 'Sub-Admins', icon: 'admin_panel_settings', section: 'settings' },
