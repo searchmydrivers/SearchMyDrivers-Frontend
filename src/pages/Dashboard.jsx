@@ -132,6 +132,11 @@ const Dashboard = () => {
       const heatmapRes = await api.get('/admins/analytics/heatmap');
       if (heatmapRes.data.success) {
         setHeatmapData(heatmapRes.data.data);
+
+        // Update Map Center if provided by backend (e.g. Sub-Admin Work Location)
+        if (heatmapRes.data.data.center) {
+          setMapCenter(heatmapRes.data.data.center);
+        }
       }
     } catch (error) {
       console.error('Error fetching dashboard data:', error);
