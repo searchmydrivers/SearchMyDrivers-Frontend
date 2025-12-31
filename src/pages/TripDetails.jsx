@@ -72,6 +72,8 @@ const TripDetails = () => {
   // Socket.io connection setup
   // Socket.io connection using shared service
   useEffect(() => {
+    console.log('🔄 [TripDetails] Mounting socket listener for trip:', tripId);
+
     const handleDriverLocationUpdate = async (data) => {
       console.log('📍 [ADMIN] Driver location received via socketService:', data);
       if (data.tripId === tripId) {
@@ -88,10 +90,8 @@ const TripDetails = () => {
     // We just attach the listener
     socketService.on('driver-location-updated', handleDriverLocationUpdate);
 
-    // Also listen for general messages/errors just in case
-    socketService.on('error', (err) => console.error('Socket Error:', err));
-
     return () => {
+      console.log('🛑 [TripDetails] Unmounting socket listener');
       socketService.off('driver-location-updated', handleDriverLocationUpdate);
     };
   }, [tripId]);

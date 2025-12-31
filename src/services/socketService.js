@@ -10,9 +10,13 @@ class SocketService {
   }
 
   connect(userData) {
-    if (this.socket) return;
+    if (this.socket && this.socket.connected) return;
 
-    this.socket = io(SOCKET_URL);
+    if (!this.socket) {
+      this.socket = io(SOCKET_URL);
+    } else {
+      this.socket.connect();
+    }
 
     this.socket.on('connect', () => {
       console.log('Socket connected:', this.socket.id);
