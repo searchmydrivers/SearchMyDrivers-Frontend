@@ -22,12 +22,18 @@ class SocketService {
       console.log('Socket connected:', this.socket.id);
 
       // Join Admin Room - FORCE role to 'admin' as this is the Admin Panel
-      const adminJoinPayload = {
-        role: 'admin',
-        adminId: userData.id || userData._id || 'admin_placeholder_id'
-      };
-      console.log('🔗 [SocketService] Connected. Emitting join-room:', adminJoinPayload);
-      this.socket.emit('join-room', adminJoinPayload);
+      const targetAdminId = userData.id || userData._id;
+
+      if (targetAdminId) {
+        const adminJoinPayload = {
+          role: 'admin',
+          adminId: targetAdminId
+        };
+        console.log('🔗 [SocketService] Connected. Emitting join-room:', adminJoinPayload);
+        this.socket.emit('join-room', adminJoinPayload);
+      } else {
+        console.error('❌ [SocketService] Missing Admin ID in userData. Cannot join private room.', userData);
+      }
 
       // Attach pending listeners
       this.pendingListeners.forEach(({ eventName, callback }) => {

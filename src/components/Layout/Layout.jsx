@@ -79,7 +79,15 @@ const Layout = ({ children }) => {
 
   useEffect(() => {
     if (admin) {
-      socketService.connect(admin || {});
+      if (admin._id || admin.id) {
+        console.log('🔌 [Layout] Connecting socket with admin data:', admin);
+        socketService.connect(admin || {});
+      } else {
+        console.warn('⚠️ [Layout] Admin object loaded but MISSING ID. Socket will not function correctly for private events.', admin);
+        // Still connect to receive public 'admins' room events if possible? 
+        // socketService.connect requires ID to join private room.
+      }
+
       fetchNotifications();
       // Poll for new notifications every 60 seconds
       const interval = setInterval(fetchNotifications, 60000);
