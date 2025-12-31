@@ -306,6 +306,48 @@ const TripDetails = () => {
           </div>
         )}
 
+        {/* SOS Alerts Section */}
+        {trip.sosAlerts && trip.sosAlerts.length > 0 && (
+          <div className="bg-red-50 border border-red-200 rounded-xl p-4 animate-fade-in mb-4">
+            <h2 className="text-sm font-bold text-red-800 mb-3 flex items-center border-b border-red-200 pb-2">
+              <span className="material-icons-outlined text-lg mr-2 text-red-600">notification_important</span>
+              SOS Alerts ({trip.sosAlerts.length})
+            </h2>
+            <div className="space-y-3">
+              {trip.sosAlerts.map((alert, index) => (
+                <div key={alert._id || index} className="bg-white border border-red-100 rounded-lg p-3 shadow-sm">
+                  <div className="flex justify-between items-start">
+                    <div>
+                      <div className="flex items-center space-x-2 mb-1">
+                        <span className={`px-2 py-0.5 rounded text-[10px] font-bold uppercase ${alert.triggeredBy === 'driver' ? 'bg-blue-100 text-blue-800' : 'bg-yellow-100 text-yellow-800'}`}>
+                          {alert.triggeredBy} Alert
+                        </span>
+                        <span className="text-[10px] text-gray-400">
+                          {new Date(alert.createdAt).toLocaleString()}
+                        </span>
+                      </div>
+                      <p className="text-sm font-bold text-gray-900 mb-1">
+                        {alert.reason || 'Emergency Alert Triggered'}
+                      </p>
+                      {alert.location && alert.location.address && (
+                        <p className="text-xs text-gray-600 flex items-start">
+                          <span className="material-icons-outlined text-[14px] mr-1 text-gray-400 mt-0.5">place</span>
+                          {alert.location.address}
+                        </p>
+                      )}
+                    </div>
+                    <div>
+                      <span className={`px-2 py-1 rounded text-[10px] font-bold uppercase ${alert.status === 'resolved' ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700 animate-pulse'}`}>
+                        {alert.status}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
           {/* Trip Information */}
           <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-4 animate-fade-in" style={{ animationDelay: '100ms' }}>
