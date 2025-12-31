@@ -570,10 +570,7 @@ const TripDetails = () => {
                       <span>Distance</span>
                       <span>₹{trip.fareDetails.distanceAmount?.toFixed(2) || '0.00'}</span>
                     </div>
-                    <div className="flex justify-between">
-                      <span>Waiting Time ({trip.fareDetails.waitingTimeMinutes || 0} min)</span>
-                      <span>₹{trip.fareDetails.waitingTimeAmount?.toFixed(2) || '0.00'}</span>
-                    </div>
+
                     <div className="flex justify-between">
                       <span>Night Charge</span>
                       <span>₹{trip.fareDetails.nightCharge?.toFixed(2) || '0.00'}</span>
