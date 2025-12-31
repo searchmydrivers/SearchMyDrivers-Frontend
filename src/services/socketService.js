@@ -29,8 +29,8 @@ class SocketService {
           role: 'admin',
           adminId: targetAdminId
         };
-        console.log('🔗 [SocketService] Connected. Emitting join-room:', adminJoinPayload);
-        this.socket.emit('join-room', adminJoinPayload);
+        console.log('🔗 [SocketService] Connected. Emitting SECURE admin-join-room:', adminJoinPayload);
+        this.socket.emit('admin-join-room', adminJoinPayload);
       } else {
         console.error('❌ [SocketService] Missing Admin ID in userData. Cannot join private room.', userData);
       }
