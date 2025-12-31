@@ -4,6 +4,7 @@ import Layout from '../components/Layout/Layout';
 import { tripService } from '../services/tripService';
 import { chatService } from '../services/chatService';
 import io from 'socket.io-client';
+import { socketService } from '../services/socketService';
 
 const ChatHistory = ({ tripId }) => {
   const [messages, setMessages] = useState([]);
@@ -69,49 +70,10 @@ const TripDetails = () => {
   }, [tripId]);
 
   // Socket.io connection setup
+  // Socket.io connection using shared service
   useEffect(() => {
-    // Get admin data from localStorage
-    const adminData = JSON.parse(localStorage.getItem('adminData') || '{}');
-    adminDataRef.current = adminData;
-    const adminId = adminData._id || adminData.id;
-
-    if (!adminId) return;
-
-    // Get API base URL
-    const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000';
-    const socketURL = API_BASE_URL.includes('/api')
-      ? API_BASE_URL.replace('/api', '')
-      : API_BASE_URL;
-
-    console.log('🔌 [ADMIN] Connecting to socket:', socketURL);
-
-    // Connect to socket
-    socketRef.current = io(socketURL, {
-      transports: ['websocket', 'polling'],
-      reconnection: true,
-      reconnectionDelay: 1000,
-      reconnectionAttempts: 5,
-    });
-
-    socketRef.current.on('connect', () => {
-      console.log('✅ [ADMIN] Socket connected');
-      socketRef.current.emit('join-room', {
-        adminId: adminId,
-        role: 'admin',
-      });
-    });
-
-    socketRef.current.on('disconnect', () => {
-      console.log('❌ [ADMIN] Socket disconnected');
-    });
-
-    socketRef.current.on('connect_error', (error) => {
-      console.error('❌ [ADMIN] Socket connection error:', error);
-    });
-
-    // Listen for driver location updates
-    socketRef.current.on('driver-location-updated', async (data) => {
-      console.log('📍 [ADMIN] Driver location received:', data);
+    const handleDriverLocationUpdate = async (data) => {
+      console.log('📍 [ADMIN] Driver location received via socketService:', data);
       if (data.tripId === tripId) {
         setDriverLocation(data.location);
         setLoadingLocation(false);
@@ -120,13 +82,17 @@ const TripDetails = () => {
         setSuccess('Driver location received');
         setTimeout(() => setSuccess(''), 3000);
       }
-    });
+    };
 
-    // Cleanup on unmount
+    // Use the shared socket service which is already connected in Layout
+    // We just attach the listener
+    socketService.on('driver-location-updated', handleDriverLocationUpdate);
+
+    // Also listen for general messages/errors just in case
+    socketService.on('error', (err) => console.error('Socket Error:', err));
+
     return () => {
-      if (socketRef.current) {
-        socketRef.current.disconnect();
-      }
+      socketService.off('driver-location-updated', handleDriverLocationUpdate);
     };
   }, [tripId]);
 
