@@ -18,11 +18,12 @@ class SocketService {
       console.log('Socket connected:', this.socket.id);
 
       // Join Admin Room - FORCE role to 'admin' as this is the Admin Panel
-      console.log('Emitting join-room for admin:', userData);
-      this.socket.emit('join-room', {
+      const adminJoinPayload = {
         role: 'admin',
         adminId: userData.id || userData._id || 'admin_placeholder_id'
-      });
+      };
+      console.log('🔗 [SocketService] Connected. Emitting join-room:', adminJoinPayload);
+      this.socket.emit('join-room', adminJoinPayload);
 
       // Attach pending listeners
       this.pendingListeners.forEach(({ eventName, callback }) => {

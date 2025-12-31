@@ -9,24 +9,45 @@ const SOSAlertSystem = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    // Initialize Audio
-    audioRef.current = new Audio('https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3'); // Example siren sound
-    audioRef.current.loop = true;
+    // Initialize Audio with a more reliable approach
+    try {
+      audioRef.current = new Audio('https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3');
+      audioRef.current.loop = true;
+      audioRef.current.preload = 'auto';
+    } catch (e) {
+      console.error('Audio initialization error:', e);
+    }
 
     const handleSOSAlert = (data) => {
-      console.log('🚨 SOS Alert Received:', data);
-      setAlert(data);
-      try {
-        audioRef.current.play().catch(e => console.log('Audio play failed (user interaction needed):', e));
-      } catch (err) {
-        console.error('Audio setup error:', err);
+      console.log('🚨 SOS ALERT RECEIVED IN COMPONENT:', data);
+
+      // Force state update strictly
+      setAlert(prev => {
+        // Prevent duplicate alerts if id matches (optional logic)
+        if (prev && prev.sosId === data.sosId) return prev;
+        return data;
+      });
+
+      // Attempt audio play
+      if (audioRef.current) {
+        const playPromise = audioRef.current.play();
+        if (playPromise !== undefined) {
+          playPromise
+            .then(() => console.log('🔊 SOS Siren Playing'))
+            .catch(error => {
+              console.error('⚠️ Audio play prevented by browser policy (Click to enable):', error);
+              // We could show a visual "Click to unmute" button here if needed
+            });
+        }
       }
     };
 
+    console.log('🔌 SOSAlertSystem: Listening for "admin-sos-alert"');
     // Listen for socket event using the service wrapper
     socketService.on('admin-sos-alert', handleSOSAlert);
 
     return () => {
+      console.log('🔌 SOSAlertSystem: Unmounting/Cleaning up');
       socketService.off('admin-sos-alert', handleSOSAlert);
 
       if (audioRef.current) {
