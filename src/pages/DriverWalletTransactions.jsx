@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import Layout from '../components/Layout/Layout';
 import { transactionService } from '../services/transactionService';
+import { formatDateTime } from '../utils/dateUtils';
 
 const DriverWalletTransactions = () => {
   const [activeTab, setActiveTab] = useState('transactions'); // 'transactions' or 'withdrawals'
@@ -89,7 +90,6 @@ const WalletTransactionsTab = () => {
   };
 
   const formatAmount = (amount) => `₹${parseFloat(amount).toFixed(2)}`;
-  const formatDate = (dateString) => new Date(dateString).toLocaleDateString() + ' ' + new Date(dateString).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
 
   return (
     <div className="p-4">
@@ -138,7 +138,7 @@ const WalletTransactionsTab = () => {
               <tbody className="bg-white divide-y divide-gray-200">
                 {transactions.map((txn, idx) => (
                   <tr key={idx} className="hover:bg-gray-50 transition-colors">
-                    <td className="px-4 py-3 whitespace-nowrap text-xs text-gray-900 font-medium">{formatDate(txn.createdAt)}</td>
+                    <td className="px-4 py-3 whitespace-nowrap text-xs text-gray-900 font-medium">{formatDateTime(txn.createdAt)}</td>
                     <td className="px-4 py-3 whitespace-nowrap">
                       <div className="text-xs font-bold text-gray-900">{txn.driverName}</div>
                       <div className="text-[10px] text-gray-500">{txn.driverPhone}</div>
@@ -256,10 +256,6 @@ const WithdrawalRequestsTab = () => {
     }
   };
 
-  const formatDate = (dateString) => new Date(dateString).toLocaleDateString('en-US', {
-    year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit'
-  });
-
   return (
     <div className="p-4">
       <div className="flex justify-end mb-3">
@@ -297,7 +293,7 @@ const WithdrawalRequestsTab = () => {
             <tbody className="bg-white divide-y divide-gray-200">
               {withdrawals.map((req) => (
                 <tr key={req._id} className="hover:bg-gray-50 transition-colors">
-                  <td className="px-4 py-3 whitespace-nowrap text-xs text-gray-900 font-medium">{formatDate(req.createdAt)}</td>
+                  <td className="px-4 py-3 whitespace-nowrap text-xs text-gray-900 font-medium">{formatDateTime(req.createdAt)}</td>
                   <td className="px-4 py-3 whitespace-nowrap">
                     <div className="text-xs font-bold text-gray-900">{req.driver?.name || 'Unknown'}</div>
                     <div className="text-gray-500 text-[10px]">{req.driver?.phone}</div>

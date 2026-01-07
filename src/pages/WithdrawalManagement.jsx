@@ -1,5 +1,6 @@
 
 import { useState, useEffect } from 'react';
+import { formatDateTime } from '../utils/dateUtils';
 import Layout from '../components/Layout/Layout';
 import api from '../config/api';
 
@@ -74,15 +75,7 @@ const WithdrawalManagement = () => {
     }
   };
 
-  const formatDate = (dateString) => {
-    return new Date(dateString).toLocaleDateString('en-US', {
-      year: 'numeric',
-      month: 'short',
-      day: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit'
-    });
-  };
+
 
   return (
     <Layout>
@@ -133,7 +126,7 @@ const WithdrawalManagement = () => {
                   {withdrawals.map((req) => (
                     <tr key={req._id} className="hover:bg-gray-50">
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                        {formatDate(req.createdAt)}
+                        {formatDateTime(req.createdAt)}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                         <div className="font-medium">{req.driver?.name || 'Unknown'}</div>
@@ -149,8 +142,8 @@ const WithdrawalManagement = () => {
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
                         <span className={`px-2 py-1 text-xs rounded-full font-bold uppercase ${req.status === 'pending' ? 'bg-yellow-100 text-yellow-800' :
-                            req.status === 'approved' ? 'bg-green-100 text-green-800' :
-                              'bg-red-100 text-red-800'
+                          req.status === 'approved' ? 'bg-green-100 text-green-800' :
+                            'bg-red-100 text-red-800'
                           }`}>
                           {req.status}
                         </span>

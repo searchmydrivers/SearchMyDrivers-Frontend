@@ -115,16 +115,21 @@ const ServiceZones = () => {
     setSelectedZone(zone);
     setName(zone.name);
     setDescription(zone.description || '');
-    setCoordinates(zone.area.coordinates[0]); // GeoJSON Polygon
+
+    // Safety check
+    const zoneCoords = zone.area?.coordinates?.[0] || [];
+    setCoordinates(zoneCoords);
+
     setIsEditing(true);
     setIsCreating(false);
 
     // Pan map to the selected zone
-    if (mapRef.current && zone.area.coordinates[0].length > 0) {
+    if (mapRef.current && zoneCoords.length > 0) {
       setTimeout(() => {
         try {
+          if (!window.google) return;
           const bounds = new window.google.maps.LatLngBounds();
-          zone.area.coordinates[0].forEach(coord => {
+          zoneCoords.forEach(coord => {
             // GeoJSON coordinates are [lng, lat], Google Maps needs {lat, lng}
             bounds.extend({ lat: coord[1], lng: coord[0] });
           });
@@ -335,19 +340,24 @@ const ServiceZones = () => {
                 )}
 
                 {/* Render Existing Zones */}
-                {!isCreating && !isEditing && zones.map((zone) => (
-                  <Polygon
-                    key={zone._id}
-                    paths={zone.area.coordinates[0].map(c => ({ lat: c[1], lng: c[0] }))}
-                    options={{
-                      fillColor: '#2BB673',
-                      fillOpacity: 0.2,
-                      strokeColor: '#0B2C4D',
-                      strokeWeight: 2,
-                    }}
-                    onClick={() => startEdit(zone)}
-                  />
-                ))}
+                {!isCreating && !isEditing && zones.map((zone) => {
+                  // Safety check for valid coordinates
+                  if (!zone.area?.coordinates?.[0]) return null;
+
+                  return (
+                    <Polygon
+                      key={zone._id}
+                      paths={zone.area.coordinates[0].map(c => ({ lat: c[1], lng: c[0] }))}
+                      options={{
+                        fillColor: '#2BB673',
+                        fillOpacity: 0.2,
+                        strokeColor: '#0B2C4D',
+                        strokeWeight: 2,
+                      }}
+                      onClick={() => startEdit(zone)}
+                    />
+                  );
+                })}
 
                 {/* Render Zone Currently Being Edited (if saved coordinates exist) */}
                 {(isEditing || isCreating) && coordinates.length > 0 && (

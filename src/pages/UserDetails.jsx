@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { formatDateTime, formatDate } from '../utils/dateUtils';
 import { useParams, useNavigate } from 'react-router-dom';
 import Layout from '../components/Layout/Layout';
 import api from '../config/api';
@@ -267,15 +268,10 @@ const UserDetails = () => {
                   <div>
                     <label className="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-0.5">Registered</label>
                     <p className="text-sm text-gray-900 font-medium">
-                      {user.createdAt ? new Date(user.createdAt).toLocaleDateString() : 'N/A'}
+                      {user.createdAt ? formatDate(user.createdAt) : 'N/A'}
                     </p>
                   </div>
-                  <div>
-                    <label className="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-0.5">Last Updated</label>
-                    <p className="text-sm text-gray-900 font-medium">
-                      {user.updatedAt ? new Date(user.updatedAt).toLocaleDateString() : 'N/A'}
-                    </p>
-                  </div>
+
                 </div>
 
                 {user.address && (
@@ -315,7 +311,7 @@ const UserDetails = () => {
                       <div>
                         <label className="block text-[10px] font-bold text-gray-500 uppercase tracking-wider mb-0.5">Blocked At</label>
                         <p className="text-xs text-gray-900 font-medium">
-                          {user.blockedAt ? new Date(user.blockedAt).toLocaleString() : 'N/A'}
+                          {user.blockedAt ? formatDateTime(user.blockedAt) : 'N/A'}
                         </p>
                       </div>
                       <div>

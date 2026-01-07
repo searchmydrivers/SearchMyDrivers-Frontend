@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { formatDate } from '../utils/dateUtils';
 import Layout from '../components/Layout/Layout';
 import api from '../config/api';
 
@@ -249,7 +250,7 @@ const SubAdmins = () => {
                         </span>
                       </td>
                       <td className="px-4 py-2.5 whitespace-nowrap text-xs text-gray-500">
-                        {new Date(subAdmin.createdAt).toLocaleDateString()}
+                        {formatDate(subAdmin.createdAt)}
                       </td>
                       <td className="px-4 py-2.5 whitespace-nowrap text-right text-xs font-medium">
                         <div className="flex items-center justify-end space-x-2">

@@ -1,4 +1,5 @@
 import { useEffect, useState, useCallback } from 'react';
+import { formatDateTime } from '../utils/dateUtils';
 import { Link } from 'react-router-dom';
 import Layout from '../components/Layout/Layout';
 import api from '../config/api';
@@ -521,7 +522,10 @@ const Dashboard = () => {
                     <div key={trip._id} className="p-3 hover:bg-red-50/30 transition-colors">
                       <div className="flex justify-between items-start mb-1">
                         <span className="text-[10px] font-bold text-gray-900 px-1.5 py-0.5 bg-gray-100 rounded">
-                          {new Date(trip.createdAt).toLocaleDateString()}
+                          {trip.scheduledTime
+                            ? formatDateTime(trip.scheduledTime)
+                            : formatDateTime(trip.createdAt)
+                          }
                         </span>
                         <span className="text-[10px] font-medium text-red-600">
                           {trip.cancellationPenalty?.cancelledBy === 'user' ? 'By User' : 'By Driver'}

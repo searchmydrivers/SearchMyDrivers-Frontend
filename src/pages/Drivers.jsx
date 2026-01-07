@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { formatDateTime } from '../utils/dateUtils';
 import { Link } from 'react-router-dom';
 import Layout from '../components/Layout/Layout';
 import { driverService } from '../services/driverService';
@@ -229,7 +230,7 @@ const Drivers = () => {
                           </span>
                         </td>
                         <td className="px-4 py-3 whitespace-nowrap text-xs text-gray-500">
-                          {driver.createdAt ? new Date(driver.createdAt).toLocaleDateString() : 'N/A'}
+                          {driver.createdAt ? formatDateTime(driver.createdAt) : 'N/A'}
                         </td>
                         <td className="px-4 py-3 whitespace-nowrap text-right text-sm font-medium">
                           <Link

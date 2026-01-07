@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import Layout from '../components/Layout/Layout';
 import { transactionService } from '../services/transactionService';
+import { formatDateTime } from '../utils/dateUtils';
 
 const TransactionHistory = () => {
   const [transactions, setTransactions] = useState([]);
@@ -76,9 +77,7 @@ const TransactionHistory = () => {
     }
   };
 
-  const formatDate = (dateString) => {
-    return new Date(dateString).toLocaleString();
-  };
+  // formatDate helper removed in favor of formatDateTime import
 
   const formatAmount = (amount) => {
     return `₹${parseFloat(amount).toFixed(2)}`;
@@ -246,7 +245,7 @@ const TransactionHistory = () => {
                       return (
                         <tr key={transaction.id} className="hover:bg-gray-50 transition-colors duration-200 animate-fade-in group" style={{ animationDelay: `${index * 30}ms` }}>
                           <td className="px-4 py-2.5 whitespace-nowrap text-xs text-gray-900 font-mono">
-                            {formatDate(transaction.createdAt)}
+                            {formatDateTime(transaction.createdAt)}
                           </td>
                           <td className="px-4 py-2.5 whitespace-nowrap">
                             <span className={`px-1.5 py-0.5 inline-flex text-[9px] font-bold rounded uppercase tracking-wide ${badge.bg} ${badge.text}`}>
@@ -315,7 +314,7 @@ const TransactionHistory = () => {
                             {badge.label}
                           </span>
                           <span className="text-[9px] text-gray-400 font-mono">
-                            {new Date(transaction.createdAt).toLocaleDateString()}
+                            {formatDateTime(transaction.createdAt)}
                           </span>
                         </div>
                         <span className={`text-xs font-bold font-mono ${transaction.type === 'credit' ? 'text-green-600' : 'text-red-600'}`}>

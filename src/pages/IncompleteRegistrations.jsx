@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { formatDateTime } from '../utils/dateUtils';
 import Layout from '../components/Layout/Layout';
 import api from '../config/api';
 
@@ -41,15 +42,7 @@ const IncompleteRegistrations = () => {
     setPagination({ ...pagination, page: newPage });
   };
 
-  const formatDate = (dateString) => {
-    return new Date(dateString).toLocaleDateString('en-US', {
-      year: 'numeric',
-      month: 'short',
-      day: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit'
-    });
-  };
+
 
   return (
     <Layout>
@@ -85,7 +78,7 @@ const IncompleteRegistrations = () => {
                   {drivers.map((driver) => (
                     <tr key={driver._id} className="hover:bg-gray-50 transition-colors">
                       <td className="px-4 py-3 whitespace-nowrap text-xs text-gray-900 font-medium">
-                        {formatDate(driver.createdAt)}
+                        {formatDateTime(driver.createdAt)}
                       </td>
                       <td className="px-4 py-3 whitespace-nowrap">
                         <div className="text-xs font-bold text-gray-900">{driver.name}</div>

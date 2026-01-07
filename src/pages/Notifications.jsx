@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { formatDateTime } from '../utils/dateUtils';
 import Layout from '../components/Layout/Layout';
 import api from '../config/api';
 import { zoneService } from '../services/zoneService';
@@ -314,10 +315,7 @@ const Notifications = () => {
     }
   };
 
-  const formatDate = (dateString) => {
-    const date = new Date(dateString);
-    return date.toLocaleString();
-  };
+
 
   const getNotificationIcon = (type) => {
     const icons = {
@@ -502,7 +500,7 @@ const Notifications = () => {
                             <p className="text-xs text-gray-600 mb-1">{notification.message}</p>
 
                             <div className="flex items-center gap-2 mt-1">
-                              <p className="text-[10px] text-gray-400">{formatDate(notification.createdAt)}</p>
+                              <p className="text-[10px] text-gray-400">{formatDateTime(notification.createdAt)}</p>
                               {activeTab === 'sent' && notification.stats && (
                                 <span className="text-[10px] text-gray-500 bg-gray-100 px-1.5 rounded">
                                   Sent: {notification.stats.successfullySent} | Failed: {notification.stats.failed}

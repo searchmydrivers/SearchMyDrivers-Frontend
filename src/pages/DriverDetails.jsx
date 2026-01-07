@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { formatDateTime } from '../utils/dateUtils';
 import { useParams, useNavigate } from 'react-router-dom';
 import Layout from '../components/Layout/Layout';
 import { driverService } from '../services/driverService';
@@ -439,27 +440,18 @@ const DriverDetails = () => {
                 <label className="text-gray-500 font-medium">Aadhar Number</label>
                 <div className="text-right">
                   <p className="font-semibold text-gray-900">{driver.aadharNumber || 'Not provided'}</p>
-                  <p className="text-[9px] text-gray-400 mt-0.5">
-                    {driver.aadharVerified ? '✅ Verified' : '⏳ Pending'}
-                  </p>
                 </div>
               </div>
               <div className="flex justify-between items-center text-xs border-b border-gray-50 pb-1">
                 <label className="text-gray-500 font-medium">PAN Number</label>
                 <div className="text-right">
                   <p className="font-semibold text-gray-900">{driver.panNumber || 'Not provided'}</p>
-                  <p className="text-[9px] text-gray-400 mt-0.5">
-                    {driver.panVerified ? '✅ Verified' : '⏳ Pending'}
-                  </p>
                 </div>
               </div>
               <div className="flex justify-between items-center text-xs">
                 <label className="text-gray-500 font-medium">License Number</label>
                 <div className="text-right">
                   <p className="font-semibold text-gray-900">{driver.licenseNumber || 'Not provided'}</p>
-                  <p className="text-[9px] text-gray-400 mt-0.5">
-                    {driver.licenseVerified ? '✅ Verified' : '⏳ Pending'}
-                  </p>
                 </div>
               </div>
             </div>
@@ -529,15 +521,10 @@ const DriverDetails = () => {
               <div className="flex items-center justify-between text-xs">
                 <span className="text-gray-500 font-medium">Account Created</span>
                 <span className="text-gray-900 font-semibold font-mono">
-                  {new Date(driver.createdAt).toLocaleString()}
+                  {formatDateTime(driver.createdAt)}
                 </span>
               </div>
-              <div className="flex items-center justify-between text-xs">
-                <span className="text-gray-500 font-medium">Last Updated</span>
-                <span className="text-gray-900 font-semibold font-mono">
-                  {new Date(driver.updatedAt).toLocaleString()}
-                </span>
-              </div>
+
             </div>
           </div>
         </div>

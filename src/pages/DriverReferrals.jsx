@@ -1,5 +1,6 @@
 
 import { useEffect, useState } from 'react';
+import { formatDate } from '../utils/dateUtils';
 import { useNavigate } from 'react-router-dom';
 import Layout from '../components/Layout/Layout';
 import api from '../config/api';
@@ -178,8 +179,8 @@ const DriverReferrals = () => {
                         {/* Status Column */}
                         <td className="px-6 py-4 whitespace-nowrap">
                           <span className={`px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${item.verificationStatus === 'verified' ? 'bg-green-100 text-green-800' :
-                              item.verificationStatus === 'rejected' ? 'bg-red-100 text-red-800' :
-                                'bg-yellow-100 text-yellow-800'
+                            item.verificationStatus === 'rejected' ? 'bg-red-100 text-red-800' :
+                              'bg-yellow-100 text-yellow-800'
                             }`}>
                             {item.verificationStatus ? item.verificationStatus.replace('-', ' ') : 'Pending'}
                           </span>
@@ -202,7 +203,7 @@ const DriverReferrals = () => {
 
                         {/* Date Column */}
                         <td className="px-6 py-4 whitespace-nowrap text-right text-sm text-gray-500">
-                          {new Date(item.createdAt).toLocaleDateString()}
+                          {formatDate(item.createdAt)}
                         </td>
                       </tr>
                     ))

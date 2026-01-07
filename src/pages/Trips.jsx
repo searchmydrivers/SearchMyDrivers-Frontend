@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { formatDateTime } from '../utils/dateUtils';
 import { Link } from 'react-router-dom';
 import Layout from '../components/Layout/Layout';
 import { tripService } from '../services/tripService';
@@ -233,7 +234,10 @@ const Trips = () => {
                           </span>
                         </td>
                         <td className="px-4 py-3 whitespace-nowrap text-xs text-gray-500">
-                          {new Date(trip.createdAt).toLocaleDateString()}
+                          {trip.scheduledTime
+                            ? formatDateTime(trip.scheduledTime)
+                            : formatDateTime(trip.createdAt)
+                          }
                         </td>
                         <td className="px-4 py-3 whitespace-nowrap text-right text-sm font-medium">
                           <Link
@@ -268,7 +272,10 @@ const Trips = () => {
                       {trip.tripId ? `#${trip.tripId}` : `#${trip._id.substring(0, 8)}...`}
                     </div>
                     <div className="text-xs text-gray-500">
-                      {new Date(trip.createdAt).toLocaleString()}
+                      {trip.scheduledTime
+                        ? formatDateTime(trip.scheduledTime)
+                        : formatDateTime(trip.createdAt)
+                      }
                     </div>
                   </div>
                   <span className={`px-2 py-1 text-xs font-bold rounded-full uppercase tracking-wider ${badge.bg} ${badge.text}`}>

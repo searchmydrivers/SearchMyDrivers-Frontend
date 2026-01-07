@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { formatDate } from '../utils/dateUtils';
 import { useNavigate } from 'react-router-dom';
 import Layout from '../components/Layout/Layout';
 import api from '../config/api';
@@ -189,7 +190,7 @@ const SupportTickets = () => {
                         </span>
                       </td>
                       <td className="px-4 py-3 whitespace-nowrap text-xs text-gray-500">
-                        {new Date(ticket.createdAt).toLocaleDateString()}
+                        {formatDate(ticket.createdAt)}
                       </td>
                       <td className="px-4 py-3 whitespace-nowrap text-right text-xs font-medium">
                         <button

@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
+import { formatDateTime } from '../utils/dateUtils';
 import { useParams, useNavigate } from 'react-router-dom';
 import Layout from '../components/Layout/Layout';
 import api from '../config/api';
@@ -219,7 +220,7 @@ const TicketDetails = () => {
                       </div>
                     )}
                     <span className="text-[9px] text-gray-400 block px-1">
-                      {new Date(msg.createdAt).toLocaleString([], { hour: '2-digit', minute: '2-digit', day: 'numeric', month: 'short' })}
+                      {formatDateTime(msg.createdAt)}
                     </span>
                   </div>
                 </div>

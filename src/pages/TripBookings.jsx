@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import Layout from '../components/Layout/Layout';
 import { tripService } from '../services/tripService';
+import { formatDateTime } from '../utils/dateUtils';
 
 const TripBookings = () => {
   const [trips, setTrips] = useState([]);
@@ -65,12 +66,10 @@ const TripBookings = () => {
     const statusConfig = {
       pending: { bg: 'bg-yellow-100', text: 'text-yellow-800', label: 'Pending' },
       'driver-assigned': { bg: 'bg-[#0B2C4D]/10', text: 'text-[#0B2C4D]', label: 'Driver Assigned' },
-      'pin-verified': { bg: 'bg-indigo-100', text: 'text-indigo-800', label: 'PIN Verified' },
       'in-progress': { bg: 'bg-purple-100', text: 'text-purple-800', label: 'In Progress' },
+      'payment-pending': { bg: 'bg-orange-100', text: 'text-orange-800', label: 'Payment Pending' },
       completed: { bg: 'bg-[#2BB673]/10', text: 'text-[#2BB673]', label: 'Completed' },
       cancelled: { bg: 'bg-red-100', text: 'text-red-800', label: 'Cancelled' },
-      'payment-pending': { bg: 'bg-orange-100', text: 'text-orange-800', label: 'Payment Pending' },
-      'payment-completed': { bg: 'bg-[#2BB673]/20', text: 'text-[#2BB673]', label: 'Payment Completed' },
     };
     const config = statusConfig[status] || { bg: 'bg-gray-100', text: 'text-gray-800', label: status || 'Unknown' };
     return (
@@ -151,7 +150,7 @@ const TripBookings = () => {
 
         {/* Filters */}
         <div className="flex flex-wrap items-center gap-2">
-          {['all', 'pending', 'driver-assigned', 'in-progress', 'completed', 'cancelled'].map((status) => (
+          {['all', 'pending', 'driver-assigned', 'in-progress', 'payment-pending', 'completed', 'cancelled'].map((status) => (
             <button
               key={status}
               onClick={() => handleFilterChange(status)}
@@ -160,7 +159,11 @@ const TripBookings = () => {
                 : 'bg-white text-gray-700 hover:bg-gray-50 border border-gray-300'
                 }`}
             >
-              {status === 'all' ? 'All' : status === 'driver-assigned' ? 'Driver Assigned' : status === 'in-progress' ? 'In Progress' : status.charAt(0).toUpperCase() + status.slice(1)}
+              {status === 'all' ? 'All' :
+                status === 'driver-assigned' ? 'Driver Assigned' :
+                  status === 'in-progress' ? 'In Progress' :
+                    status === 'payment-pending' ? 'Payment Pending' :
+                      status.charAt(0).toUpperCase() + status.slice(1)}
             </button>
           ))}
         </div>
@@ -214,7 +217,7 @@ const TripBookings = () => {
                   trips.map((trip, index) => (
                     <tr key={trip._id} className="hover:bg-gray-50 transition-colors duration-200 animate-fade-in" style={{ animationDelay: `${index * 30}ms` }}>
                       <td className="px-4 py-3 whitespace-nowrap text-xs font-medium text-[#0B2C4D]">
-                        #{trip._id?.slice(-6) || 'N/A'}
+                        #{trip.tripId || trip._id?.slice(-6) || 'N/A'}
                       </td>
                       <td className="px-4 py-3 whitespace-nowrap text-xs text-gray-900">
                         {trip.user?.name || 'N/A'}
@@ -264,7 +267,10 @@ const TripBookings = () => {
                         {getStatusBadge(trip.status)}
                       </td>
                       <td className="px-4 py-3 whitespace-nowrap text-xs text-gray-500">
-                        {trip.createdAt ? new Date(trip.createdAt).toLocaleDateString() : 'N/A'}
+                        {trip.scheduledTime
+                          ? formatDateTime(trip.scheduledTime)
+                          : formatDateTime(trip.createdAt)
+                        }
                       </td>
                       <td className="px-4 py-3 whitespace-nowrap text-xs font-medium">
                         <button
@@ -310,10 +316,13 @@ const TripBookings = () => {
                 <div className="flex items-start justify-between mb-2">
                   <div className="flex-1 min-w-0">
                     <div className="text-sm font-semibold text-gray-900">
-                      Trip #{trip._id?.slice(-6) || 'N/A'}
+                      Trip #{trip.tripId || trip._id?.slice(-6) || 'N/A'}
                     </div>
                     <div className="text-xs text-gray-500">
-                      {trip.createdAt ? new Date(trip.createdAt).toLocaleDateString() : 'N/A'}
+                      {trip.scheduledTime
+                        ? formatDateTime(trip.scheduledTime)
+                        : formatDateTime(trip.createdAt)
+                      }
                     </div>
                   </div>
                   <div>{getStatusBadge(trip.status)}</div>

@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { formatDateTime } from '../utils/dateUtils';
 import Layout from '../components/Layout/Layout';
 import { contentService } from '../services/contentService';
 
@@ -292,7 +293,7 @@ const ContentManagement = () => {
                         {content.content}
                       </p>
                       <p className="text-[10px] text-gray-400">
-                        Last updated: {new Date(content.updatedAt).toLocaleString()}
+                        Last updated: {formatDateTime(content.updatedAt)}
                       </p>
                     </div>
                     <div className="flex gap-2 shrink-0">

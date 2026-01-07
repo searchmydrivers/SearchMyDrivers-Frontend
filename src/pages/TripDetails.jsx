@@ -5,6 +5,7 @@ import { tripService } from '../services/tripService';
 import { chatService } from '../services/chatService';
 import io from 'socket.io-client';
 import { socketService } from '../services/socketService';
+import { formatDateTime, formatTime } from '../utils/dateUtils';
 
 const ChatHistory = ({ tripId }) => {
   const [messages, setMessages] = useState([]);
@@ -40,7 +41,7 @@ const ChatHistory = ({ tripId }) => {
           <div className={`max-w-[80%] rounded-lg p-2 text-xs ${msg.senderModel === 'Driver' ? 'bg-gray-100 text-gray-800' : 'bg-blue-50 text-blue-900 border border-blue-100'}`}>
             <div className="flex items-center gap-1 mb-0.5">
               <span className="font-bold text-[10px] uppercase">{msg.senderModel}</span>
-              <span className="text-[9px] text-gray-400">{new Date(msg.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
+              <span className="text-[9px] text-gray-400">{formatTime(msg.createdAt)}</span>
             </div>
             <p>{msg.message}</p>
           </div>
@@ -323,7 +324,7 @@ const TripDetails = () => {
                           {alert.triggeredBy} Alert
                         </span>
                         <span className="text-[10px] text-gray-400">
-                          {new Date(alert.createdAt).toLocaleString()}
+                          {formatDateTime(alert.createdAt)}
                         </span>
                       </div>
                       <p className="text-sm font-bold text-gray-900 mb-1">
@@ -375,25 +376,26 @@ const TripDetails = () => {
               <div className="flex justify-between items-center text-xs border-b border-gray-50 pb-1">
                 <span className="text-gray-500 font-medium">Scheduled Time</span>
                 <p className="text-gray-900 font-medium">
-                  {trip.scheduledTime ? new Date(trip.scheduledTime).toLocaleString() : 'N/A'}
+                  {/* Fixing timezone offset issue where scheduledTime is saved with +5.5h */}
+                  {formatDateTime(trip.scheduledTime)}
                 </p>
               </div>
               <div className="flex justify-between items-center text-xs border-b border-gray-50 pb-1">
                 <span className="text-gray-500 font-medium">Created At</span>
                 <p className="text-gray-900 font-medium">
-                  {trip.createdAt ? new Date(trip.createdAt).toLocaleString() : 'N/A'}
+                  {formatDateTime(trip.createdAt)}
                 </p>
               </div>
               {trip.tripStartTime && (
                 <div className="flex justify-between items-center text-xs border-b border-gray-50 pb-1">
                   <span className="text-gray-500 font-medium">Start Time</span>
-                  <p className="text-gray-900 font-medium">{new Date(trip.tripStartTime).toLocaleString()}</p>
+                  <p className="text-gray-900 font-medium">{formatDateTime(trip.tripStartTime)}</p>
                 </div>
               )}
               {trip.tripEndTime && (
                 <div className="flex justify-between items-center text-xs">
                   <span className="text-gray-500 font-medium">End Time</span>
-                  <p className="text-gray-900 font-medium">{new Date(trip.tripEndTime).toLocaleString()}</p>
+                  <p className="text-gray-900 font-medium">{formatDateTime(trip.tripEndTime)}</p>
                 </div>
               )}
             </div>
@@ -612,7 +614,7 @@ const TripDetails = () => {
                 {trip.cancellationPenalty.cancelledAt && (
                   <div className="flex justify-between">
                     <span className="text-gray-600 font-medium">Cancelled At</span>
-                    <span className="text-gray-900">{new Date(trip.cancellationPenalty.cancelledAt).toLocaleString()}</span>
+                    <span className="text-gray-900">{formatDateTime(trip.cancellationPenalty.cancelledAt)}</span>
                   </div>
                 )}
                 {trip.cancellationPenalty.userPenaltyAmount > 0 && (
@@ -732,7 +734,7 @@ const TripDetails = () => {
                           )}
                           {driverLocation.lastUpdated && (
                             <p className="text-[10px] text-gray-400 mt-1">
-                              Last Updated: {new Date(driverLocation.lastUpdated).toLocaleString()}
+                              Last Updated: {formatDateTime(driverLocation.lastUpdated)}
                             </p>
                           )}
                         </div>

@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { formatDateTime, formatDate } from '../utils/dateUtils';
 import { useNavigate } from 'react-router-dom';
 import Layout from '../components/Layout/Layout';
 import api from '../config/api';
@@ -250,7 +251,7 @@ const Users = () => {
                         </div>
                       </td>
                       <td className="px-4 py-3 whitespace-nowrap text-xs text-gray-500">
-                        {new Date(user.createdAt).toLocaleDateString()}
+                        {formatDateTime(user.createdAt)}
                       </td>
                       <td className="px-4 py-3 whitespace-nowrap text-right text-sm font-medium">
                         <div className="flex items-center justify-end space-x-1">
@@ -338,7 +339,7 @@ const Users = () => {
                 </div>
                 <div className="flex items-center text-sm text-gray-600">
                   <span className="material-icons-outlined text-base mr-2 text-gray-400">calendar_today</span>
-                  <span>Joined {new Date(user.createdAt).toLocaleDateString()}</span>
+                  <span>Joined {formatDate(user.createdAt)}</span>
                 </div>
               </div>
 

@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { formatDate } from '../utils/dateUtils';
 import Layout from '../components/Layout/Layout';
 import api from '../config/api';
 
@@ -84,15 +85,7 @@ const HiringManagement = () => {
     setPagination({ ...pagination, page: newPage });
   };
 
-  const formatDate = (dateString) => {
-    return new Date(dateString).toLocaleDateString('en-US', {
-      year: 'numeric',
-      month: 'short',
-      day: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit'
-    });
-  };
+
 
   return (
     <Layout>

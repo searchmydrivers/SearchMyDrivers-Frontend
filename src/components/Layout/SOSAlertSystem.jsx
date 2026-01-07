@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react';
+import { formatTime } from '../../utils/dateUtils';
 import { useNavigate } from 'react-router-dom';
 import { socketService } from '../../services/socketService'; // Assuming we have a socket service wrapper
 
@@ -103,7 +104,7 @@ const SOSAlertSystem = () => {
               <span className="font-bold">Trip ID:</span> {alert.tripId}
             </p>
             <p className="text-sm text-gray-600">
-              <span className="font-bold">Time:</span> {new Date(alert.timestamp).toLocaleTimeString()}
+              <span className="font-bold">Time:</span> {formatTime(alert.timestamp)}
             </p>
           </div>
 
