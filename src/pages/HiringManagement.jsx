@@ -4,8 +4,13 @@ import Layout from '../components/Layout/Layout';
 import api from '../config/api';
 
 const HiringManagement = () => {
-  const [activeTab, setActiveTab] = useState('active'); // 'active', 'refund_pending', 'history'
+  const [activeTab, setActiveTab] = useState('active'); // 'active', 'refund_pending', 'history', 'commissions'
   const [requests, setRequests] = useState([]);
+  const [commissionData, setCommissionData] = useState({
+    transactions: [],
+    totalCommission: 0,
+    totalTransactions: 0
+  });
   const [loading, setLoading] = useState(true);
   const [pagination, setPagination] = useState({
     page: 1,
@@ -15,41 +20,23 @@ const HiringManagement = () => {
   });
 
   useEffect(() => {
-    fetchRequests();
+    if (activeTab === 'commissions') {
+      fetchCommissions();
+    } else {
+      fetchRequests();
+    }
   }, [activeTab, pagination.page]);
 
   const fetchRequests = async () => {
     setLoading(true);
     try {
-      // Map tabs to status
-      let status = '';
-      if (activeTab === 'active') status = 'requested'; // or accepted? 'requested' means waiting for driver
-      if (activeTab === 'refund_pending') status = 'refund_pending';
-      // history assumes completed, refunded, rejected, cancelled
-
-      // Actually, let's just fetch all and filter client side OR enhance API?
-      // API supports status query.
-      // Let's refine logical mapping:
-      // Active: 'requested', 'accepted'
-      // Refund Pending: 'refund_pending'
-      // History: 'completed', 'refunded', 'rejected', 'cancelled'
-
-      // For now, simple mapping, or if "history" fetch all?
-      // Let's use specific status calls if possible, or just fetch all active for "Active" tab
-
       let queryParams = { page: pagination.page, limit: pagination.limit };
 
       if (activeTab === 'active') {
-        // We might need multiple statuses here, but API single status.
-        // Let's just fetch 'requested' for now as "Pending Driver Action"
         queryParams.status = 'requested';
       } else if (activeTab === 'refund_pending') {
         queryParams.status = 'refund_pending';
       } else if (activeTab === 'history') {
-        // Fetch verified history? API might need update to support array of statuses
-        // For this MVP, let's just show 'refunded' as history or 'completed' if we had it.
-        // Or maybe just remove status param to get all and filter? pagination breaks then.
-        // Let's stick to 'refunded' for history for now as that's the main admin action output
         queryParams.status = 'refunded';
       }
 
@@ -64,6 +51,31 @@ const HiringManagement = () => {
       }
     } catch (error) {
       console.error("Error fetching requests:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const fetchCommissions = async () => {
+    setLoading(true);
+    try {
+      const queryParams = { page: pagination.page, limit: pagination.limit };
+      const response = await api.get('/hiring/admin/commission-transactions', { params: queryParams });
+
+      if (response.data.success) {
+        setCommissionData({
+          transactions: response.data.data.transactions,
+          totalCommission: response.data.data.analytics.totalCommission,
+          totalTransactions: response.data.data.analytics.totalTransactions
+        });
+        setPagination({
+          ...pagination,
+          total: response.data.data.pagination.total,
+          totalPages: response.data.data.pagination.pages
+        });
+      }
+    } catch (error) {
+      console.error("Error fetching commissions:", error);
     } finally {
       setLoading(false);
     }
@@ -85,7 +97,98 @@ const HiringManagement = () => {
     setPagination({ ...pagination, page: newPage });
   };
 
+  const renderCommissionsTab = () => (
+    <div className="space-y-4">
+      {/* Analytics Summary */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="bg-gradient-to-br from-green-500 to-green-600 rounded-xl p-6 text-white shadow-lg">
+          <p className="text-green-100 text-sm font-medium mb-1">Total Commission Earned</p>
+          <p className="text-3xl font-bold">₹{commissionData.totalCommission?.toLocaleString('en-IN')}</p>
+        </div>
+        <div className="bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl p-6 text-white shadow-lg">
+          <p className="text-blue-100 text-sm font-medium mb-1">Total Transactions</p>
+          <p className="text-3xl font-bold">{commissionData.totalTransactions}</p>
+        </div>
+      </div>
 
+      {/* Transactions Table */}
+      <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+        {loading ? (
+          <div className="flex items-center justify-center py-12">
+            <div className="w-8 h-8 border-4 border-[#2BB673] border-t-transparent rounded-full animate-spin"></div>
+          </div>
+        ) : commissionData.transactions.length === 0 ? (
+          <div className="text-center py-12 text-sm">
+            <p className="text-gray-500">No commission transactions found.</p>
+          </div>
+        ) : (
+          <div className="overflow-x-auto">
+            <table className="min-w-full divide-y divide-gray-200">
+              <thead className="bg-[#0B2C4D]">
+                <tr>
+                  <th className="px-4 py-3 text-left text-xs font-bold text-white uppercase tracking-wider">Date</th>
+                  <th className="px-4 py-3 text-left text-xs font-bold text-white uppercase tracking-wider">User</th>
+                  <th className="px-4 py-3 text-left text-xs font-bold text-white uppercase tracking-wider">Driver</th>
+                  <th className="px-4 py-3 text-left text-xs font-bold text-white uppercase tracking-wider">Location</th>
+                  <th className="px-4 py-3 text-left text-xs font-bold text-white uppercase tracking-wider">Contract Details</th>
+                  <th className="px-4 py-3 text-left text-xs font-bold text-white uppercase tracking-wider">Commission</th>
+                  <th className="px-4 py-3 text-left text-xs font-bold text-white uppercase tracking-wider">Payment ID</th>
+                  <th className="px-4 py-3 text-left text-xs font-bold text-white uppercase tracking-wider">Status</th>
+                </tr>
+              </thead>
+              <tbody className="bg-white divide-y divide-gray-200">
+                {commissionData.transactions.map((txn) => (
+                  <tr key={txn._id} className="hover:bg-gray-50 transition-colors">
+                    <td className="px-4 py-3 whitespace-nowrap text-xs text-gray-900 font-medium">
+                      {formatDate(txn.requestDate)}
+                    </td>
+                    <td className="px-4 py-3 whitespace-nowrap">
+                      <div className="text-xs font-bold text-gray-900">{txn.user?.name}</div>
+                      <div className="text-[10px] text-gray-500">{txn.user?.phone}</div>
+                    </td>
+                    <td className="px-4 py-3 whitespace-nowrap">
+                      <div className="text-xs font-bold text-gray-900">{txn.driver?.name}</div>
+                      <div className="text-[10px] text-gray-500">{txn.driver?.phone}</div>
+                    </td>
+                    <td className="px-4 py-3 whitespace-nowrap text-xs text-gray-900">
+                      {txn.workLocation}
+                    </td>
+                    <td className="px-4 py-3 whitespace-nowrap text-xs">
+                      <div className="font-bold text-gray-900">{txn.durationMonths} Month(s)</div>
+                      <div className="text-[10px] text-gray-500">
+                        ₹{txn.driverMonthlyPrice}/mo
+                      </div>
+                      <div className="text-[10px] text-gray-500">
+                        Total: ₹{txn.totalDriverPayment}
+                      </div>
+                    </td>
+                    <td className="px-4 py-3 whitespace-nowrap">
+                      <div className="text-sm font-bold text-green-600">
+                        ₹{txn.commissionAmount?.toLocaleString('en-IN')}
+                      </div>
+                      <div className="text-[10px] text-gray-500">
+                        (10%)
+                      </div>
+                    </td>
+                    <td className="px-4 py-3 whitespace-nowrap">
+                      <div className="text-[10px] font-mono text-gray-600 max-w-[120px] truncate">
+                        {txn.paymentId}
+                      </div>
+                    </td>
+                    <td className="px-4 py-3 whitespace-nowrap">
+                      <span className="px-2 py-0.5 text-[10px] rounded font-bold uppercase tracking-wide bg-green-100 text-green-800">
+                        {txn.status.replace('_', ' ')}
+                      </span>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
+      </div>
+    </div>
+  );
 
   return (
     <Layout>
@@ -94,7 +197,7 @@ const HiringManagement = () => {
 
         {/* Tabs */}
         <div className="flex space-x-2 border-b border-gray-200">
-          {['active', 'refund_pending', 'history'].map((tab) => (
+          {['active', 'refund_pending', 'history', 'commissions'].map((tab) => (
             <button
               key={tab}
               onClick={() => { setActiveTab(tab); setPagination({ ...pagination, page: 1 }); }}
@@ -103,106 +206,125 @@ const HiringManagement = () => {
                 : 'border-transparent text-gray-500 hover:text-gray-700'
                 }`}
             >
-              {tab.replace('_', ' ')}
+              {tab === 'commissions' ? 'Commission Transactions' : tab.replace('_', ' ')}
             </button>
           ))}
         </div>
 
         {/* Content */}
-        <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden min-h-[400px]">
-          {loading ? (
-            <div className="flex items-center justify-center py-12">
-              <div className="w-8 h-8 border-4 border-[#2BB673] border-t-transparent rounded-full animate-spin"></div>
-            </div>
-          ) : requests.length === 0 ? (
-            <div className="text-center py-12 text-sm">
-              <p className="text-gray-500">No requests found.</p>
-            </div>
-          ) : (
-            <div className="overflow-x-auto">
-              <table className="min-w-full divide-y divide-gray-200">
-                <thead className="bg-[#0B2C4D]">
-                  <tr>
-                    <th className="px-4 py-3 text-left text-xs font-bold text-white uppercase tracking-wider">Date</th>
-                    <th className="px-4 py-3 text-left text-xs font-bold text-white uppercase tracking-wider">User</th>
-                    <th className="px-4 py-3 text-left text-xs font-bold text-white uppercase tracking-wider">Driver</th>
-                    <th className="px-4 py-3 text-left text-xs font-bold text-white uppercase tracking-wider">Location</th>
-                    <th className="px-4 py-3 text-left text-xs font-bold text-white uppercase tracking-wider">Duration</th>
-                    <th className="px-4 py-3 text-left text-xs font-bold text-white uppercase tracking-wider">Commission</th>
-                    <th className="px-4 py-3 text-left text-xs font-bold text-white uppercase tracking-wider">Status</th>
-                    <th className="px-4 py-3 text-right text-xs font-bold text-white uppercase tracking-wider">Action</th>
-                  </tr>
-                </thead>
-                <tbody className="bg-white divide-y divide-gray-200">
-                  {requests.map((req) => (
-                    <tr key={req._id} className="hover:bg-gray-50 transition-colors">
-                      <td className="px-4 py-3 whitespace-nowrap text-xs text-gray-900 font-medium">
-                        {formatDate(req.createdAt)}
-                      </td>
-                      <td className="px-4 py-3 whitespace-nowrap">
-                        <div className="text-xs font-bold text-gray-900">{req.user?.name}</div>
-                        <div className="text-[10px] text-gray-500">{req.user?.phone}</div>
-                      </td>
-                      <td className="px-4 py-3 whitespace-nowrap">
-                        <div className="text-xs font-bold text-gray-900">{req.driver?.name}</div>
-                        <div className="text-[10px] text-gray-500">{req.driver?.phone}</div>
-                      </td>
-                      <td className="px-4 py-3 whitespace-nowrap text-xs text-gray-900">
-                        {req.workLocation}
-                      </td>
-                      <td className="px-4 py-3 whitespace-nowrap text-xs text-gray-900">
-                        {req.durationMonths} Month(s)
-                      </td>
-                      <td className="px-4 py-3 whitespace-nowrap text-xs font-bold text-gray-900">
-                        ₹{req.commissionAmount}
-                      </td>
-                      <td className="px-4 py-3 whitespace-nowrap">
-                        <span className={`px-2 py-0.5 text-[10px] rounded font-bold uppercase tracking-wide ${req.status === 'requested' ? 'bg-yellow-100 text-yellow-800' :
-                          req.status === 'accepted' ? 'bg-green-100 text-green-800' :
-                            req.status === 'refund_pending' ? 'bg-red-100 text-red-800' :
-                              'bg-gray-100 text-gray-800'
-                          }`}>
-                          {req.status}
-                        </span>
-                      </td>
-                      <td className="px-4 py-3 whitespace-nowrap text-right text-xs font-medium">
-                        {req.status === 'refund_pending' && (
-                          <button
-                            onClick={() => handleRefund(req._id)}
-                            className="text-red-600 hover:text-red-900 font-bold border border-red-200 bg-red-50 px-2 py-1 rounded hover:bg-red-100 transition-colors"
-                          >
-                            Process Refund
-                          </button>
-                        )}
-                      </td>
+        {activeTab === 'commissions' ? (
+          renderCommissionsTab()
+        ) : (
+          <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden min-h-[400px]">
+            {loading ? (
+              <div className="flex items-center justify-center py-12">
+                <div className="w-8 h-8 border-4 border-[#2BB673] border-t-transparent rounded-full animate-spin"></div>
+              </div>
+            ) : requests.length === 0 ? (
+              <div className="text-center py-12 text-sm">
+                <p className="text-gray-500">No requests found.</p>
+              </div>
+            ) : (
+              <div className="overflow-x-auto">
+                <table className="min-w-full divide-y divide-gray-200">
+                  <thead className="bg-[#0B2C4D]">
+                    <tr>
+                      <th className="px-4 py-3 text-left text-xs font-bold text-white uppercase tracking-wider">Date</th>
+                      <th className="px-4 py-3 text-left text-xs font-bold text-white uppercase tracking-wider">User</th>
+                      <th className="px-4 py-3 text-left text-xs font-bold text-white uppercase tracking-wider">Driver</th>
+                      <th className="px-4 py-3 text-left text-xs font-bold text-white uppercase tracking-wider">Location</th>
+                      <th className="px-4 py-3 text-left text-xs font-bold text-white uppercase tracking-wider">Duration</th>
+                      <th className="px-4 py-3 text-left text-xs font-bold text-white uppercase tracking-wider">Pricing</th>
+                      <th className="px-4 py-3 text-left text-xs font-bold text-white uppercase tracking-wider">Commission</th>
+                      <th className="px-4 py-3 text-left text-xs font-bold text-white uppercase tracking-wider">Status</th>
+                      <th className="px-4 py-3 text-right text-xs font-bold text-white uppercase tracking-wider">Action</th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          )}
+                  </thead>
+                  <tbody className="bg-white divide-y divide-gray-200">
+                    {requests.map((req) => (
+                      <tr key={req._id} className="hover:bg-gray-50 transition-colors">
+                        <td className="px-4 py-3 whitespace-nowrap text-xs text-gray-900 font-medium">
+                          {formatDate(req.createdAt)}
+                        </td>
+                        <td className="px-4 py-3 whitespace-nowrap">
+                          <div className="text-xs font-bold text-gray-900">{req.user?.name}</div>
+                          <div className="text-[10px] text-gray-500">{req.user?.phone}</div>
+                        </td>
+                        <td className="px-4 py-3 whitespace-nowrap">
+                          <div className="text-xs font-bold text-gray-900">{req.driver?.name}</div>
+                          <div className="text-[10px] text-gray-500">{req.driver?.phone}</div>
+                        </td>
+                        <td className="px-4 py-3 whitespace-nowrap text-xs text-gray-900">
+                          {req.workLocation}
+                        </td>
+                        <td className="px-4 py-3 whitespace-nowrap text-xs text-gray-900">
+                          <div className="font-bold">{req.durationMonths} Month(s)</div>
+                          <div className="text-[10px] text-gray-500">
+                            {formatDate(req.startDate)} - {formatDate(req.endDate)}
+                          </div>
+                        </td>
+                        <td className="px-4 py-3 whitespace-nowrap text-xs">
+                          <div className="font-bold text-gray-900">₹{req.driverMonthlyPrice}/mo</div>
+                          <div className="text-[10px] text-gray-500">
+                            Total: ₹{req.totalDriverPayment}
+                          </div>
+                        </td>
+                        <td className="px-4 py-3 whitespace-nowrap">
+                          <div className="text-xs font-bold text-green-600">
+                            ₹{req.commissionAmount}
+                          </div>
+                          <div className="text-[10px] text-gray-500">
+                            (10% of total)
+                          </div>
+                        </td>
+                        <td className="px-4 py-3 whitespace-nowrap">
+                          <span className={`px-2 py-0.5 text-[10px] rounded font-bold uppercase tracking-wide ${req.status === 'requested' ? 'bg-yellow-100 text-yellow-800' :
+                            req.status === 'accepted' ? 'bg-green-100 text-green-800' :
+                              req.status === 'refund_pending' ? 'bg-red-100 text-red-800' :
+                                'bg-gray-100 text-gray-800'
+                            }`}>
+                            {req.status.replace('_', ' ')}
+                          </span>
+                        </td>
+                        <td className="px-4 py-3 whitespace-nowrap text-right text-xs font-medium">
+                          {req.status === 'refund_pending' && (
+                            <button
+                              onClick={() => handleRefund(req._id)}
+                              className="text-red-600 hover:text-red-900 font-bold border border-red-200 bg-red-50 px-2 py-1 rounded hover:bg-red-100 transition-colors"
+                            >
+                              Process Refund
+                            </button>
+                          )}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
 
-          {/* Pagination */}
-          {pagination.totalPages > 1 && (
-            <div className="px-4 py-3 border-t border-gray-200 flex justify-between items-center text-xs">
-              <button
-                disabled={pagination.page === 1}
-                onClick={() => handlePageChange(pagination.page - 1)}
-                className="px-3 py-1 border rounded hover:bg-gray-50 disabled:opacity-50"
-              >
-                Previous
-              </button>
-              <span className="text-gray-600">Page {pagination.page} of {pagination.totalPages}</span>
-              <button
-                disabled={pagination.page === pagination.totalPages}
-                onClick={() => handlePageChange(pagination.page + 1)}
-                className="px-3 py-1 border rounded hover:bg-gray-50 disabled:opacity-50"
-              >
-                Next
-              </button>
-            </div>
-          )}
-        </div>
+            {/* Pagination */}
+            {pagination.totalPages > 1 && (
+              <div className="px-4 py-3 border-t border-gray-200 flex justify-between items-center text-xs">
+                <button
+                  disabled={pagination.page === 1}
+                  onClick={() => handlePageChange(pagination.page - 1)}
+                  className="px-3 py-1 border rounded hover:bg-gray-50 disabled:opacity-50"
+                >
+                  Previous
+                </button>
+                <span className="text-gray-600">Page {pagination.page} of {pagination.totalPages}</span>
+                <button
+                  disabled={pagination.page === pagination.totalPages}
+                  onClick={() => handlePageChange(pagination.page + 1)}
+                  className="px-3 py-1 border rounded hover:bg-gray-50 disabled:opacity-50"
+                >
+                  Next
+                </button>
+              </div>
+            )}
+          </div>
+        )}
       </div>
     </Layout>
   );
