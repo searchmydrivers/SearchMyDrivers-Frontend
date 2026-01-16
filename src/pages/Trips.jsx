@@ -79,6 +79,7 @@ const Trips = () => {
       completed: { bg: 'bg-[#2BB673]/10', text: 'text-[#2BB673]', icon: 'check_circle' },
       cancelled: { bg: 'bg-red-100', text: 'text-red-800', icon: 'cancel' },
       'payment-completed': { bg: 'bg-[#0B2C4D]/10', text: 'text-[#0B2C4D]', icon: 'payment' },
+      'payment-pending': { bg: 'bg-orange-100', text: 'text-orange-800', icon: 'pending_actions' },
     };
     return badges[status] || { bg: 'bg-gray-100', text: 'text-gray-800', icon: 'help' };
   };
@@ -90,7 +91,9 @@ const Trips = () => {
       'in-progress': 'In Progress',
       completed: 'Completed',
       cancelled: 'Cancelled',
+      cancelled: 'Cancelled',
       'payment-completed': 'Paid',
+      'payment-pending': 'Payment Pending',
     };
     return labels[status] || status;
   };
@@ -130,6 +133,7 @@ const Trips = () => {
               { id: 'all', label: 'All', activeClass: 'from-[#0B2C4D] to-[#254f7a]' },
               { id: 'pending', label: 'Pending', activeClass: 'from-yellow-400 to-yellow-600' },
               { id: 'in-progress', label: 'In Progress', activeClass: 'from-purple-500 to-purple-600' },
+              { id: 'payment-pending', label: 'Payment Pending', activeClass: 'from-orange-400 to-orange-600' },
               { id: 'completed', label: 'Completed', activeClass: 'from-[#2BB673] to-[#239960]' },
               { id: 'cancelled', label: 'Cancelled', activeClass: 'from-red-500 to-red-600' },
             ].map((filter) => (

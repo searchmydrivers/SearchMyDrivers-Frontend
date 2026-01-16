@@ -99,6 +99,7 @@ const Dashboard = () => {
     'Payment pending': '#8B5CF6', // Violet
     'In progress': '#3B82F6', // Blue
     'Pin verified': '#06B6D4', // Cyan
+    'Completed': '#2BB673', // Green
   };
 
   useEffect(() => {
