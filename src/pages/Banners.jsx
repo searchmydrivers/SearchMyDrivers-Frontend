@@ -12,10 +12,8 @@ const Banners = () => {
   const [formData, setFormData] = useState({
     title: '',
     type: 'user',
-    position: 'home-top',
     link: '',
     isActive: true,
-    order: 0,
     image: null,
   });
   const [error, setError] = useState('');
@@ -46,10 +44,8 @@ const Banners = () => {
     setFormData({
       title: banner.title || '',
       type: banner.type || 'user',
-      position: banner.position || 'home-top',
       link: banner.link || '',
       isActive: banner.isActive !== undefined ? banner.isActive : true,
-      order: banner.order || 0,
       image: null,
     });
     setShowModal(true);
@@ -62,10 +58,8 @@ const Banners = () => {
     setFormData({
       title: '',
       type: 'user',
-      position: 'home-top',
       link: '',
       isActive: true,
-      order: 0,
       image: null,
     });
     setShowModal(true);
@@ -83,10 +77,8 @@ const Banners = () => {
       const formDataToSend = new FormData();
       formDataToSend.append('title', formData.title);
       formDataToSend.append('type', formData.type);
-      formDataToSend.append('position', formData.position);
       if (formData.link) formDataToSend.append('link', formData.link);
       formDataToSend.append('isActive', formData.isActive);
-      formDataToSend.append('order', formData.order);
       if (formData.image) formDataToSend.append('image', formData.image);
 
       let response;
@@ -235,7 +227,6 @@ const Banners = () => {
                 <div className="p-3">
                   <h3 className="font-semibold text-gray-800 mb-2 text-xs truncate" title={banner.title}>{banner.title}</h3>
                   <div className="flex items-center justify-between mb-3 text-[10px]">
-                    <span className="text-gray-500">Position: {banner.position}</span>
                     <span
                       className={`px-1.5 py-0.5 font-bold rounded uppercase tracking-wide ${banner.isActive
                         ? 'bg-green-50 text-green-700'
@@ -286,7 +277,7 @@ const Banners = () => {
                   />
                 </div>
                 <div className="grid grid-cols-2 gap-3">
-                  <div>
+                  <div className="col-span-2">
                     <label className="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-1">Type</label>
                     <select
                       value={formData.type}
@@ -296,21 +287,6 @@ const Banners = () => {
                     >
                       <option value="user">User</option>
                       <option value="driver">Driver</option>
-                    </select>
-                  </div>
-                  <div>
-                    <label className="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-1">Position</label>
-                    <select
-                      value={formData.position}
-                      onChange={(e) => setFormData({ ...formData, position: e.target.value })}
-                      className="w-full px-3 py-2 border border-gray-300 rounded focus:ring-1 focus:ring-[#0B2C4D] outline-none text-xs"
-                      required
-                    >
-                      <option value="home-top">Home Top</option>
-                      <option value="home-middle">Home Middle</option>
-                      <option value="home-bottom">Home Bottom</option>
-                      <option value="profile-top">Profile Top</option>
-                      <option value="profile-bottom">Profile Bottom</option>
                     </select>
                   </div>
                 </div>
@@ -324,28 +300,16 @@ const Banners = () => {
                     placeholder="https://example.com"
                   />
                 </div>
-                <div className="grid grid-cols-2 gap-3">
-                  <div>
-                    <label className="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-1">Order</label>
-                    <input
-                      type="number"
-                      value={formData.order}
-                      onChange={(e) => setFormData({ ...formData, order: parseInt(e.target.value) || 0 })}
-                      className="w-full px-3 py-2 border border-gray-300 rounded focus:ring-1 focus:ring-[#0B2C4D] outline-none text-xs"
-                      min="0"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-1">Status</label>
-                    <select
-                      value={formData.isActive}
-                      onChange={(e) => setFormData({ ...formData, isActive: e.target.value === 'true' })}
-                      className="w-full px-3 py-2 border border-gray-300 rounded focus:ring-1 focus:ring-[#0B2C4D] outline-none text-xs"
-                    >
-                      <option value={true}>Active</option>
-                      <option value={false}>Inactive</option>
-                    </select>
-                  </div>
+                <div>
+                  <label className="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-1">Status</label>
+                  <select
+                    value={formData.isActive}
+                    onChange={(e) => setFormData({ ...formData, isActive: e.target.value === 'true' })}
+                    className="w-full px-3 py-2 border border-gray-300 rounded focus:ring-1 focus:ring-[#0B2C4D] outline-none text-xs"
+                  >
+                    <option value={true}>Active</option>
+                    <option value={false}>Inactive</option>
+                  </select>
                 </div>
                 <div>
                   <label className="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-1">Banner Image {editingBanner ? '(Optional)' : '*'}</label>
