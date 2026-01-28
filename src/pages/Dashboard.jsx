@@ -75,7 +75,7 @@ const Dashboard = () => {
   const [showInfoWindow, setShowInfoWindow] = useState(false);
   const [mapError, setMapError] = useState(null);
 
-  const GOOGLE_MAPS_API_KEY = import.meta.env.VITE_GOOGLE_MAPS_API_KEY || 'AIzaSyBEIm7hwzYIXr2Dwxb31Xh8GsJ1JQzP7xY';
+  const GOOGLE_MAPS_API_KEY = import.meta.env.VITE_GOOGLE_MAPS_API_KEY || 'AIzaSyAxV3ZfT3eM6VXg49d6H6gV43YErgIh0Q8';
 
   const COLORS = {
     primary: '#0B2C4D', // Navy

@@ -6,6 +6,7 @@ import { chatService } from '../services/chatService';
 import io from 'socket.io-client';
 import { socketService } from '../services/socketService';
 import { formatDateTime, formatTime } from '../utils/dateUtils';
+import AddressDisplay from '../components/common/AddressDisplay';
 
 const ChatHistory = ({ tripId }) => {
   const [messages, setMessages] = useState([]);
@@ -118,7 +119,7 @@ const TripDetails = () => {
   const fetchLocationAddress = async (latitude, longitude) => {
     try {
       const response = await fetch(
-        `https://maps.googleapis.com/maps/api/geocode/json?latlng=${latitude},${longitude}&key=AIzaSyBEIm7hwzYIXr2Dwxb31Xh8GsJ1JQzP7xY`
+        `https://maps.googleapis.com/maps/api/geocode/json?latlng=${latitude},${longitude}&key=${import.meta.env.VITE_GOOGLE_MAPS_API_KEY}`
       );
       const data = await response.json();
       if (data.results && data.results.length > 0) {
@@ -485,10 +486,10 @@ const TripDetails = () => {
               Pickup Location
             </h2>
             <div>
-              <p className="text-xs text-gray-900 font-medium leading-relaxed">{trip.pickupLocation?.address || 'N/A'}</p>
-              <p className="text-[10px] text-gray-500 mt-1">
+              <AddressDisplay location={trip.pickupLocation} className="text-xs text-gray-900 font-medium leading-relaxed" />
+              {/* <p className="text-[10px] text-gray-500 mt-1">
                 {trip.pickupLocation?.city || ''}, {trip.pickupLocation?.state || ''} - {trip.pickupLocation?.pincode || 'N/A'}
-              </p>
+              </p> */}
               {trip.pickupLocation?.coordinates && (
                 <p className="text-[9px] text-gray-400 mt-0.5 font-mono">
                   {trip.pickupLocation.coordinates.latitude?.toFixed(6)}, {trip.pickupLocation.coordinates.longitude?.toFixed(6)}
@@ -504,10 +505,10 @@ const TripDetails = () => {
               Drop Location
             </h2>
             <div>
-              <p className="text-xs text-gray-900 font-medium leading-relaxed">{trip.dropLocation?.address || 'N/A'}</p>
-              <p className="text-[10px] text-gray-500 mt-1">
+              <AddressDisplay location={trip.dropLocation} className="text-xs text-gray-900 font-medium leading-relaxed" />
+              {/* <p className="text-[10px] text-gray-500 mt-1">
                 {trip.dropLocation?.city || ''}, {trip.dropLocation?.state || ''} - {trip.dropLocation?.pincode || 'N/A'}
-              </p>
+              </p> */}
               {trip.dropLocation?.coordinates && (
                 <p className="text-[9px] text-gray-400 mt-0.5 font-mono">
                   {trip.dropLocation.coordinates.latitude?.toFixed(6)}, {trip.dropLocation.coordinates.longitude?.toFixed(6)}
@@ -758,7 +759,7 @@ const TripDetails = () => {
                             loading="lazy"
                             allowFullScreen
                             referrerPolicy="no-referrer-when-downgrade"
-                            src={`https://www.google.com/maps/embed/v1/place?key=AIzaSyBEIm7hwzYIXr2Dwxb31Xh8GsJ1JQzP7xY&q=${driverLocation.latitude},${driverLocation.longitude}&zoom=15`}
+                            src={`https://www.google.com/maps/embed/v1/place?key=${import.meta.env.VITE_GOOGLE_MAPS_API_KEY}&q=${driverLocation.latitude},${driverLocation.longitude}&zoom=15`}
                           ></iframe>
                         </div>
                       </div>

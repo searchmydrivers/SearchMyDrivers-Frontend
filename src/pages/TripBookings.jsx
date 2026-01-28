@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import Layout from '../components/Layout/Layout';
 import { tripService } from '../services/tripService';
 import { formatDateTime } from '../utils/dateUtils';
+import AddressDisplay from '../components/common/AddressDisplay';
 
 const TripBookings = () => {
   const [trips, setTrips] = useState([]);
@@ -227,8 +228,13 @@ const TripBookings = () => {
                       </td>
                       <td className="px-4 py-3">
                         <div className="text-xs text-gray-900">
-                          <div className="font-medium truncate max-w-[150px]" title={trip.pickupLocation?.address}>{trip.pickupLocation?.address || 'N/A'}</div>
-                          <div className="text-gray-500 truncate max-w-[150px]" title={trip.dropLocation?.address}>→ {trip.dropLocation?.address || 'N/A'}</div>
+                          <div className="font-medium">
+                            <AddressDisplay location={trip.pickupLocation} />
+                          </div>
+                          <div className="text-gray-500 mt-1 flex items-start">
+                            <span className="mr-1">→</span>
+                            <AddressDisplay location={trip.dropLocation} />
+                          </div>
                         </div>
                       </td>
                       <td className="px-4 py-3 whitespace-nowrap text-xs text-gray-900">
@@ -338,9 +344,18 @@ const TripBookings = () => {
                       <span className="text-gray-900 truncate">{trip.driver?.name || 'Not Assigned'}</span>
                     </div>
                   </div>
-                  <div className="truncate">
+                  <div className="">
                     <span className="font-medium text-gray-700">Route: </span>
-                    <span className="text-gray-900">{trip.pickupLocation?.address || 'N/A'} → {trip.dropLocation?.address || 'N/A'}</span>
+                    <div className="text-gray-900 mt-1 pl-2 border-l-2 border-gray-200">
+                      <div>
+                        <span className="text-xs text-gray-500">From:</span>
+                        <AddressDisplay location={trip.pickupLocation} className="inline ml-1" />
+                      </div>
+                      <div className="mt-1">
+                        <span className="text-xs text-gray-500">To:</span>
+                        <AddressDisplay location={trip.dropLocation} className="inline ml-1" />
+                      </div>
+                    </div>
                   </div>
                   <div>
                     <span className="font-medium text-gray-700">Type: </span>

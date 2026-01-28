@@ -3,6 +3,7 @@ import { formatDateTime } from '../utils/dateUtils';
 import { Link } from 'react-router-dom';
 import Layout from '../components/Layout/Layout';
 import { tripService } from '../services/tripService';
+import AddressDisplay from '../components/common/AddressDisplay';
 
 const Trips = () => {
   const [trips, setTrips] = useState([]);
@@ -160,6 +161,7 @@ const Trips = () => {
                   <th className="px-4 py-3 text-left text-xs font-bold text-white uppercase tracking-wider">Trip ID</th>
                   <th className="px-4 py-3 text-left text-xs font-bold text-white uppercase tracking-wider">User</th>
                   <th className="px-4 py-3 text-left text-xs font-bold text-white uppercase tracking-wider">Driver</th>
+                  <th className="px-4 py-3 text-left text-xs font-bold text-white uppercase tracking-wider">Route</th>
                   <th className="px-4 py-3 text-left text-xs font-bold text-white uppercase tracking-wider">Type</th>
                   <th className="px-4 py-3 text-left text-xs font-bold text-white uppercase tracking-wider">Amount</th>
                   <th className="px-4 py-3 text-left text-xs font-bold text-white uppercase tracking-wider">Status</th>
@@ -219,6 +221,17 @@ const Trips = () => {
                               Unassigned
                             </span>
                           )}
+                        </td>
+                        <td className="px-4 py-3">
+                          <div className="text-xs text-gray-900">
+                            <div className="font-medium">
+                              <AddressDisplay location={trip.pickupLocation} />
+                            </div>
+                            <div className="text-gray-500 mt-1 flex items-start">
+                              <span className="mr-1">→</span>
+                              <AddressDisplay location={trip.dropLocation} />
+                            </div>
+                          </div>
                         </td>
                         <td className="px-4 py-3 whitespace-nowrap">
                           <span className="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-medium bg-gray-100 text-[#0B2C4D]">
@@ -309,6 +322,24 @@ const Trips = () => {
                       </div>
                     </div>
                   )}
+
+                  <div className="bg-gray-50 p-3 rounded-lg mt-2">
+                    <div className="text-xs text-gray-500 uppercase font-semibold mb-2">Route</div>
+                    <div className="space-y-2">
+                      <div className="flex items-start">
+                        <div className="min-w-[16px] flex justify-center mt-0.5 mr-2">
+                          <div className="w-2.5 h-2.5 rounded-full bg-green-500"></div>
+                        </div>
+                        <AddressDisplay location={trip.pickupLocation} className="text-sm text-gray-900" />
+                      </div>
+                      <div className="flex items-start">
+                        <div className="min-w-[16px] flex justify-center mt-0.5 mr-2">
+                          <div className="w-2.5 h-2.5 rounded-full bg-red-500"></div>
+                        </div>
+                        <AddressDisplay location={trip.dropLocation} className="text-sm text-gray-900" />
+                      </div>
+                    </div>
+                  </div>
                 </div>
 
                 <div className="flex items-center justify-between pt-3 border-t border-gray-100">
