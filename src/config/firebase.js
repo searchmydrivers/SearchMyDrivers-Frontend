@@ -1,5 +1,6 @@
 import { initializeApp } from "firebase/app";
 import { getMessaging, getToken, onMessage } from "firebase/messaging";
+import { getDatabase } from "firebase/database";
 
 const firebaseConfig = {
   apiKey: "AIzaSyDbu9A11dLlwcD2dp97sKRNDmSS49ARwgw",
@@ -12,6 +13,7 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 const messaging = getMessaging(app);
+const db = getDatabase(app);
 
 export const requestForToken = async () => {
   try {
@@ -38,4 +40,4 @@ export const onMessageListener = () =>
     });
   });
 
-export { messaging };
+export { messaging, db };

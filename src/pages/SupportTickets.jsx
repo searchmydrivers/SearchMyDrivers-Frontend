@@ -177,6 +177,18 @@ const SupportTickets = () => {
                               </div>
                             </>
                           ) : <span className="text-gray-400 italic text-xs">Deleted Driver</span>)}
+
+                          {ticket.raisedBy === 'guest' && (
+                            <>
+                              <div className="h-6 w-6 rounded-full bg-purple-100 flex items-center justify-center text-purple-600 font-bold text-[10px] mr-2">
+                                {ticket.guestInfo?.name?.[0] || 'G'}
+                              </div>
+                              <div className="text-xs">
+                                <div className="font-medium text-gray-900">{ticket.guestInfo?.name || 'Guest'}</div>
+                                <div className="text-[10px] text-gray-500">Registration Help</div>
+                              </div>
+                            </>
+                          )}
                         </div>
                       </td>
                       <td className="px-4 py-3 whitespace-nowrap">

@@ -21,6 +21,8 @@ import {
   Line
 } from 'recharts';
 import { GoogleMap, LoadScript, Marker, InfoWindow, HeatmapLayer } from '@react-google-maps/api';
+import { ref, onValue, off } from 'firebase/database';
+import { db } from '../config/firebase';
 
 const CustomTooltip = ({ active, payload, label }) => {
   if (active && payload && payload.length) {
@@ -68,12 +70,14 @@ const Dashboard = () => {
   const [mapSearchTerm, setMapSearchTerm] = useState('');
   const [searchResults, setSearchResults] = useState([]);
   const [selectedDriver, setSelectedDriver] = useState(null);
-  const [mapCenter, setMapCenter] = useState({ lat: 22.7196, lng: 75.8577 });
-  const [mapZoom, setMapZoom] = useState(12);
+  const [mapCenter, setMapCenter] = useState({ lat: 20.5937, lng: 78.9629 }); // Central India
+  const [mapZoom, setMapZoom] = useState(5); // India view zoom level
   const [mapLoading, setMapLoading] = useState(false);
   const [showSuggestions, setShowSuggestions] = useState(false);
   const [showInfoWindow, setShowInfoWindow] = useState(false);
   const [mapError, setMapError] = useState(null);
+  const [liveDrivers, setLiveDrivers] = useState({});
+  const [showGodsEye, setShowGodsEye] = useState(true);
 
   const GOOGLE_MAPS_API_KEY = import.meta.env.VITE_GOOGLE_MAPS_API_KEY || 'AIzaSyAxV3ZfT3eM6VXg49d6H6gV43YErgIh0Q8';
 
@@ -105,6 +109,22 @@ const Dashboard = () => {
   useEffect(() => {
     fetchDashboardData();
   }, [revenueFilter]);
+
+  // God's Eye: Real-time Firebase listener
+  useEffect(() => {
+    const driversRef = ref(db, 'drivers_live');
+
+    const unsubscribe = onValue(driversRef, (snapshot) => {
+      const data = snapshot.val();
+      if (data) {
+        setLiveDrivers(data);
+      } else {
+        setLiveDrivers({});
+      }
+    });
+
+    return () => off(driversRef);
+  }, []);
 
   // ... (fetchDashboardData and map handlers remain the same) ...
   const fetchDashboardData = async () => {
@@ -506,17 +526,17 @@ const Dashboard = () => {
           </div>
         </div>
 
-        {/* Bottom Grid: Activity & Map */}
-        <div className="grid grid-cols-1 xl:grid-cols-4 gap-6">
+        {/* Bottom Grid: Activity */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           {/* Cancellations List */}
-          <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden xl:col-span-1">
+          <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
             <div className="p-4 border-b border-gray-50 flex justify-between items-center bg-red-50/50">
               <h3 className="font-bold text-red-900 flex items-center text-sm">
                 <span className="material-icons-outlined mr-2 text-base">cancel_presentation</span>
                 Recent Cancellations
               </h3>
             </div>
-            <div className="overflow-y-auto max-h-[450px]">
+            <div className="overflow-y-auto max-h-[400px]">
               {recentActivity.cancellations && recentActivity.cancellations.length > 0 ? (
                 <div className="divide-y divide-gray-100">
                   {recentActivity.cancellations.map((trip) => (
@@ -561,14 +581,14 @@ const Dashboard = () => {
           </div>
 
           {/* Top Drivers */}
-          <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden xl:col-span-1">
+          <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
             <div className="p-4 border-b border-gray-50 flex justify-between items-center bg-blue-50/50">
               <h3 className="font-bold text-blue-900 flex items-center text-sm">
                 <span className="material-icons-outlined mr-2 text-base">emoji_events</span>
                 Top Performers
               </h3>
             </div>
-            <div className="overflow-y-auto max-h-[450px]">
+            <div className="overflow-y-auto max-h-[400px]">
               {recentActivity.topDrivers && recentActivity.topDrivers.length > 0 ? (
                 <div className="divide-y divide-gray-100">
                   {recentActivity.topDrivers.map((driver, idx) => (
@@ -594,72 +614,98 @@ const Dashboard = () => {
               )}
             </div>
           </div>
+        </div>
 
-          {/* Live Map */}
-          <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-5 xl:col-span-2">
-            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-4">
-              <div>
-                <h3 className="text-base font-bold text-gray-900">Live Driver Map</h3>
-                <div className="flex items-center gap-2">
-                  <p className="text-xs text-gray-500">Real-time fleet tracking</p>
-                  <button
-                    onClick={() => setShowHeatmap(!showHeatmap)}
-                    className={`text-[10px] px-2 py-0.5 rounded border ${showHeatmap ? 'bg-red-50 border-red-200 text-red-600' : 'bg-gray-50 border-gray-200 text-gray-500'}`}
-                  >
-                    {showHeatmap ? 'Hide Heatmap' : 'Show Demand'}
-                  </button>
+        {/* Live Map - Full Width */}
+        <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+          <div className="p-6 border-b border-gray-50 bg-white">
+            <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
+              <div className="flex items-center gap-4">
+                <div className="w-14 h-14 rounded-2xl bg-[#0B2C4D]/5 flex items-center justify-center text-[#0B2C4D] shrink-0 border border-[#0B2C4D]/10 shadow-sm">
+                  <span className="material-icons text-3xl">explore</span>
+                </div>
+                <div className="flex flex-col gap-1.5">
+                  <h3 className="text-xl font-extrabold text-gray-900 tracking-tight flex items-center gap-2">
+                    Live Driver Fleet Map
+                    <span className="px-2 py-0.5 rounded text-[10px] bg-gray-100 text-gray-500 font-bold uppercase tracking-widest">God's Eye</span>
+                  </h3>
+                  <div className="flex items-center gap-3">
+                    <p className="text-sm text-gray-500 font-medium">Real-time tracking of online drivers across India</p>
+                    <div className="flex items-center gap-1.5 px-2.5 py-1 bg-green-50 rounded-full border border-green-100 shadow-sm">
+                      <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse"></div>
+                      <span className="text-[10px] font-bold text-green-700 uppercase tracking-widest">Live</span>
+                    </div>
+                  </div>
                 </div>
               </div>
-              <div className="relative w-full md:w-64">
-                <input
-                  type="text"
-                  value={mapSearchTerm}
-                  onChange={(e) => {
-                    setMapSearchTerm(e.target.value);
-                    setShowSuggestions(true);
-                  }}
-                  placeholder="Search driver by name/phone..."
-                  className="w-full pl-9 pr-8 py-1.5 text-sm border border-gray-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-[#2BB673] focus:border-transparent transition-all"
-                />
-                <span className="material-icons-outlined absolute left-2.5 top-1/2 -translate-y-1/2 text-gray-400 text-base">search</span>
 
-                {mapLoading && (
-                  <div className="absolute right-2.5 top-1/2 -translate-y-1/2">
-                    <div className="w-3 h-3 border-2 border-[#2BB673] border-t-transparent rounded-full animate-spin"></div>
-                  </div>
-                )}
+              <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-4">
+                <div className="flex bg-gray-50 p-1.5 rounded-2xl border border-gray-100 shadow-inner">
+                  <button
+                    onClick={() => setShowGodsEye(!showGodsEye)}
+                    className={`px-5 py-2.5 text-xs font-bold rounded-xl transition-all duration-300 ${showGodsEye ? 'bg-white text-[#0B2C4D] shadow-md scale-[1.02]' : 'text-gray-500 hover:text-gray-700'}`}
+                  >
+                    {showGodsEye ? "God's Eye Active" : "Enable God's Eye"}
+                  </button>
+                  <button
+                    onClick={() => setShowHeatmap(!showHeatmap)}
+                    className={`px-5 py-2.5 text-xs font-bold rounded-xl transition-all duration-300 ${showHeatmap ? 'bg-white text-red-600 shadow-md scale-[1.02]' : 'text-gray-500 hover:text-gray-700'}`}
+                  >
+                    {showHeatmap ? "Heatmap Active" : "Demand Heatmap"}
+                  </button>
+                </div>
 
-                {showSuggestions && mapSearchTerm.trim().length >= 2 && (
-                  <div className="absolute z-50 w-full mt-1 bg-white border border-gray-100 rounded-lg shadow-xl max-h-60 overflow-y-auto">
-                    {searchResults.length > 0 ? (
-                      searchResults.map((d) => (
-                        <div
-                          key={d._id}
-                          onClick={() => handleSelectDriver(d)}
-                          className="p-2 hover:bg-gray-50 cursor-pointer flex items-center gap-2 border-b border-gray-50 last:border-0"
-                        >
-                          <div className="w-6 h-6 rounded-full bg-blue-50 flex items-center justify-center font-bold text-[10px] text-[#0B2C4D]">
-                            {d.name ? d.name[0].toUpperCase() : '?'}
+                <div className="relative min-w-[320px]">
+                  <input
+                    type="text"
+                    value={mapSearchTerm}
+                    onChange={(e) => {
+                      setMapSearchTerm(e.target.value);
+                      setShowSuggestions(true);
+                    }}
+                    placeholder="Search driver by name or phone..."
+                    className="w-full pl-12 pr-12 py-3.5 text-sm bg-white border border-gray-200 rounded-2xl focus:outline-none focus:ring-4 focus:ring-[#0B2C4D]/5 focus:border-[#0B2C4D] transition-all shadow-sm"
+                  />
+                  <span className="material-icons absolute left-4 top-1/2 -translate-y-1/2 text-gray-400">search</span>
+
+                  {mapLoading && (
+                    <div className="absolute right-4 top-1/2 -translate-y-1/2">
+                      <div className="w-5 h-5 border-3 border-[#0B2C4D] border-t-transparent rounded-full animate-spin"></div>
+                    </div>
+                  )}
+
+                  {showSuggestions && mapSearchTerm.trim().length >= 2 && (
+                    <div className="absolute z-50 w-full mt-1 bg-white border border-gray-100 rounded-lg shadow-xl max-h-60 overflow-y-auto">
+                      {searchResults.length > 0 ? (
+                        searchResults.map((d) => (
+                          <div
+                            key={d._id}
+                            onClick={() => handleSelectDriver(d)}
+                            className="p-3 hover:bg-gray-50 cursor-pointer flex items-center gap-3 border-b border-gray-50 last:border-0"
+                          >
+                            <div className="w-8 h-8 rounded-full bg-blue-50 flex items-center justify-center font-bold text-xs text-[#0B2C4D]">
+                              {d.name ? d.name[0].toUpperCase() : '?'}
+                            </div>
+                            <div className="overflow-hidden">
+                              <p className="text-xs font-bold text-gray-900 truncate">{d.name}</p>
+                              <p className="text-[10px] text-gray-500">{d.phone}</p>
+                            </div>
                           </div>
-                          <div className="overflow-hidden">
-                            <p className="text-xs font-medium text-gray-900 truncate">{d.name}</p>
-                            <p className="text-[10px] text-gray-500">{d.phone}</p>
+                        ))
+                      ) : (
+                        !mapLoading && (
+                          <div className="p-4 text-center text-gray-500 text-xs italic">
+                            No active drivers matching your search.
                           </div>
-                        </div>
-                      ))
-                    ) : (
-                      !mapLoading && (
-                        <div className="p-3 text-center text-gray-500 text-xs">
-                          No drivers found with active location.
-                        </div>
-                      )
-                    )}
-                  </div>
-                )}
+                        )
+                      )}
+                    </div>
+                  )}
+                </div>
               </div>
             </div>
 
-            <div className="h-[450px] w-full rounded-xl overflow-hidden border border-gray-200 bg-gray-50 relative">
+            <div className="h-[600px] w-full mt-4 rounded-2xl overflow-hidden border border-gray-100 shadow-inner bg-gray-100 relative">
               {!GOOGLE_MAPS_API_KEY ? (
                 <div className="absolute inset-0 flex flex-col items-center justify-center text-center p-6 bg-gray-100">
                   <span className="material-icons-outlined text-4xl text-gray-400 mb-2">map_off</span>
@@ -670,7 +716,7 @@ const Dashboard = () => {
                 <LoadScript
                   googleMapsApiKey={GOOGLE_MAPS_API_KEY}
                   libraries={libraries}
-                  loadingElement={<div className="h-full w-full flex items-center justify-center bg-gray-100 text-gray-500 text-sm">Loading Map...</div>}
+                  loadingElement={<div className="h-full w-full flex items-center justify-center bg-gray-100 text-gray-500 text-sm">Loading Live Fleet Matrix...</div>}
                 >
                   <GoogleMap
                     mapContainerStyle={{ height: '100%', width: '100%' }}
@@ -680,13 +726,18 @@ const Dashboard = () => {
                       disableDefaultUI: false,
                       zoomControl: true,
                       streetViewControl: false,
-                      mapTypeControl: false,
+                      mapTypeControl: true,
                       fullscreenControl: true,
                       styles: [
                         {
                           featureType: "poi",
                           elementType: "labels",
                           stylers: [{ visibility: "off" }]
+                        },
+                        {
+                          featureType: "administrative.country",
+                          elementType: "geometry.stroke",
+                          stylers: [{ color: "#0B2C4D" }, { weight: 1 }]
                         }
                       ]
                     }}
@@ -699,66 +750,71 @@ const Dashboard = () => {
                           : []
                         }
                         options={{
-                          radius: 20,
+                          radius: 30,
                           opacity: 0.8,
-                          gradient: [
-                            'rgba(0, 255, 255, 0)',
-                            'rgba(0, 255, 255, 1)',
-                            'rgba(0, 191, 255, 1)',
-                            'rgba(0, 127, 255, 1)',
-                            'rgba(0, 63, 255, 1)',
-                            'rgba(0, 0, 255, 1)',
-                            'rgba(0, 0, 223, 1)',
-                            'rgba(0, 0, 191, 1)',
-                            'rgba(0, 0, 159, 1)',
-                            'rgba(0, 0, 127, 1)',
-                            'rgba(63, 0, 91, 1)',
-                            'rgba(127, 0, 63, 1)',
-                            'rgba(191, 0, 31, 1)',
-                            'rgba(255, 0, 0, 1)'
-                          ]
                         }}
                       />
                     )}
 
-                    {/* Driver Markers */}
-                    {!showHeatmap && selectedDriver && selectedDriver.location?.latitude && (
+                    {/* God's Eye Layer: All Live Drivers */}
+                    {showGodsEye && !showHeatmap && Object.entries(liveDrivers).map(([id, driver]) => (
+                      <Marker
+                        key={id}
+                        position={{ lat: driver.lat, lng: driver.lng }}
+                        icon={{
+                          url: 'https://cdn-icons-png.flaticon.com/512/3202/3202926.png',
+                          scaledSize: new window.google.maps.Size(32, 32),
+                          anchor: new window.google.maps.Point(16, 16),
+                          rotation: driver.bearing || 0
+                        }}
+                        title={driver.name || "Live Driver"}
+                        onClick={() => {
+                          setSelectedDriver({ _id: id, ...driver });
+                          setShowInfoWindow(true);
+                        }}
+                      />
+                    ))}
+
+                    {/* Selected Driver Marker (Search result) */}
+                    {!showGodsEye && !showHeatmap && selectedDriver && selectedDriver.location?.latitude && (
                       <>
                         <Marker
                           position={{ lat: selectedDriver.location.latitude, lng: selectedDriver.location.longitude }}
                           onClick={() => setShowInfoWindow(true)}
                           animation={window.google?.maps?.Animation?.DROP}
                         />
-                        {showInfoWindow && (
-                          <InfoWindow
-                            position={{ lat: selectedDriver.location.latitude, lng: selectedDriver.location.longitude }}
-                            onCloseClick={() => setShowInfoWindow(false)}
-                          >
-                            <div className="p-1.5 min-w-[180px]">
-                              <div className="flex items-center gap-2 mb-1">
-                                <div className="w-6 h-6 rounded-full bg-blue-50 flex items-center justify-center font-bold text-[#0B2C4D] text-xs">
-                                  {selectedDriver.name[0]}
-                                </div>
-                                <div>
-                                  <p className="font-bold text-gray-900 text-xs">{selectedDriver.name}</p>
-                                  <p className="text-[10px] text-gray-500">{selectedDriver.phone}</p>
-                                </div>
-                              </div>
-                              <div className="flex flex-col gap-1 text-[10px] mt-1.5">
-                                <span className={`self-start px-1.5 py-0.5 rounded-full ${selectedDriver.isOnline ? 'bg-[#2BB673]/10 text-[#2BB673]' : 'bg-gray-100 text-gray-600'}`}>
-                                  {selectedDriver.isOnline ? 'Online' : 'Offline'}
-                                </span>
-                                <div className="flex items-start text-gray-600 mt-0.5">
-                                  <span className="material-icons-outlined text-xs mr-1">location_on</span>
-                                  <span className="break-words max-w-[160px]">
-                                    {selectedDriver.location?.address || selectedDriver.workLocation || 'Location unavailable'}
-                                  </span>
-                                </div>
-                              </div>
-                            </div>
-                          </InfoWindow>
-                        )}
                       </>
+                    )}
+
+                    {showInfoWindow && selectedDriver && (
+                      <InfoWindow
+                        position={
+                          selectedDriver.location
+                            ? { lat: selectedDriver.location.latitude, lng: selectedDriver.location.longitude }
+                            : { lat: selectedDriver.lat, lng: selectedDriver.lng }
+                        }
+                        onCloseClick={() => setShowInfoWindow(false)}
+                      >
+                        <div className="p-1.5 min-w-[180px]">
+                          <div className="flex items-center gap-2 mb-1">
+                            <div className="w-6 h-6 rounded-full bg-blue-50 flex items-center justify-center font-bold text-[#0B2C4D] text-xs">
+                              {(selectedDriver.name || "D")[0]}
+                            </div>
+                            <div>
+                              <p className="font-bold text-gray-900 text-xs">{selectedDriver.name || "Driver"}</p>
+                              <p className="text-[10px] text-gray-500">{selectedDriver.phone || "Live Tracking"}</p>
+                            </div>
+                          </div>
+                          <div className="flex flex-col gap-1 text-[10px] mt-1.5">
+                            <span className="self-start px-1.5 py-0.5 rounded-full bg-[#2BB673]/10 text-[#2BB673]">
+                              Online & Moving
+                            </span>
+                            {selectedDriver.speed && (
+                              <div className="text-gray-600">Speed: {Math.round(selectedDriver.speed)} km/h</div>
+                            )}
+                          </div>
+                        </div>
+                      </InfoWindow>
                     )}
                   </GoogleMap>
                 </LoadScript>

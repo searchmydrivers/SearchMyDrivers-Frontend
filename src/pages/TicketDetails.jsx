@@ -104,9 +104,10 @@ const TicketDetails = () => {
 
   if (!ticket) return null;
 
-  const requester = ticket.raisedBy === 'user' ? ticket.user : ticket.driver;
+  const isGuest = ticket.raisedBy === 'guest';
+  const requester = isGuest ? ticket.guestInfo : (ticket.raisedBy === 'user' ? ticket.user : ticket.driver);
   const requesterName = requester?.name || 'Unknown User';
-  const requesterAvatar = requester?.avatar || requester?.profilePicture;
+  const requesterAvatar = isGuest ? null : (requester?.avatar || requester?.profilePicture);
 
   return (
     <Layout>

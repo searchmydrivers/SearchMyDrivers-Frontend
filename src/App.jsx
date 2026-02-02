@@ -30,6 +30,7 @@ const SupportTickets = lazy(() => import('./pages/SupportTickets'));
 const TicketDetails = lazy(() => import('./pages/TicketDetails'));
 const DriverReferrals = lazy(() => import('./pages/DriverReferrals'));
 const Settings = lazy(() => import('./pages/Settings'));
+const PublicSupport = lazy(() => import('./pages/PublicSupport'));
 
 
 function App() {
@@ -40,6 +41,7 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/forgot-password" element={<ForgotPassword />} />
           <Route path="/reset-password" element={<ResetPassword />} />
+          <Route path="/support" element={<PublicSupport />} />
           <Route
             path="/dashboard"
             element={

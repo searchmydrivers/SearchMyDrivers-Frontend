@@ -172,12 +172,19 @@ const Login = () => {
                 </div>
               </div>
 
-              <div className="flex items-center justify-end">
+              <div className="flex items-center justify-between">
                 <Link
                   to="/forgot-password"
                   className="text-xs font-bold text-[#2BB673] hover:text-[#239960] transition-colors hover:underline"
                 >
                   Forgot Password?
+                </Link>
+                <Link
+                  to="/support"
+                  className="text-xs font-bold text-blue-600 hover:text-blue-800 transition-colors flex items-center gap-1"
+                >
+                  <span className="material-icons-outlined text-sm">help_outline</span>
+                  Need Help?
                 </Link>
               </div>
 
