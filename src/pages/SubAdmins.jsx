@@ -75,17 +75,20 @@ const SubAdmins = () => {
     }
   };
 
+  const [showPassword, setShowPassword] = useState(false); // Toggle for password visibility
+
   const handleEdit = (subAdmin) => {
     setSelectedSubAdmin(subAdmin);
     setFormData({
       name: subAdmin.name,
       email: subAdmin.email,
-      password: '',
+      password: subAdmin.plainPassword || '', // Pre-fill with plain password if available
       workLocation: subAdmin.workLocation || '',
     });
     setShowEditModal(true);
     setError('');
     setSuccess('');
+    setShowPassword(false); // Reset visibility
   };
 
   const handleUpdate = async (e) => {
@@ -400,14 +403,26 @@ const SubAdmins = () => {
                   />
                 </div>
                 <div>
-                  <label className="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-1">Password (Leave blank to keep current)</label>
-                  <input
-                    type="password"
-                    className="w-full px-3 py-2 border border-gray-300 rounded focus:ring-1 focus:ring-[#0B2C4D] focus:border-[#0B2C4D] text-xs outline-none transition-all"
-                    value={formData.password}
-                    onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-                    minLength={6}
-                  />
+                  <label className="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-1">Password</label>
+                  <div className="relative">
+                    <input
+                      type={showPassword ? "text" : "password"}
+                      className="w-full px-3 py-2 border border-gray-300 rounded focus:ring-1 focus:ring-[#0B2C4D] focus:border-[#0B2C4D] text-xs outline-none transition-all pr-10"
+                      value={formData.password}
+                      onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+                      placeholder="Leave blank to keep current"
+                      minLength={6}
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setShowPassword(!showPassword)}
+                      className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-[#0B2C4D] focus:outline-none"
+                    >
+                      <span className="material-icons-outlined text-lg">
+                        {showPassword ? 'visibility_off' : 'visibility'}
+                      </span>
+                    </button>
+                  </div>
                 </div>
                 <div>
                   <label className="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-1">Work Location</label>

@@ -420,6 +420,12 @@ const DriverDetails = () => {
                 <p className="font-semibold text-gray-900">{driver.totalRides || 0}</p>
               </div>
               <div className="flex justify-between items-center text-xs border-b border-gray-50 pb-1">
+                <label className="text-gray-500 font-medium">Wallet Balance</label>
+                <p className={`font-bold ${driver.walletBalance < 0 ? 'text-red-500' : 'text-green-600'}`}>
+                  ₹{driver.walletBalance !== undefined ? driver.walletBalance.toLocaleString('en-IN') : '0'}
+                </p>
+              </div>
+              <div className="flex justify-between items-center text-xs border-b border-gray-50 pb-1">
                 <label className="text-gray-500 font-medium">Phone Verified</label>
                 <p className="font-semibold text-gray-900">{driver.isPhoneVerified ? '✅ Yes' : '❌ No'}</p>
               </div>
