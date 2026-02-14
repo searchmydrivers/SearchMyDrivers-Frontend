@@ -6,9 +6,9 @@ const Footer = () => {
     return (
         <footer className="bg-gray-900 text-white py-12 border-t border-gray-800">
             <div className="container mx-auto px-4 md:px-12 max-w-[1440px]">
-                <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
+                <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8 text-center md:text-left">
                     <div>
-                        <img src="/image.png" alt="SearchMyDriver" className="h-40 w-auto object-contain mb-4 block" />
+                        <img src="/image.png" alt="SearchMyDriver" className="h-40 w-auto object-contain mb-4 block mx-auto md:mx-0" />
                         <p className="text-gray-400">Connecting you with the best drivers in town.</p>
                     </div>
                     <div>
@@ -29,7 +29,7 @@ const Footer = () => {
                     </div>
                     <div>
                         <h4 className="font-bold mb-4">Newsletter</h4>
-                        <div className="flex gap-2">
+                        <div className="flex gap-2 justify-center md:justify-start items-center">
                             <input type="email" placeholder="Enter your email" className="bg-gray-800 border-none rounded px-4 py-2 text-white w-full focus:ring-1 focus:ring-green-500" />
                             <button className="bg-[#00008B] px-4 py-2 rounded text-white font-medium hover:bg-[#0000CD] transition-all shadow-[0_0_30px_rgba(0,0,139,0.8)] hover:shadow-[0_0_40px_rgba(0,0,139,1)] border-2 border-[#00008B] transform hover:-translate-y-0.5">Subscribe</button>
                         </div>

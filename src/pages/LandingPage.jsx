@@ -76,7 +76,17 @@ const LandingPage = () => {
         { title: 'Affordable Rates', icon: 'M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z', description: 'Transparent pricing with no hidden charges. Premium service at competitive rates.' }
     ];
 
-    const cities = landingPageData?.citiesSection?.cities?.length > 0 ? landingPageData.citiesSection.cities.map(c => c.name || c) : ['Mumbai', 'Navi Mumbai', 'Thane', 'Pune'];
+    const cities = landingPageData?.citiesSection?.cities?.length > 0
+        ? landingPageData.citiesSection.cities.map(c => {
+            if (typeof c === 'string') return c;
+            if (c && typeof c === 'object') {
+                if (c.name) return c.name;
+                const keys = Object.keys(c).filter(k => !isNaN(k)).sort((a, b) => Number(a) - Number(b));
+                if (keys.length > 0) return keys.map(k => c[k]).join('');
+            }
+            return '';
+        }).filter(Boolean)
+        : ['Mumbai', 'Navi Mumbai', 'Thane', 'Pune'];
 
     const testimonials = landingPageData?.testimonialsSection?.testimonials?.length > 0 ? landingPageData.testimonialsSection.testimonials : [
         { name: 'Sarah Johnson', role: 'Daily Commuter', content: "The drivers are incredibly professional and punctual. It's completely changed my morning commute for the better!" },
@@ -273,47 +283,47 @@ const LandingPage = () => {
 
 
             {/* Download App Section - User */}
-            <section className="py-12 bg-white overflow-hidden">
+            <section className="py-8 md:py-12 bg-white overflow-hidden">
                 <div className="container mx-auto px-4 md:px-12 max-w-[1440px]">
-                    <div className="flex flex-col lg:flex-row items-center gap-12">
+                    <div className="flex flex-row items-center gap-4 md:gap-12">
                         {/* Text Content */}
-                        <div className="flex-1 space-y-4 animate-fade-in-up">
-                            <div className="inline-block bg-[#ffbd59]/20 px-4 py-1.5 rounded-full text-[#ffbd59] font-bold text-sm mb-2 border border-[#ffbd59]">
+                        <div className="flex-1 space-y-2 md:space-y-4 animate-fade-in-up min-w-0">
+                            <div className="inline-block bg-[#ffbd59]/20 px-3 py-1 md:px-4 md:py-1.5 rounded-full text-[#ffbd59] font-bold text-[10px] md:text-sm mb-1 md:mb-2 border border-[#ffbd59]">
                                 {landingPageData?.userAppSection?.badge || 'For Users'}
                             </div>
-                            <h2 className="text-2xl md:text-4xl font-bold text-gray-900 leading-tight">
-                                {landingPageData?.userAppSection?.heading || 'Download Our'} <span className="relative inline-block">App <span className="absolute bottom-1 left-0 w-full h-3 bg-[#ffbd59]/40 -z-10"></span></span>
+                            <h2 className="text-lg md:text-4xl font-bold text-gray-900 leading-tight">
+                                {landingPageData?.userAppSection?.heading || 'Download Our'} <span className="relative inline-block">App <span className="absolute bottom-1 left-0 w-full h-1.5 md:h-3 bg-[#ffbd59]/40 -z-10"></span></span>
                             </h2>
 
-                            <div className="space-y-4">
+                            <div className="space-y-2 md:space-y-4">
                                 <div>
-                                    <h3 className="text-xl font-bold text-gray-900 mb-3 flex items-center gap-2">
-                                        <span className="w-1.5 h-6 bg-black rounded-full"></span>
+                                    <h3 className="text-sm md:text-xl font-bold text-gray-900 mb-1 md:mb-3 flex items-center gap-1.5 md:gap-2">
+                                        <span className="w-1 h-4 md:w-1.5 md:h-6 bg-black rounded-full"></span>
                                         {landingPageData?.userAppSection?.detailsTitle || 'Details'}
                                     </h3>
-                                    <p className="text-gray-600 leading-relaxed text-sm">
+                                    <p className="text-gray-600 leading-relaxed text-[10px] md:text-sm text-justify md:text-left line-clamp-3 md:line-clamp-none">
                                         {landingPageData?.userAppSection?.detailsText || 'Our Driver Service App is a user-friendly platform that connects you with professional, police-verified drivers. With just a few clicks, you can easily book, schedule, and customize your rides.'}
                                     </p>
                                 </div>
 
                                 <div>
-                                    <h3 className="text-xl font-bold text-gray-900 mb-3 flex items-center gap-2">
-                                        <span className="w-1.5 h-6 bg-black rounded-full"></span>
+                                    <h3 className="text-sm md:text-xl font-bold text-gray-900 mb-1 md:mb-3 flex items-center gap-1.5 md:gap-2">
+                                        <span className="w-1 h-4 md:w-1.5 md:h-6 bg-black rounded-full"></span>
                                         {landingPageData?.userAppSection?.howItWorksTitle || 'How it works'}
                                     </h3>
-                                    <p className="text-gray-600 leading-relaxed text-sm">
+                                    <p className="text-gray-600 leading-relaxed text-[10px] md:text-sm text-justify md:text-left line-clamp-3 md:line-clamp-none">
                                         {landingPageData?.userAppSection?.howItWorksText || 'Our Driver Service App transforms the way you access transportation. Whether you need an immediate ride or want to plan ahead, our app connects you with experienced drivers.'}
                                     </p>
                                 </div>
                             </div>
-                            {/* ... Keeping Buttons same for brevity in this thought trace, but will write them in full ... */}
-                            <div className="flex flex-wrap gap-4 pt-4">
+
+                            <div className="flex flex-wrap gap-2 md:gap-4 pt-2 md:pt-4">
                                 <a href={landingPageData?.userAppSection?.playStoreLink || "https://play.google.com/store/apps/details?id=com.searchmydrivers.user"} target="_blank" rel="noopener noreferrer">
-                                    <button className="bg-white text-black border-2 border-black px-8 py-3 rounded-full flex items-center gap-3 hover:bg-black hover:text-white transition-all shadow-lg hover:shadow-xl transform hover:-translate-y-1 group">
-                                        <svg className="w-8 h-8 transition-transform group-hover:scale-110" viewBox="0 0 24 24" fill="currentColor"><path d="M3.609 1.814L13.792 12 3.61 22.186a2.955 2.955 0 01-.194-2.88L3.61 1.814zM15.636 13.845l3.522 3.522a2.388 2.388 0 00.316.273l-3.838-5.694-1.9 1.9zM15.636 10.155l1.9-1.9 3.838-5.694a2.388 2.388 0 00-.316.273l-3.522 3.522zM19.158 5.758a.955.955 0 010 12.484l2.253-3.376c.49-.736.49-1.706 0-2.433l-2.253-3.376z" /></svg>
+                                    <button className="bg-white text-black border md:border-2 border-black px-3 py-1.5 md:px-8 md:py-3 rounded-full flex items-center gap-1.5 md:gap-3 hover:bg-black hover:text-white transition-all shadow-lg hover:shadow-xl transform hover:-translate-y-1 group">
+                                        <svg className="w-4 h-4 md:w-8 md:h-8 transition-transform group-hover:scale-110" viewBox="0 0 24 24" fill="currentColor"><path d="M3.609 1.814L13.792 12 3.61 22.186a2.955 2.955 0 01-.194-2.88L3.61 1.814zM15.636 13.845l3.522 3.522a2.388 2.388 0 00.316.273l-3.838-5.694-1.9 1.9zM15.636 10.155l1.9-1.9 3.838-5.694a2.388 2.388 0 00-.316.273l-3.522 3.522zM19.158 5.758a.955.955 0 010 12.484l2.253-3.376c.49-.736.49-1.706 0-2.433l-2.253-3.376z" /></svg>
                                         <div className="text-left leading-none">
-                                            <div className="text-[10px] uppercase tracking-wider font-bold mb-1">GET IT ON</div>
-                                            <div className="text-xl font-extrabold">Google Play</div>
+                                            <div className="text-[8px] md:text-[10px] uppercase tracking-wider font-bold mb-0.5 md:mb-1">GET IT ON</div>
+                                            <div className="text-xs md:text-xl font-extrabold">Google Play</div>
                                         </div>
                                     </button>
                                 </a>
@@ -321,11 +331,11 @@ const LandingPage = () => {
                         </div>
 
                         {/* Images - Phone Mockups */}
-                        <div className="flex-1 relative h-[400px] flex items-center justify-center animate-fade-in-up" style={{ animationDelay: '0.2s' }}>
-                            <div className="relative w-full max-w-md h-full">
-                                <img src={userImages[0]} alt="App Screenshot 1" className="absolute top-10 left-0 w-[42%] transform -rotate-12 z-10 hover:z-30 hover:rotate-0 transition-all duration-500 ease-out" />
+                        <div className="flex-1 relative h-[200px] md:h-[400px] flex items-center justify-center animate-fade-in-up" style={{ animationDelay: '0.2s' }}>
+                            <div className="relative w-full max-w-[160px] md:max-w-md h-full">
+                                <img src={userImages[0]} alt="App Screenshot 1" className="absolute top-5 md:top-10 left-0 w-[42%] transform -rotate-12 z-10 hover:z-30 hover:rotate-0 transition-all duration-500 ease-out" />
                                 <img src={userImages[1]} alt="App Screenshot 2" className="absolute top-0 left-1/2 -translate-x-1/2 w-[45%] z-20 hover:scale-105 transition-transform duration-500 ease-out" />
-                                <img src={userImages[2]} alt="App Screenshot 3" className="absolute top-20 right-0 w-[42%] transform rotate-12 z-0 hover:z-30 hover:rotate-0 transition-all duration-500 ease-out" />
+                                <img src={userImages[2]} alt="App Screenshot 3" className="absolute top-10 md:top-20 right-0 w-[42%] transform rotate-12 z-0 hover:z-30 hover:rotate-0 transition-all duration-500 ease-out" />
                             </div>
                         </div>
                     </div>
@@ -333,26 +343,26 @@ const LandingPage = () => {
             </section>
 
             {/* Download App Section - Driver */}
-            <section className="py-12 bg-white overflow-hidden">
+            <section className="py-8 md:py-12 bg-white overflow-hidden">
                 <div className="container mx-auto px-4 md:px-12 max-w-[1440px]">
-                    <div className="flex flex-col lg:flex-row-reverse items-center gap-16">
+                    <div className="flex flex-row-reverse items-center gap-4 md:gap-16">
                         {/* Text Content */}
-                        <div className="flex-1 space-y-4 animate-fade-in-up">
-                            <div className="inline-block bg-[#2BB673]/10 px-4 py-1.5 rounded-full text-[#2BB673] font-bold text-sm mb-2 border border-[#2BB673]/20">
+                        <div className="flex-1 space-y-2 md:space-y-4 animate-fade-in-up min-w-0">
+                            <div className="inline-block bg-[#2BB673]/10 px-3 py-1 md:px-4 md:py-1.5 rounded-full text-[#2BB673] font-bold text-[10px] md:text-sm mb-1 md:mb-2 border border-[#2BB673]/20">
                                 {landingPageData?.driverAppSection?.badge || 'For Drivers'}
                             </div>
-                            <h2 className="text-2xl md:text-3xl font-bold text-gray-900 leading-tight">
-                                {landingPageData?.driverAppSection?.heading || 'Join Our Network'} <span className="text-[#2BB673]">As A Partner</span>
+                            <h2 className="text-lg md:text-3xl font-bold text-gray-900 leading-tight">
+                                {landingPageData?.driverAppSection?.heading || 'Join Our Network'} <span className="text-[#2BB673] block md:inline">As A Partner</span>
                             </h2>
-                            <div className="space-y-4">
-                                <p className="text-gray-600 leading-relaxed text-sm">
+                            <div className="space-y-2 md:space-y-4">
+                                <p className="text-gray-600 leading-relaxed text-[10px] md:text-sm text-justify md:text-left line-clamp-4 md:line-clamp-none">
                                     {landingPageData?.driverAppSection?.description || 'Are you a professional driver looking for consistent earnings and flexible hours? Join SearchMyDriver specifically designed for partners.'}
                                 </p>
-                                <div className="flex flex-wrap gap-4 pt-4">
+                                <div className="flex flex-wrap gap-2 md:gap-4 pt-2 md:pt-4">
                                     <a href={landingPageData?.driverAppSection?.playStoreLink || "https://play.google.com/store/apps/details?id=com.searchmydrivers.partner"} target="_blank" rel="noopener noreferrer">
-                                        <button className="bg-[#2BB673] text-white px-6 py-2.5 rounded-full flex items-center gap-2 hover:bg-[#239960] transition-all shadow-lg hover:shadow-green-500/30 transform hover:-translate-y-1">
-                                            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" /></svg>
-                                            <span className="font-bold text-lg">Download Driver App</span>
+                                        <button className="bg-[#2BB673] text-white px-3 py-1.5 md:px-6 md:py-2.5 rounded-full flex items-center gap-1.5 md:gap-2 hover:bg-[#239960] transition-all shadow-lg hover:shadow-green-500/30 transform hover:-translate-y-1">
+                                            <svg className="w-4 h-4 md:w-6 md:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" /></svg>
+                                            <span className="font-bold text-xs md:text-lg">Download App</span>
                                         </button>
                                     </a>
                                 </div>
@@ -360,12 +370,12 @@ const LandingPage = () => {
                         </div>
 
                         {/* Images - Phone Mockups - Driver */}
-                        <div className="flex-1 relative h-[400px] flex items-center justify-center animate-fade-in-up" style={{ animationDelay: '0.2s' }}>
-                            <div className="relative w-full max-w-md h-[400px] flex justify-center items-center perspective-1000">
+                        <div className="flex-1 relative h-[200px] md:h-[400px] flex items-center justify-center animate-fade-in-up" style={{ animationDelay: '0.2s' }}>
+                            <div className="relative w-full max-w-[160px] md:max-w-md h-[200px] md:h-[400px] flex justify-center items-center perspective-1000">
                                 {driverImages.map((src, index) => {
                                     const diff = (index - activeDriverIndex + driverImages.length) % driverImages.length;
                                     let style = {};
-                                    let className = "absolute w-[45%] transition-all duration-700 ease-in-out";
+                                    let className = "absolute w-[65%] md:w-[45%] transition-all duration-700 ease-in-out";
                                     if (diff === 0) style = { transform: 'translateX(0) scale(1.1) translateZ(50px)', zIndex: 50, opacity: 1 };
                                     else if (diff === 1) style = { transform: 'translateX(40%) scale(0.9) translateZ(-50px) rotateY(-15deg)', zIndex: 40, opacity: 0.8 };
                                     else if (diff === 2) style = { transform: 'translateX(0) scale(0.8) translateZ(-100px)', zIndex: 30, opacity: 0.5 };
