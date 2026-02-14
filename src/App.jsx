@@ -31,6 +31,12 @@ const TicketDetails = lazy(() => import('./pages/TicketDetails'));
 const DriverReferrals = lazy(() => import('./pages/DriverReferrals'));
 const Settings = lazy(() => import('./pages/Settings'));
 const PublicSupport = lazy(() => import('./pages/PublicSupport'));
+const LandingPage = lazy(() => import('./pages/LandingPage'));
+const PrivacyPolicy = lazy(() => import('./pages/PrivacyPolicy'));
+const TermsOfService = lazy(() => import('./pages/TermsOfService'));
+const ContactPage = lazy(() => import('./pages/ContactPage'));
+const ServicesPage = lazy(() => import('./pages/ServicesPage'));
+const LandingPageManager = lazy(() => import('./pages/LandingPageManager'));
 
 
 function App() {
@@ -41,7 +47,12 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/forgot-password" element={<ForgotPassword />} />
           <Route path="/reset-password" element={<ResetPassword />} />
+          <Route path="/reset-password" element={<ResetPassword />} />
           <Route path="/support" element={<PublicSupport />} />
+          <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+          <Route path="/terms-of-service" element={<TermsOfService />} />
+          <Route path="/contact" element={<ContactPage />} />
+          <Route path="/services" element={<ServicesPage />} />
           <Route
             path="/dashboard"
             element={
@@ -252,7 +263,15 @@ function App() {
               </ProtectedRoute>
             }
           />
-          <Route path="/" element={<Navigate to="/dashboard" replace />} />
+          <Route
+            path="/landing-page-manager"
+            element={
+              <ProtectedRoute>
+                <LandingPageManager />
+              </ProtectedRoute>
+            }
+          />
+          <Route path="/" element={<LandingPage />} />
         </Routes>
       </Suspense>
     </Router>

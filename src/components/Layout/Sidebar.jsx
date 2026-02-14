@@ -42,6 +42,7 @@ const Sidebar = ({ isOpen, onClose, collapsed, toggleSidebar }) => {
       { path: '/zones', label: 'Service Zones', icon: 'map', section: 'management' },
       { path: '/content', label: 'Content', icon: 'description', section: 'management' },
       { path: '/banners', label: 'Banners', icon: 'image', section: 'management' },
+      { path: '/landing-page-manager', label: 'Landing Page', icon: 'web', section: 'management' },
     ]),
 
     { path: '/incomplete-registrations', label: 'Incomplete Reg.', icon: 'pending_actions', section: 'management' },

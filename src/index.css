@@ -187,6 +187,7 @@
       transform: translateX(0);
       opacity: 1;
     }
+
     to {
       transform: translateX(-100%);
       opacity: 0;
@@ -198,6 +199,7 @@
       transform: translateX(100%);
       opacity: 0;
     }
+
     to {
       transform: translateX(0);
       opacity: 1;
@@ -297,4 +299,35 @@
   direction: ltr;
   -webkit-font-feature-settings: 'liga';
   -webkit-font-smoothing: antialiased;
+
+}
+
+/* Utility to hide scrollbar */
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  /* IE and Edge */
+  scrollbar-width: none;
+
+  /* Firefox */
+}
+
+/* Car Drive In Animation */
+@keyframes driveInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-50%) scale(0.9);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(0) scale(1);
+  }
+}
+
+.animate-drive-in-left {
+  animation: driveInLeft 3s cubic-bezier(0.22, 1, 0.36, 1) forwards;
 }
