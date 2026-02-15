@@ -292,7 +292,9 @@ const LandingPage = () => {
                                 {landingPageData?.userAppSection?.badge || 'For Users'}
                             </div>
                             <h2 className="text-lg md:text-4xl font-bold text-gray-900 leading-tight">
-                                {landingPageData?.userAppSection?.heading || 'Download Our'} <span className="relative inline-block">App <span className="absolute bottom-1 left-0 w-full h-1.5 md:h-3 bg-[#ffbd59]/40 -z-10"></span></span>
+                                {landingPageData?.userAppSection?.heading || (
+                                    <>Download Our <span className="relative inline-block">App <span className="absolute bottom-1 left-0 w-full h-1.5 md:h-3 bg-[#ffbd59]/40 -z-10"></span></span></>
+                                )}
                             </h2>
 
                             <div className="space-y-2 md:space-y-4">
@@ -352,7 +354,9 @@ const LandingPage = () => {
                                 {landingPageData?.driverAppSection?.badge || 'For Drivers'}
                             </div>
                             <h2 className="text-lg md:text-3xl font-bold text-gray-900 leading-tight">
-                                {landingPageData?.driverAppSection?.heading || 'Join Our Network'} <span className="text-[#2BB673] block md:inline">As A Partner</span>
+                                {landingPageData?.driverAppSection?.heading || (
+                                    <>Join Our Network <span className="text-[#2BB673] block md:inline">As A Partner</span></>
+                                )}
                             </h2>
                             <div className="space-y-2 md:space-y-4">
                                 <p className="text-gray-600 leading-relaxed text-[10px] md:text-sm text-justify md:text-left line-clamp-4 md:line-clamp-none">

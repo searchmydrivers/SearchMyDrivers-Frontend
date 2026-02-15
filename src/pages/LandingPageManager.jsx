@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import api from '../config/api';
 import Layout from '../components/Layout/Layout';
 
 const LandingPageManager = () => {
@@ -9,8 +9,6 @@ const LandingPageManager = () => {
     const [saving, setSaving] = useState(false);
     const [message, setMessage] = useState({ type: '', text: '' });
 
-    const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
-
     // Fetch landing page data
     useEffect(() => {
         fetchLandingPageData();
@@ -19,7 +17,7 @@ const LandingPageManager = () => {
     const fetchLandingPageData = async () => {
         try {
             setLoading(true);
-            const response = await axios.get(`${API_URL}/landing-page`);
+            const response = await api.get('/landing-page');
             if (response.data.success) {
                 setLandingPageData(response.data.data);
             }
@@ -39,15 +37,9 @@ const LandingPageManager = () => {
     const handleSave = async (section, data) => {
         setSaving(true);
         try {
-            const token = localStorage.getItem('token');
-            const response = await axios.put(
-                `${API_URL}/landing-page/${section}`,
-                data,
-                {
-                    headers: {
-                        'Authorization': `Bearer ${token}`
-                    }
-                }
+            const response = await api.put(
+                `/landing-page/${section}`,
+                data
             );
 
             if (response.data.success) {
@@ -1269,7 +1261,7 @@ const LegalContentEditor = ({ type, title, defaultTitle }) => {
     const fetchContent = async () => {
         try {
             setLoading(true);
-            const response = await axios.get(`${API_URL}/content/${type}?appType=user`);
+            const response = await api.get(`/content/${type}?appType=user`);
             if (response.data.success) {
                 setContentData({
                     title: response.data.data.content.title,
@@ -1295,19 +1287,13 @@ const LegalContentEditor = ({ type, title, defaultTitle }) => {
         e.preventDefault();
         setSaving(true);
         try {
-            const token = localStorage.getItem('token');
-            const response = await axios.post(
-                `${API_URL}/content`,
+            const response = await api.post(
+                '/content',
                 {
                     type: type,
                     appType: 'user',
                     title: contentData.title,
                     content: contentData.content
-                },
-                {
-                    headers: {
-                        'Authorization': `Bearer ${token}`
-                    }
                 }
             );
 
@@ -1409,7 +1395,7 @@ const ServicesPageEditor = () => {
     const fetchContent = async () => {
         try {
             setLoading(true);
-            const response = await axios.get(`${API_URL}/content/services-page?appType=user`);
+            const response = await api.get('/content/services-page?appType=user');
             if (response.data.success) {
                 // Parse JSON content if it's a string, otherwise use defaults
                 let parsedContent = {};
@@ -1431,16 +1417,14 @@ const ServicesPageEditor = () => {
         e.preventDefault();
         setSaving(true);
         try {
-            const token = localStorage.getItem('token');
-            const response = await axios.post(
-                `${API_URL}/content`,
+            const response = await api.post(
+                '/content',
                 {
                     type: 'services-page',
                     appType: 'user',
                     title: 'Services Page Content', // Fixed title for internal use
                     content: JSON.stringify(formData) // Store complex object as string
-                },
-                { headers: { 'Authorization': `Bearer ${token}` } }
+                }
             );
 
             if (response.data.success) {
@@ -1622,7 +1606,7 @@ const ContactPageEditor = () => {
     const fetchContent = async () => {
         try {
             setLoading(true);
-            const response = await axios.get(`${API_URL}/content/contact-page?appType=user`);
+            const response = await api.get('/content/contact-page?appType=user');
             if (response.data.success) {
                 let parsedContent = {};
                 try {
@@ -1641,16 +1625,14 @@ const ContactPageEditor = () => {
         e.preventDefault();
         setSaving(true);
         try {
-            const token = localStorage.getItem('token');
-            const response = await axios.post(
-                `${API_URL}/content`,
+            const response = await api.post(
+                '/content',
                 {
                     type: 'contact-page',
                     appType: 'user',
                     title: 'Contact Page Content',
                     content: JSON.stringify(formData)
-                },
-                { headers: { 'Authorization': `Bearer ${token}` } }
+                }
             );
 
             if (response.data.success) {
@@ -1815,10 +1797,8 @@ const ContactPageEditor = () => {
     );
 };
 
-// Image Uploader Component
 const ImageUploader = ({ value, onChange, placeholder }) => {
     const [uploading, setUploading] = useState(false);
-    const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
 
     const handleFileChange = async (e) => {
         const file = e.target.files[0];
@@ -1829,8 +1809,10 @@ const ImageUploader = ({ value, onChange, placeholder }) => {
         formData.append('image', file);
 
         try {
-            const response = await axios.post(`${API_URL}/upload/image`, formData, {
-                headers: { 'Content-Type': 'multipart/form-data' }
+            const response = await api.post('/upload/image', formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data'
+                }
             });
 
             if (response.data.success) {
@@ -1845,16 +1827,29 @@ const ImageUploader = ({ value, onChange, placeholder }) => {
     };
 
     return (
-        <div className="flex gap-2 items-center w-full">
+        <div className="flex gap-3 items-center w-full">
+            {value && (
+                <div className="w-12 h-12 rounded border bg-gray-50 flex-shrink-0 overflow-hidden">
+                    <img
+                        src={value}
+                        alt="Preview"
+                        className="w-full h-full object-cover"
+                        onError={(e) => {
+                            e.target.onerror = null;
+                            e.target.src = 'https://via.placeholder.com/150?text=Error';
+                        }}
+                    />
+                </div>
+            )}
             <input
                 type="text"
                 value={value}
                 onChange={(e) => onChange(e.target.value)}
                 placeholder={placeholder || "Image URL"}
-                className="flex-1 px-3 py-2 border border-gray-300 rounded-lg text-sm"
+                className="flex-1 px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-[#2BB673] focus:border-transparent"
             />
-            <label className={`cursor-pointer bg-gray-100 hover:bg-gray-200 px-3 py-2 rounded-lg border border-gray-300 flex items-center justify-center transition-colors ${uploading ? 'opacity-50 cursor-not-allowed' : ''}`}>
-                <span className="text-gray-600">Upload</span>
+            <label className={`cursor-pointer bg-[#2BB673] text-white hover:bg-[#239960] px-4 py-2 rounded-lg font-medium flex items-center justify-center transition-colors ${uploading ? 'opacity-50 cursor-not-allowed' : ''}`}>
+                <span>{uploading ? '...' : 'Upload'}</span>
                 <input type="file" className="hidden" accept="image/*" onChange={handleFileChange} disabled={uploading} />
             </label>
         </div>

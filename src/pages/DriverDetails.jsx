@@ -438,6 +438,44 @@ const DriverDetails = () => {
 
           <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-4 animate-fade-in" style={{ animationDelay: '250ms' }}>
             <h2 className="text-sm font-bold text-gray-900 mb-4 flex items-center border-b border-gray-100 pb-2">
+              <span className="material-icons-outlined text-lg mr-2 text-indigo-600">account_balance</span>
+              Bank Account Details
+            </h2>
+            {driver.bankDetails ? (
+              <div className="space-y-2.5">
+                <div className="flex justify-between items-center text-xs border-b border-gray-50 pb-1">
+                  <label className="text-gray-500 font-medium">Bank Name</label>
+                  <p className="font-semibold text-gray-900">{driver.bankDetails.bankName}</p>
+                </div>
+                <div className="flex justify-between items-center text-xs border-b border-gray-50 pb-1">
+                  <label className="text-gray-500 font-medium">A/C Holder</label>
+                  <p className="font-semibold text-gray-900">{driver.bankDetails.accountHolderName}</p>
+                </div>
+                <div className="flex justify-between items-center text-xs border-b border-gray-50 pb-1">
+                  <label className="text-gray-500 font-medium">Account Number</label>
+                  <p className="font-semibold text-gray-900">{driver.bankDetails.accountNumber}</p>
+                </div>
+                <div className="flex justify-between items-center text-xs border-b border-gray-50 pb-1">
+                  <label className="text-gray-500 font-medium">IFSC Code</label>
+                  <p className="font-semibold text-gray-900">{driver.bankDetails.ifscCode}</p>
+                </div>
+                {driver.bankDetails.upiId && (
+                  <div className="flex justify-between items-center text-xs">
+                    <label className="text-gray-500 font-medium">UPI ID</label>
+                    <p className="font-semibold text-gray-900">{driver.bankDetails.upiId}</p>
+                  </div>
+                )}
+              </div>
+            ) : (
+              <div className="flex flex-col items-center justify-center py-6 text-gray-400 italic">
+                <span className="material-icons-outlined text-3xl mb-1 text-gray-200">account_balance_wallet</span>
+                <p className="text-xs">No bank details added yet</p>
+              </div>
+            )}
+          </div>
+
+          <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-4 animate-fade-in" style={{ animationDelay: '260ms' }}>
+            <h2 className="text-sm font-bold text-gray-900 mb-4 flex items-center border-b border-gray-100 pb-2">
               <span className="material-icons-outlined text-lg mr-2 text-[#2BB673]">description</span>
               Document Numbers
             </h2>
@@ -533,9 +571,9 @@ const DriverDetails = () => {
 
             </div>
           </div>
-        </div>
-      </div>
-    </Layout>
+        </div >
+      </div >
+    </Layout >
   );
 };
 
