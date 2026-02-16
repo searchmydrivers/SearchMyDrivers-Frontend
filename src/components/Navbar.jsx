@@ -16,8 +16,8 @@ const Navbar = () => {
     const isHomePage = location.pathname === '/';
     const isServicesPage = location.pathname === '/services';
 
-    const getLinkPath = (hash) => {
-        return isHomePage ? hash : `/${hash}`;
+    const getLinkPath = (sectionId) => {
+        return isHomePage ? `#${sectionId}` : `/#${sectionId}`;
     };
 
     return (
@@ -35,9 +35,9 @@ const Navbar = () => {
                 </div>
 
                 <div className="hidden md:flex items-center gap-8">
-                    <a href={getLinkPath('#features')} className="text-white/90 hover:text-[#00008B] hover:drop-shadow-[0_0_10px_rgba(0,0,139,0.8)] transition-colors font-medium">Features</a>
+                    <Link to={getLinkPath('features')} className="text-white/90 hover:text-[#00008B] hover:drop-shadow-[0_0_10px_rgba(0,0,139,0.8)] transition-colors font-medium">Features</Link>
                     <Link to="/services" className="text-white/90 hover:text-[#00008B] hover:drop-shadow-[0_0_10px_rgba(0,0,139,0.8)] transition-colors font-medium">Services</Link>
-                    <a href={getLinkPath('#testimonials')} className="text-white/90 hover:text-[#00008B] hover:drop-shadow-[0_0_10px_rgba(0,0,139,0.8)] transition-colors font-medium">Testimonials</a>
+                    <Link to={getLinkPath('testimonials')} className="text-white/90 hover:text-[#00008B] hover:drop-shadow-[0_0_10px_rgba(0,0,139,0.8)] transition-colors font-medium">Testimonials</Link>
                     <Link to="/contact" className="text-white/90 hover:text-[#00008B] hover:drop-shadow-[0_0_10px_rgba(0,0,139,0.8)] transition-colors font-medium">Contact Us</Link>
                     <Link to="/login" className="bg-white text-[#239960] px-6 py-2.5 rounded-full font-bold hover:bg-gray-100 transition-colors shadow-md">
                         Login
@@ -60,8 +60,8 @@ const Navbar = () => {
             {isOpen && (
                 <div className="absolute top-full left-0 right-0 bg-[#239960] p-4 md:hidden shadow-lg border-t border-white/10">
                     <div className="flex flex-col gap-4">
-                        <a href={getLinkPath('#features')} className="text-white font-medium" onClick={() => setIsOpen(false)}>Features</a>
-                        <a href={getLinkPath('#testimonials')} className="text-white font-medium" onClick={() => setIsOpen(false)}>Testimonials</a>
+                        <Link to={getLinkPath('features')} className="text-white font-medium" onClick={() => setIsOpen(false)}>Features</Link>
+                        <Link to={getLinkPath('testimonials')} className="text-white font-medium" onClick={() => setIsOpen(false)}>Testimonials</Link>
                         <Link to="/contact" className="text-white font-medium" onClick={() => setIsOpen(false)}>Contact Us</Link>
                         <Link to="/login" className="text-white font-bold bg-white/20 p-2 rounded text-center" onClick={() => setIsOpen(false)}>Login</Link>
                     </div>

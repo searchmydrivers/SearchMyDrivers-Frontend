@@ -55,6 +55,7 @@ const LandingPageManager = () => {
     };
 
     const sections = [
+        { id: 'hero-content', name: 'Hero Content', icon: '🏠' },
         { id: 'stats', name: 'Stats Section', icon: '📊' },
         { id: 'hero-banners', name: 'Hero Banners', icon: '🖼️' },
         { id: 'faq-banners', name: 'FAQ Banners', icon: '🎡' },
@@ -63,6 +64,7 @@ const LandingPageManager = () => {
         { id: 'userApp', name: 'User App', icon: '📱' },
         { id: 'driverApp', name: 'Driver App', icon: '🚗' },
         { id: 'cities', name: 'Cities', icon: '🏙️' },
+        { id: 'socialLinks', name: 'Social Links', icon: '🔗' },
         { id: 'faq', name: 'FAQ', icon: '❓' },
         { id: 'services', name: 'Services Page', icon: '🛠️' },
         { id: 'contact', name: 'Contact Page', icon: '📞' },
@@ -141,6 +143,13 @@ const LandingPageManager = () => {
 
                         {/* Main Content */}
                         <div className="lg:col-span-3">
+                            {activeSection === 'hero-content' && (
+                                <HeroSectionEditor
+                                    data={landingPageData?.hero}
+                                    onSave={(data) => handleSave('hero', data)}
+                                    saving={saving}
+                                />
+                            )}
 
                             {activeSection === 'stats' && (
                                 <StatsSectionEditor
@@ -183,6 +192,13 @@ const LandingPageManager = () => {
                                 <CitiesSectionEditor
                                     data={landingPageData?.citiesSection}
                                     onSave={(data) => handleSave('cities-section', data)}
+                                    saving={saving}
+                                />
+                            )}
+                            {activeSection === 'socialLinks' && (
+                                <SocialLinksEditor
+                                    data={landingPageData?.socialLinks}
+                                    onSave={(data) => handleSave('social-links', data)}
                                     saving={saving}
                                 />
                             )}
@@ -230,16 +246,30 @@ const LandingPageManager = () => {
 // Hero Section Editor Component
 const HeroSectionEditor = ({ data, onSave, saving }) => {
     const [formData, setFormData] = useState({
-        title1: '',
-        title2: '',
-        description: '',
-        buttonText: '',
-        carImage: ''
+        title: '',
+        subtitle: '',
+        ctaText: '', // User App Button Text
+        userAppUrl: '', // User App URL (playStoreLink in schema used for User App usually, but we added userAppUrl specific field too?)
+        // Let's check schema again: playStoreLink, driverCtaText, driverAppUrl, userAppUrl. 
+        // Previously I added userAppUrl. I will use that.
+        appStoreLink: '',
+        driverCtaText: '',
+        driverAppUrl: '',
+        image: ''
     });
 
     useEffect(() => {
         if (data) {
-            setFormData(data);
+            setFormData({
+                title: data.title || '',
+                subtitle: data.subtitle || '', // map description -> subtitle
+                ctaText: data.ctaText || '',
+                userAppUrl: data.userAppUrl || data.playStoreLink || '', // fallback
+                appStoreLink: data.appStoreLink || '',
+                driverCtaText: data.driverCtaText || '',
+                driverAppUrl: data.driverAppUrl || '',
+                image: data.image || ''
+            });
         }
     }, [data]);
 
@@ -249,90 +279,113 @@ const HeroSectionEditor = ({ data, onSave, saving }) => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        onSave(formData);
+        // create data matching schema
+        const dataToSave = {
+            ...formData,
+            playStoreLink: formData.userAppUrl // sync legacy field if needed
+        };
+        onSave(dataToSave);
     };
 
     return (
         <div className="bg-white rounded-lg shadow-sm p-6">
-            <h2 className="text-xl font-bold text-gray-900 mb-6">Hero Section</h2>
+            <h2 className="text-xl font-bold text-gray-900 mb-6">Hero Section Content</h2>
             <form onSubmit={handleSubmit} className="space-y-6">
                 <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">Title Line 1</label>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Main Title</label>
                     <input
                         type="text"
-                        name="title1"
-                        value={formData.title1}
+                        name="title"
+                        value={formData.title}
                         onChange={handleChange}
                         className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#2BB673] focus:border-transparent"
-                        placeholder="e.g., Your Trusted"
+                        placeholder="e.g., Your Trusted Driving Partner"
                     />
+                    <p className="text-xs text-gray-500 mt-1">First 2 words are white, rest are green in design.</p>
                 </div>
 
                 <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">Title Line 2 (Highlighted)</label>
-                    <input
-                        type="text"
-                        name="title2"
-                        value={formData.title2}
-                        onChange={handleChange}
-                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#2BB673] focus:border-transparent"
-                        placeholder="e.g., Driving Partner"
-                    />
-                </div>
-
-                <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">Description</label>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Subtitle</label>
                     <textarea
-                        name="description"
-                        value={formData.description}
+                        name="subtitle"
+                        value={formData.subtitle}
                         onChange={handleChange}
-                        rows="4"
+                        rows="3"
                         className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#2BB673] focus:border-transparent resize-none"
-                        placeholder="Enter description..."
                     />
                 </div>
 
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">User App Button Text</label>
+                        <input
+                            type="text"
+                            name="ctaText"
+                            value={formData.ctaText}
+                            onChange={handleChange}
+                            className="w-full px-4 py-2 border border-gray-300 rounded-lg"
+                        />
+                    </div>
+                    <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">User App Link (Play Store)</label>
+                        <input
+                            type="text"
+                            name="userAppUrl"
+                            value={formData.userAppUrl}
+                            onChange={handleChange}
+                            className="w-full px-4 py-2 border border-gray-300 rounded-lg"
+                        />
+                    </div>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">Driver App Button Text</label>
+                        <input
+                            type="text"
+                            name="driverCtaText"
+                            value={formData.driverCtaText}
+                            onChange={handleChange}
+                            className="w-full px-4 py-2 border border-gray-300 rounded-lg"
+                            placeholder="e.g. Join as Driver"
+                        />
+                    </div>
+                    <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">Driver App Link</label>
+                        <input
+                            type="text"
+                            name="driverAppUrl"
+                            value={formData.driverAppUrl}
+                            onChange={handleChange}
+                            className="w-full px-4 py-2 border border-gray-300 rounded-lg"
+                        />
+                    </div>
+                </div>
+
                 <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">Button Text</label>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">App Store Link (iOS)</label>
                     <input
                         type="text"
-                        name="buttonText"
-                        value={formData.buttonText}
+                        name="appStoreLink"
+                        value={formData.appStoreLink}
                         onChange={handleChange}
-                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#2BB673] focus:border-transparent"
-                        placeholder="e.g., Get Started"
+                        className="w-full px-4 py-2 border border-gray-300 rounded-lg"
                     />
                 </div>
 
                 <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">Car Image URL</label>
-                    <input
-                        type="text"
-                        name="carImage"
-                        value={formData.carImage}
-                        onChange={handleChange}
-                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#2BB673] focus:border-transparent"
-                        placeholder="Image URL or path"
+                    <ImageUploader
+                        value={formData.image}
+                        onChange={(url) => setFormData({ ...formData, image: url })}
+                        placeholder="Image URL"
                     />
-                </div>
-
-                {/* Preview */}
-                <div className="bg-gradient-to-br from-[#2BB673] to-[#239960] rounded-lg p-6">
-                    <h3 className="text-white text-xs font-semibold mb-3 uppercase">Preview</h3>
-                    <h1 className="text-3xl font-extrabold text-white leading-tight mb-3">
-                        <span className="block">{formData.title1 || 'Title Line 1'}</span>
-                        <span className="block text-[#dcfce7]">{formData.title2 || 'Title Line 2'}</span>
-                    </h1>
-                    <p className="text-white/90 mb-4">{formData.description || 'Description...'}</p>
-                    <button type="button" className="bg-white text-[#239960] px-6 py-2 rounded-full font-bold text-sm">
-                        {formData.buttonText || 'Button Text'}
-                    </button>
                 </div>
 
                 <button
                     type="submit"
                     disabled={saving}
-                    className="w-full bg-[#2BB673] text-white py-3 rounded-lg font-bold hover:bg-[#239960] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="w-full bg-[#2BB673] text-white py-3 rounded-lg font-bold hover:bg-[#239960] transition-colors disabled:opacity-50"
                 >
                     {saving ? 'Saving...' : 'Save Changes'}
                 </button>
@@ -2126,6 +2179,80 @@ const ImageUploader = ({ value, onChange, placeholder }) => {
                 <span>{uploading ? '...' : 'Upload'}</span>
                 <input type="file" className="hidden" accept="image/*" onChange={handleFileChange} disabled={uploading} />
             </label>
+        </div>
+    );
+};
+
+
+
+// Social Links Editor
+const SocialLinksEditor = ({ data, onSave, saving }) => {
+    const [formData, setFormData] = useState({
+        facebook: '',
+        instagram: '',
+        youtube: '',
+        twitter: '',
+        linkedin: ''
+    });
+
+    useEffect(() => {
+        if (data) {
+            setFormData(data);
+        }
+    }, [data]);
+
+    const handleChange = (e) => {
+        setFormData({ ...formData, [e.target.name]: e.target.value });
+    };
+
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        onSave(formData);
+    };
+
+    const socialPlatforms = [
+        { name: 'facebook', label: 'Facebook', placeholder: 'https://facebook.com/your-page' },
+        { name: 'instagram', label: 'Instagram', placeholder: 'https://instagram.com/your-handle' },
+        { name: 'youtube', label: 'YouTube', placeholder: 'https://youtube.com/c/your-channel' },
+        { name: 'twitter', label: 'Twitter (X)', placeholder: 'https://x.com/your-handle' },
+        { name: 'linkedin', label: 'LinkedIn', placeholder: 'https://linkedin.com/company/your-company' }
+    ];
+
+    return (
+        <div className="bg-white rounded-lg shadow-sm p-6">
+            <h2 className="text-xl font-bold text-gray-900 mb-6">Social Media Links</h2>
+            <form onSubmit={handleSubmit} className="space-y-6">
+                <div className="space-y-4">
+                    {socialPlatforms.map((platform) => (
+                        <div key={platform.name}>
+                            <label className="block text-sm font-medium text-gray-700 mb-1 capitalize">
+                                {platform.label}
+                            </label>
+                            <div className="relative">
+                                <input
+                                    type="url"
+                                    name={platform.name}
+                                    value={formData[platform.name] || ''}
+                                    onChange={handleChange}
+                                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#2BB673] focus:border-transparent pl-10"
+                                    placeholder={platform.placeholder}
+                                />
+                                <div className="absolute left-3 top-2.5 text-gray-400">
+                                    <span className="material-icons-outlined text-lg">link</span>
+                                </div>
+                            </div>
+                        </div>
+                    ))}
+                </div>
+
+                <button
+                    type="submit"
+                    disabled={saving}
+                    className="w-full bg-[#2BB673] text-white py-3 rounded-lg font-bold hover:bg-[#239960] transition-colors disabled:opacity-50"
+                >
+                    {saving ? 'Saving...' : 'Save Changes'}
+                </button>
+            </form>
         </div>
     );
 };

@@ -2,6 +2,7 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-d
 import { Suspense, lazy } from 'react';
 import ProtectedRoute from './components/ProtectedRoute';
 import Loader from './components/common/Loader';
+import ScrollToTop from './components/ScrollToTop';
 
 // Lazy load pages
 const Login = lazy(() => import('./pages/Login'));
@@ -43,6 +44,7 @@ const ContactInquiries = lazy(() => import('./pages/ContactInquiries'));
 function App() {
   return (
     <Router>
+      <ScrollToTop />
       <Suspense fallback={<Loader />}>
         <Routes>
           <Route path="/login" element={<Login />} />
