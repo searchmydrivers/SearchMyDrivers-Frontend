@@ -1,0 +1,29 @@
+User-agent: *
+Allow: /
+Allow: /contact
+Allow: /services
+Allow: /support
+Allow: /privacy-policy
+Allow: /terms-of-service
+
+# Private routes
+Disallow: /login
+Disallow: /forgot-password
+Disallow: /reset-password
+Disallow: /dashboard
+Disallow: /users
+Disallow: /drivers
+Disallow: /trip-bookings
+Disallow: /transactions
+Disallow: /content
+Disallow: /hiring-requests
+Disallow: /settings
+Disallow: /notifications
+Disallow: /fare
+Disallow: /subadmins
+Disallow: /zones
+Disallow: /tickets
+Disallow: /landing-page-manager
+Disallow: /contact-inquiries
+
+Sitemap: https://searchmydrivers.com/sitemap.xml

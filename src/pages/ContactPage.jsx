@@ -1,16 +1,26 @@
 import React, { useState, useEffect } from 'react';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
-import axios from 'axios';
+import api from '../config/api';
 
 const ContactPage = () => {
     const [content, setContent] = useState(null);
-    const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+    const [formData, setFormData] = useState({
+        firstName: '',
+        lastName: '',
+        email: '',
+        phone: '',
+        role: '',
+        city: '',
+        message: '',
+    });
+    const [submitting, setSubmitting] = useState(false);
+    const [submitResult, setSubmitResult] = useState(null);
 
     useEffect(() => {
         const fetchContent = async () => {
             try {
-                const response = await axios.get(`${API_URL}/content/contact-page?appType=user`);
+                const response = await api.get('/content/contact-page?appType=user');
                 if (response.data.success && response.data.data) {
                     try {
                         const parsed = JSON.parse(response.data.data.content.content);
@@ -21,6 +31,30 @@ const ContactPage = () => {
         };
         fetchContent();
     }, []);
+
+    const handleChange = (e) => {
+        setFormData({ ...formData, [e.target.name]: e.target.value });
+    };
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        setSubmitting(true);
+        setSubmitResult(null);
+        try {
+            const response = await api.post('/contact', formData);
+            if (response.data.success) {
+                setSubmitResult({ type: 'success', message: response.data.message });
+                setFormData({ firstName: '', lastName: '', email: '', phone: '', role: '', city: '', message: '' });
+            }
+        } catch (error) {
+            setSubmitResult({
+                type: 'error',
+                message: error.response?.data?.message || 'Something went wrong. Please try again.',
+            });
+        } finally {
+            setSubmitting(false);
+        }
+    };
 
     const defaultData = {
         hero: {
@@ -102,30 +136,59 @@ const ContactPage = () => {
 
                         {/* Contact Form */}
                         <div className="bg-white rounded-2xl p-8 shadow-xl border border-gray-100 animate-fade-in-up" style={{ animationDelay: '0.2s' }}>
-                            <form className="space-y-6">
+                            {submitResult && (
+                                <div className={`mb-6 p-4 rounded-lg text-sm font-medium ${submitResult.type === 'success' ? 'bg-green-50 text-green-700 border border-green-200' : 'bg-red-50 text-red-700 border border-red-200'}`}>
+                                    {submitResult.message}
+                                </div>
+                            )}
+                            <form className="space-y-6" onSubmit={handleSubmit}>
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                     <div>
                                         <label className="block text-sm font-medium text-gray-700 mb-2">First Name</label>
-                                        <input type="text" className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-[#2BB673] focus:border-transparent outline-none transition-all" placeholder="John" />
+                                        <input type="text" name="firstName" value={formData.firstName} onChange={handleChange} required className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-[#2BB673] focus:border-transparent outline-none transition-all" placeholder="John" />
                                     </div>
                                     <div>
                                         <label className="block text-sm font-medium text-gray-700 mb-2">Last Name</label>
-                                        <input type="text" className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-[#2BB673] focus:border-transparent outline-none transition-all" placeholder="Doe" />
+                                        <input type="text" name="lastName" value={formData.lastName} onChange={handleChange} required className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-[#2BB673] focus:border-transparent outline-none transition-all" placeholder="Doe" />
                                     </div>
                                 </div>
 
                                 <div>
                                     <label className="block text-sm font-medium text-gray-700 mb-2">Email Address</label>
-                                    <input type="email" className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-[#2BB673] focus:border-transparent outline-none transition-all" placeholder="john@example.com" />
+                                    <input type="email" name="email" value={formData.email} onChange={handleChange} required className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-[#2BB673] focus:border-transparent outline-none transition-all" placeholder="john@example.com" />
+                                </div>
+
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                    <div>
+                                        <label className="block text-sm font-medium text-gray-700 mb-2">Phone Number</label>
+                                        <input type="tel" name="phone" value={formData.phone} onChange={handleChange} required className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-[#2BB673] focus:border-transparent outline-none transition-all" placeholder="+91 12345 67890" />
+                                    </div>
+                                    <div>
+                                        <label className="block text-sm font-medium text-gray-700 mb-2">I am a</label>
+                                        <select name="role" value={formData.role} onChange={handleChange} required className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-[#2BB673] focus:border-transparent outline-none transition-all bg-white text-gray-700 cursor-pointer">
+                                            <option value="" disabled>Select your role</option>
+                                            <option value="user">User</option>
+                                            <option value="partner">Partner (Driver)</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-700 mb-2">City</label>
+                                    <input type="text" name="city" value={formData.city} onChange={handleChange} required className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-[#2BB673] focus:border-transparent outline-none transition-all" placeholder="Enter your city" />
                                 </div>
 
                                 <div>
                                     <label className="block text-sm font-medium text-gray-700 mb-2">Message</label>
-                                    <textarea rows="4" className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-[#2BB673] focus:border-transparent outline-none transition-all resize-none" placeholder="How can we help you?"></textarea>
+                                    <textarea name="message" value={formData.message} onChange={handleChange} required rows="4" className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-[#2BB673] focus:border-transparent outline-none transition-all resize-none" placeholder="How can we help you?"></textarea>
                                 </div>
 
-                                <button type="button" className="w-full bg-[#2BB673] text-white font-bold py-4 rounded-lg hover:bg-[#239960] transition-colors shadow-lg hover:shadow-xl transform hover:-translate-y-1">
-                                    Send Message
+                                <button
+                                    type="submit"
+                                    disabled={submitting}
+                                    className="w-full bg-[#2BB673] text-white font-bold py-4 rounded-lg hover:bg-[#239960] transition-colors shadow-lg hover:shadow-xl transform hover:-translate-y-1 disabled:opacity-60 disabled:cursor-not-allowed disabled:hover:translate-y-0"
+                                >
+                                    {submitting ? 'Sending...' : 'Send Message'}
                                 </button>
                             </form>
                         </div>

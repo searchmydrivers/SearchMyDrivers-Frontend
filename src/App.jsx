@@ -37,6 +37,7 @@ const TermsOfService = lazy(() => import('./pages/TermsOfService'));
 const ContactPage = lazy(() => import('./pages/ContactPage'));
 const ServicesPage = lazy(() => import('./pages/ServicesPage'));
 const LandingPageManager = lazy(() => import('./pages/LandingPageManager'));
+const ContactInquiries = lazy(() => import('./pages/ContactInquiries'));
 
 
 function App() {
@@ -268,6 +269,14 @@ function App() {
             element={
               <ProtectedRoute>
                 <LandingPageManager />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/contact-inquiries"
+            element={
+              <ProtectedRoute>
+                <ContactInquiries />
               </ProtectedRoute>
             }
           />

@@ -1,6 +1,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import { Helmet } from 'react-helmet-async';
 import api from '../config/api';
 
 import Navbar from '../components/Navbar';
@@ -14,26 +15,67 @@ const LandingPage = () => {
     const [isExpanded, setIsExpanded] = useState(false);
     const [openFaq, setOpenFaq] = useState(null);
     const [landingPageData, setLandingPageData] = useState(null);
+    const [heroBanners, setHeroBanners] = useState([]);
+    const [faqBanners, setFaqBanners] = useState([]);
+    const [testimonials, setTestimonials] = useState([]);
+    const [activeBannerIndex, setActiveBannerIndex] = useState(0);
+    const [activeBannerIndex2, setActiveBannerIndex2] = useState(0);
     const [loading, setLoading] = useState(true);
+    const [submittingReview, setSubmittingReview] = useState(false);
+    const [rating, setRating] = useState(5);
 
     // const API_URL = import.meta.env.VITE_API_URL || 'https://api.searchmydrivers.com/api';
 
-    // Fetch landing page data
+    // Fetch landing page data and banners
     useEffect(() => {
-        const fetchLandingPageData = async () => {
+        const fetchData = async () => {
             try {
-                const response = await api.get(`/landing-page`);
-                if (response.data.success) {
-                    setLandingPageData(response.data.data);
+                setLoading(true);
+                const [landingRes, heroRes, faqRes, testimonialRes] = await Promise.all([
+                    api.get(`/landing-page`),
+                    api.get(`/banners?type=hero`),
+                    api.get(`/banners?type=faq`),
+                    api.get(`/testimonials`)
+                ]);
+
+                if (landingRes.data.success) {
+                    setLandingPageData(landingRes.data.data);
+                }
+                if (heroRes.data.success) {
+                    setHeroBanners(heroRes.data.data.banners || []);
+                }
+                if (faqRes.data.success) {
+                    setFaqBanners(faqRes.data.data.banners || []);
+                }
+                if (testimonialRes.data.success) {
+                    setTestimonials(testimonialRes.data.data || []);
                 }
             } catch (error) {
-                console.error('Error fetching landing page data:', error);
+                console.error('Error fetching data:', error);
             } finally {
                 setLoading(false);
             }
         };
-        fetchLandingPageData();
+        fetchData();
     }, []);
+
+    // Banner Carousel 1 Auto-slide logic
+    useEffect(() => {
+        if (heroBanners.length <= 1) return;
+        const interval = setInterval(() => {
+            setActiveBannerIndex((prev) => (prev + 1) % heroBanners.length);
+        }, 5000); // 5 seconds per banner
+        return () => clearInterval(interval);
+    }, [heroBanners.length]);
+
+    // Banner Carousel 2 Auto-slide logic
+    useEffect(() => {
+        if (faqBanners.length <= 1) return;
+        const interval = setInterval(() => {
+            setActiveBannerIndex2((prev) => (prev + 1) % faqBanners.length);
+        }, 6000); // 6 seconds per banner for the second one
+        return () => clearInterval(interval);
+    }, [faqBanners.length]);
 
     const driverImages = landingPageData?.driverAppSection?.appImages?.length > 0
         ? landingPageData.driverAppSection.appImages
@@ -88,13 +130,39 @@ const LandingPage = () => {
         }).filter(Boolean)
         : ['Mumbai', 'Navi Mumbai', 'Thane', 'Pune'];
 
-    const testimonials = landingPageData?.testimonialsSection?.testimonials?.length > 0 ? landingPageData.testimonialsSection.testimonials : [
-        { name: 'Sarah Johnson', role: 'Daily Commuter', content: "The drivers are incredibly professional and punctual. It's completely changed my morning commute for the better!" },
-        { name: 'Michael Chen', role: 'Business Traveler', content: "Reliability is key for my business trips. SearchMyDriver has never let me down. Highly recommended!" },
-        { name: 'Emily Davis', role: 'Weekend Explorer', content: "I love the peace of mind knowing I have a safe driver for my weekend getaways. The booking process is so easy." },
-        { name: 'David Lee', role: 'Frequent Flyer', content: "Airport transfers have never been smoother. Always on time and very courteous drivers." },
-        { name: 'Jessica Brown', role: 'Mom of Two', content: "I trust SearchMyDriver for my kids' school runs when I'm stuck at work. Safe and trackable!" }
+    const displayTestimonials = testimonials.length > 0 ? testimonials : [
+        { name: 'Sarah Johnson', role: 'Daily Commuter', review: "The drivers are incredibly professional and punctual. It's completely changed my morning commute for the better!" },
+        { name: 'Michael Chen', role: 'Business Traveler', review: "Reliability is key for my business trips. SearchMyDriver has never let me down. Highly recommended!" },
+        { name: 'Emily Davis', role: 'Weekend Explorer', review: "I love the peace of mind knowing I have a safe driver for my weekend getaways. The booking process is so easy." },
+        { name: 'David Lee', role: 'Frequent Flyer', review: "Airport transfers have never been smoother. Always on time and very courteous drivers." },
+        { name: 'Jessica Brown', role: 'Mom of Two', review: "I trust SearchMyDriver for my kids' school runs when I'm stuck at work. Safe and trackable!" }
     ];
+
+    const handleSubmitReview = async (e) => {
+        e.preventDefault();
+        setSubmittingReview(true);
+        const formData = new FormData(e.target);
+        const data = {
+            name: formData.get('name'),
+            role: formData.get('role'),
+            rating: rating,
+            review: formData.get('review')
+        };
+
+        try {
+            const response = await api.post('/testimonials', data);
+            if (response.data.success) {
+                alert("Thank you for your review! It has been submitted for moderation.");
+                setShowReviewModal(false);
+                setRating(5);
+            }
+        } catch (error) {
+            console.error('Error submitting review:', error);
+            alert("Failed to submit review. Please try again.");
+        } finally {
+            setSubmittingReview(false);
+        }
+    };
 
     const faqs = landingPageData?.faqSection?.faqs?.length > 0 ? landingPageData.faqSection.faqs : [
         { question: "How do I book a driver?", answer: "You can book a driver easily through our website or mobile app. Just enter your location, destination, and preferred time." },
@@ -105,7 +173,14 @@ const LandingPage = () => {
     ];
 
     return (
-        <div className="font-sans antialiased text-gray-900 bg-white">
+        <main className="font-sans antialiased text-gray-900 bg-white">
+            <Helmet>
+                <title>Search My Driver | Best Professional Driver Service Mumbai & India</title>
+                <meta name="description" content="Book professional, police-verified drivers instantly with Search My Driver. We provide safe, reliable driver services for daily commutes, outstation trips, and luxury cars." />
+                <meta property="og:title" content="Search My Driver - Your Trusted Driving Partner" />
+                <meta property="og:description" content="Hire professional verified drivers on call. Safe, reliable and affordable driver services." />
+                <link rel="canonical" href={window.location.origin} />
+            </Helmet>
             <Navbar />
 
             {/* Hero Section */}
@@ -135,10 +210,10 @@ const LandingPage = () => {
                                 </p>
 
                                 <div className="flex flex-wrap gap-4">
-                                    <Link to="/login" className="bg-white text-[#239960] px-8 py-3.5 rounded-full font-bold text-lg hover:bg-gray-50 transition-all shadow-xl hover:shadow-2xl transform hover:-translate-y-1 flex items-center gap-2">
+                                    <a href="https://play.google.com/store/apps/details?id=com.searchmydrivers.user" target="_blank" rel="noopener noreferrer" className="bg-white text-[#239960] px-8 py-3.5 rounded-full font-bold text-lg hover:bg-gray-50 transition-all shadow-xl hover:shadow-2xl transform hover:-translate-y-1 flex items-center gap-2">
                                         {landingPageData?.hero?.ctaText || 'Get Started'}
                                         <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" /></svg>
-                                    </Link>
+                                    </a>
                                     <a href={landingPageData?.hero?.appStoreLink || '#'} className="bg-black text-white px-6 py-2.5 rounded-full flex items-center gap-3 hover:bg-gray-900 transition-all shadow-xl hover:shadow-2xl transform hover:-translate-y-1">
                                         <svg className="w-8 h-8" fill="currentColor" viewBox="0 0 24 24">
                                             <path d="M17.05 20.28c-.98.95-2.05.8-3.08.35-1.09-.46-2.09-.48-3.24 0-1.44.62-2.2.44-3.06-.35C2.79 15.25 3.51 7.59 9.05 7.31c1.35.07 2.29.74 3.08.74 1.18 0 2.45-1.64 3.98-1.64 1.25.04 2.37.5 3.08 1.48-2.61 1.58-2.18 4.71.69 5.89-.53 1.55-1.25 3.09-2.83 6.5zm-3.27-14.7c.64-1.02.99-2.28.61-3.58 1.09.28 2.37.91 2.94 1.96.17.65.04 1.59-.44 2.54-.7.83-1.87 1.21-2.91 1.05-.17-.67-.2-1.32-.2-1.97z" />
@@ -158,7 +233,7 @@ const LandingPage = () => {
                             <div className="relative z-10 w-full max-w-[800px]">
                                 <img
                                     src={landingPageData?.hero?.image || "/Gemini_Generated_Image_2jf3zt2jf3zt2jf3-removebg-preview.png"}
-                                    alt="Premium Car"
+                                    alt="Professional uniform chauffeur with premium luxury car"
                                     className="w-full h-auto drop-shadow-2xl filter brightness-105 contrast-105 transform hover:scale-[1.02] transition-transform duration-500"
                                 />
                                 {/* Reflection/Shadow */}
@@ -253,6 +328,79 @@ const LandingPage = () => {
                 </div>
             </section>
 
+            {/* Banner Carousel Section 1 (Below Stats) */}
+            {heroBanners.length > 0 && (
+                <section className="py-12 bg-gray-50 overflow-hidden">
+                    <div className="container mx-auto px-4 md:px-12 max-w-[1440px]">
+                        <div className="relative h-[250px] md:h-[450px] rounded-3xl overflow-hidden shadow-2xl group">
+                            <div
+                                className="flex h-full transition-transform duration-1000 ease-in-out"
+                                style={{ transform: `translateX(-${activeBannerIndex * 100}%)` }}
+                            >
+                                {heroBanners.map((banner, index) => (
+                                    <div key={banner._id || index} className="min-w-full h-full relative group">
+                                        {banner.link ? (
+                                            <a href={banner.link} target="_blank" rel="noopener noreferrer" className="block w-full h-full">
+                                                <img
+                                                    src={banner.image}
+                                                    alt={banner.title}
+                                                    className="w-full h-full object-cover"
+                                                />
+                                            </a>
+                                        ) : (
+                                            <img
+                                                src={banner.image}
+                                                alt={banner.title}
+                                                className="w-full h-full object-cover"
+                                            />
+                                        )}
+                                        {/* Overlay Title */}
+                                        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-black/30 flex flex-col justify-end p-8 md:p-12 opacity-100 transition-opacity">
+                                            <h3 className="text-white text-2xl md:text-5xl font-extrabold mb-4 transform translate-y-0 transition-transform duration-500 max-w-2xl leading-tight">
+                                                {banner.title}
+                                            </h3>
+                                            {banner.link && (
+                                                <div className="transform translate-y-0 transition-all duration-500">
+                                                    <span className="inline-flex items-center gap-2 bg-[#2BB673] hover:bg-[#239960] text-white px-8 py-3 rounded-full text-base font-bold shadow-lg transition-all group-hover:scale-105">
+                                                        Explore Now
+                                                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M17 8l4 4m0 0l-4 4m4-4H3" /></svg>
+                                                    </span>
+                                                </div>
+                                            )}
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+
+                            {/* Navigation Dots */}
+                            <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex gap-3 z-10">
+                                {heroBanners.map((_, index) => (
+                                    <button
+                                        key={index}
+                                        onClick={() => setActiveBannerIndex(index)}
+                                        className={`h-2 rounded-full transition-all duration-500 ${index === activeBannerIndex ? 'bg-white w-10 shadow-lg' : 'bg-white/40 w-2 hover:bg-white/60'}`}
+                                    />
+                                ))}
+                            </div>
+
+                            {/* Arrow Controls */}
+                            <button
+                                onClick={() => setActiveBannerIndex((prev) => (prev - 1 + heroBanners.length) % heroBanners.length)}
+                                className="absolute left-6 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full bg-white/20 backdrop-blur-md text-white flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all hover:bg-[#2BB673] hover:scale-110"
+                            >
+                                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M15 19l-7-7 7-7" /></svg>
+                            </button>
+                            <button
+                                onClick={() => setActiveBannerIndex((prev) => (prev + 1) % heroBanners.length)}
+                                className="absolute right-6 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full bg-white/20 backdrop-blur-md text-white flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all hover:bg-[#2BB673] hover:scale-110"
+                            >
+                                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M9 5l7 7-7 7" /></svg>
+                            </button>
+                        </div>
+                    </div>
+                </section>
+            )}
+
             {/* Description Section */}
             <section id="features" className="py-24 bg-white relative">
                 <div className="container mx-auto px-4 md:px-12 max-w-[1440px]">
@@ -335,9 +483,9 @@ const LandingPage = () => {
                         {/* Images - Phone Mockups */}
                         <div className="flex-1 relative h-[200px] md:h-[400px] flex items-center justify-center animate-fade-in-up" style={{ animationDelay: '0.2s' }}>
                             <div className="relative w-full max-w-[160px] md:max-w-md h-full">
-                                <img src={userImages[0]} alt="App Screenshot 1" className="absolute top-5 md:top-10 left-0 w-[42%] transform -rotate-12 z-10 hover:z-30 hover:rotate-0 transition-all duration-500 ease-out" />
-                                <img src={userImages[1]} alt="App Screenshot 2" className="absolute top-0 left-1/2 -translate-x-1/2 w-[45%] z-20 hover:scale-105 transition-transform duration-500 ease-out" />
-                                <img src={userImages[2]} alt="App Screenshot 3" className="absolute top-10 md:top-20 right-0 w-[42%] transform rotate-12 z-0 hover:z-30 hover:rotate-0 transition-all duration-500 ease-out" />
+                                <img src={userImages[0]} alt="Search My Driver User App Interface - Booking Screen" className="absolute top-5 md:top-10 left-0 w-[42%] transform -rotate-12 z-10 hover:z-30 hover:rotate-0 transition-all duration-500 ease-out" />
+                                <img src={userImages[1]} alt="Search My Driver User App Interface - Driver Tracking" className="absolute top-0 left-1/2 -translate-x-1/2 w-[45%] z-20 hover:scale-105 transition-transform duration-500 ease-out" />
+                                <img src={userImages[2]} alt="Search My Driver User App Interface - Payment and History" className="absolute top-10 md:top-20 right-0 w-[42%] transform rotate-12 z-0 hover:z-30 hover:rotate-0 transition-all duration-500 ease-out" />
                             </div>
                         </div>
                     </div>
@@ -385,7 +533,7 @@ const LandingPage = () => {
                                     else if (diff === 2) style = { transform: 'translateX(0) scale(0.8) translateZ(-100px)', zIndex: 30, opacity: 0.5 };
                                     else style = { transform: 'translateX(-40%) scale(0.9) translateZ(-50px) rotateY(15deg)', zIndex: 40, opacity: 0.8 };
 
-                                    return <img key={index} src={src} alt={`Driver App Screen ${index + 1}`} className={className} style={style} />;
+                                    return <img key={index} src={src} alt={`Search My Driver Partner App - Screen ${index + 1}: Professional Driver Management Interface`} className={className} style={style} />;
                                 })}
                             </div>
                         </div>
@@ -435,26 +583,111 @@ const LandingPage = () => {
                     </div>
 
                     <div className="flex overflow-x-auto space-x-8 pb-8 snap-x snap-mandatory scrollbar-hide">
-                        {testimonials.map((testimonial, idx) => (
+                        {displayTestimonials.map((testimonial, idx) => (
                             <div key={idx} className="min-w-[300px] md:min-w-[350px] bg-white p-8 rounded-2xl shadow-[0_0_20px_rgba(59,130,246,0.15)] border border-blue-200 relative animate-fade-in-up hover:shadow-[0_0_25px_rgba(59,130,246,0.25)] transition-all duration-300 snap-center" style={{ animationDelay: `${0.2 * (idx + 1)}s` }}>
                                 <div className="text-blue-200 absolute top-6 right-6 opacity-40">
                                     <svg className="w-12 h-12" fill="currentColor" viewBox="0 0 24 24"><path d="M14.017 21L14.017 18C14.017 16.0547 15.3789 13.5547 17.5352 12.0078L18.4219 12.6484C17.0273 13.9219 16.5117 14.8281 16.5117 15.6875L16.5117 18L19.5078 18L19.5078 21L14.017 21ZM5.01562 21L5.01562 18C5.01562 16.0547 6.375 13.5547 8.53125 12.0078L9.42188 12.6484C8.02734 13.9219 7.51172 14.8281 7.51172 15.6875L7.51172 18L10.5078 18L10.5078 21L5.01562 21Z" /></svg>
                                 </div>
                                 <div className="flex items-center gap-4 mb-6">
-                                    <div className="w-12 h-12 bg-gray-200 rounded-full overflow-hidden">
-                                        <img src={testimonial.avatar || `https://i.pravatar.cc/150?u=${testimonial.name}`} alt={testimonial.name} className="w-full h-full object-cover" />
+                                    <div className="w-12 h-12 bg-[#2BB673]/10 rounded-full overflow-hidden flex items-center justify-center">
+                                        <span className="text-xl font-bold text-[#2BB673]">{testimonial.name.charAt(0)}</span>
                                     </div>
                                     <div>
                                         <h4 className="font-bold text-gray-900">{testimonial.name}</h4>
                                         <p className="text-sm text-gray-500">{testimonial.role}</p>
+                                        <div className="flex text-yellow-400 mt-1">
+                                            {[...Array(testimonial.rating || 5)].map((_, i) => (
+                                                <svg key={i} className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" /></svg>
+                                            ))}
+                                        </div>
                                     </div>
                                 </div>
-                                <p className="text-gray-600 italic">"{testimonial.content || testimonial.text}"</p>
+                                <p className="text-gray-600 italic">"{testimonial.review}"</p>
                             </div>
                         ))}
                     </div>
                 </div>
             </section>
+
+            {/* Banner Carousel Section 2 (Above FAQ) - 3D Effect */}
+            {faqBanners.length > 0 && (
+                <section className="py-24 bg-gray-50 overflow-hidden">
+                    <div className="container mx-auto px-4 md:px-12 max-w-[1440px]">
+                        <div className="relative h-[400px] md:h-[600px] flex items-center justify-center perspective-[2000px]">
+                            {faqBanners.map((banner, index) => {
+                                // Calculate position relative to active index
+                                const diff = (index - activeBannerIndex2 + faqBanners.length) % faqBanners.length;
+
+                                let style = {};
+                                let className = "absolute w-full max-w-4xl h-full transition-all duration-1000 cubic-bezier(0.4, 0, 0.2, 1) rounded-3xl overflow-hidden shadow-2xl origin-center pointer-events-none";
+
+                                if (diff === 0) {
+                                    // Active Slide
+                                    style = {
+                                        transform: "translateZ(0px) translateX(0%) scale(1)",
+                                        zIndex: 30,
+                                        opacity: 1,
+                                        filter: "blur(0px)",
+                                        pointerEvents: "auto"
+                                    };
+                                } else if (diff === 1 || (faqBanners.length === 2 && diff === 1)) {
+                                    // Next Slide
+                                    style = {
+                                        transform: "translateZ(-200px) translateX(25%) scale(0.85) rotateY(-15deg)",
+                                        zIndex: 20,
+                                        opacity: 0.5,
+                                        filter: "blur(4px)"
+                                    };
+                                } else if (diff === faqBanners.length - 1) {
+                                    // Previous Slide
+                                    style = {
+                                        transform: "translateZ(-200px) translateX(-25%) scale(0.85) rotateY(15deg)",
+                                        zIndex: 20,
+                                        opacity: 0.5,
+                                        filter: "blur(4px)"
+                                    };
+                                } else {
+                                    // Hidden Slides
+                                    style = {
+                                        transform: "translateZ(-400px) scale(0.7)",
+                                        zIndex: 10,
+                                        opacity: 0,
+                                        visibility: "hidden"
+                                    };
+                                }
+
+                                return (
+                                    <div key={banner._id || index} className={className} style={style}>
+                                        <div className="relative w-full h-full group">
+                                            <img src={banner.image} alt={banner.title} className="w-full h-full object-cover" />
+                                            <div className="absolute inset-0 bg-black/20 group-hover:bg-black/5 transition-colors duration-500"></div>
+                                            <div className="absolute bottom-0 left-0 right-0 p-6 md:p-10 bg-gradient-to-t from-black/80 to-transparent">
+                                                <h3 className="text-white text-xl md:text-3xl font-bold mb-2 transform translate-y-2 group-hover:translate-y-0 transition-transform duration-500">{banner.title}</h3>
+                                                {banner.link && (
+                                                    <a href={banner.link} target="_blank" rel="noopener noreferrer" className="inline-block bg-[#2BB673] text-white px-6 py-2 rounded-full text-sm font-bold opacity-0 group-hover:opacity-100 transition-all duration-500 transform translate-y-4 group-hover:translate-y-0">
+                                                        Discover More
+                                                    </a>
+                                                )}
+                                            </div>
+                                        </div>
+                                    </div>
+                                );
+                            })}
+                        </div>
+
+                        {/* Custom Indicators */}
+                        <div className="flex justify-center gap-3 mt-12">
+                            {faqBanners.map((_, index) => (
+                                <button
+                                    key={index}
+                                    onClick={() => setActiveBannerIndex2(index)}
+                                    className={`h-1.5 rounded-full transition-all duration-700 ${index === activeBannerIndex2 ? 'bg-[#2BB673] w-12' : 'bg-gray-300 w-4 hover:bg-gray-400'}`}
+                                />
+                            ))}
+                        </div>
+                    </div>
+                </section>
+            )}
 
             {/* FAQ Section */}
             <section className="py-20 bg-white">
@@ -490,24 +723,25 @@ const LandingPage = () => {
                                 <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" /></svg>
                             </button>
                         </div>
-                        <form className="space-y-4" onSubmit={(e) => {
-                            e.preventDefault();
-                            alert("Thank you for your review! It has been submitted for moderation.");
-                            setShowReviewModal(false);
-                        }}>
+                        <form className="space-y-4" onSubmit={handleSubmitReview}>
                             <div>
                                 <label className="block text-sm font-medium text-gray-700 mb-1">Full Name</label>
-                                <input type="text" required className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#2BB673] focus:border-transparent outline-none transition-all" placeholder="John Doe" />
+                                <input name="name" type="text" required className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#2BB673] focus:border-transparent outline-none transition-all" placeholder="John Doe" />
                             </div>
                             <div>
                                 <label className="block text-sm font-medium text-gray-700 mb-1">Role (Optional)</label>
-                                <input type="text" className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#2BB673] focus:border-transparent outline-none transition-all" placeholder="Daily Commuter, Business Traveler..." />
+                                <input name="role" type="text" className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#2BB673] focus:border-transparent outline-none transition-all" placeholder="Daily Commuter, Business Traveler..." />
                             </div>
                             <div>
                                 <label className="block text-sm font-medium text-gray-700 mb-1">Rating</label>
                                 <div className="flex gap-2">
                                     {[1, 2, 3, 4, 5].map((star) => (
-                                        <button key={star} type="button" className="text-yellow-400 hover:scale-110 transition-transform">
+                                        <button
+                                            key={star}
+                                            type="button"
+                                            onClick={() => setRating(star)}
+                                            className={`transition-transform hover:scale-110 ${rating >= star ? 'text-yellow-400' : 'text-gray-300'}`}
+                                        >
                                             <svg className="w-8 h-8" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" /></svg>
                                         </button>
                                     ))}
@@ -515,16 +749,20 @@ const LandingPage = () => {
                             </div>
                             <div>
                                 <label className="block text-sm font-medium text-gray-700 mb-1">Your Review</label>
-                                <textarea required rows="4" className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#2BB673] focus:border-transparent outline-none transition-all resize-none" placeholder="Tell us about your experience..."></textarea>
+                                <textarea name="review" required rows="4" className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#2BB673] focus:border-transparent outline-none transition-all resize-none" placeholder="Tell us about your experience..."></textarea>
                             </div>
-                            <button type="submit" className="w-full bg-[#2BB673] text-white font-bold py-3 rounded-lg hover:bg-[#239960] transition-colors shadow-lg hover:shadow-xl transform hover:-translate-y-0.5">
-                                Submit Review
+                            <button
+                                type="submit"
+                                disabled={submittingReview}
+                                className="w-full bg-[#2BB673] text-white font-bold py-3 rounded-lg hover:bg-[#239960] transition-colors shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 disabled:opacity-50"
+                            >
+                                {submittingReview ? 'Submitting...' : 'Submit Review'}
                             </button>
                         </form>
                     </div>
                 </div>
             )}
-        </div>
+        </main>
     );
 };
 

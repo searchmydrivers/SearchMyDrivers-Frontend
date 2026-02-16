@@ -56,11 +56,13 @@ const LandingPageManager = () => {
 
     const sections = [
         { id: 'stats', name: 'Stats Section', icon: '📊' },
+        { id: 'hero-banners', name: 'Hero Banners', icon: '🖼️' },
+        { id: 'faq-banners', name: 'FAQ Banners', icon: '🎡' },
+        { id: 'testimonials', name: 'Reviews Moderation', icon: '💬' },
         { id: 'features', name: 'Why Choose Us', icon: '⭐' },
         { id: 'userApp', name: 'User App', icon: '📱' },
         { id: 'driverApp', name: 'Driver App', icon: '🚗' },
         { id: 'cities', name: 'Cities', icon: '🏙️' },
-        { id: 'testimonials', name: 'Testimonials', icon: '💬' },
         { id: 'faq', name: 'FAQ', icon: '❓' },
         { id: 'services', name: 'Services Page', icon: '🛠️' },
         { id: 'contact', name: 'Contact Page', icon: '📞' },
@@ -147,6 +149,15 @@ const LandingPageManager = () => {
                                     saving={saving}
                                 />
                             )}
+                            {activeSection === 'hero-banners' && (
+                                <BannerSectionEditor type="hero" sectionTitle="Hero Carousel Banners" />
+                            )}
+                            {activeSection === 'faq-banners' && (
+                                <BannerSectionEditor type="faq" sectionTitle="FAQ Section Banners (3D Effect)" />
+                            )}
+                            {activeSection === 'testimonials' && (
+                                <TestimonialModerator />
+                            )}
                             {activeSection === 'features' && (
                                 <WhyChooseUsEditor
                                     data={landingPageData?.whyChooseUs}
@@ -175,13 +186,7 @@ const LandingPageManager = () => {
                                     saving={saving}
                                 />
                             )}
-                            {activeSection === 'testimonials' && (
-                                <TestimonialsSectionEditor
-                                    data={landingPageData?.testimonialsSection}
-                                    onSave={(data) => handleSave('testimonials-section', data)}
-                                    saving={saving}
-                                />
-                            )}
+
                             {activeSection === 'faq' && (
                                 <FAQSectionEditor
                                     data={landingPageData?.faqSection}
@@ -332,6 +337,403 @@ const HeroSectionEditor = ({ data, onSave, saving }) => {
                     {saving ? 'Saving...' : 'Save Changes'}
                 </button>
             </form>
+        </div>
+    );
+};
+
+const TestimonialModerator = () => {
+    const [testimonials, setTestimonials] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [filter, setFilter] = useState('all'); // all, pending, approved, rejected
+    const [actionLoading, setActionLoading] = useState(null);
+
+    useEffect(() => {
+        fetchTestimonials();
+    }, [filter]);
+
+    const fetchTestimonials = async () => {
+        try {
+            setLoading(true);
+            const params = filter !== 'all' ? { status: filter } : {};
+            const response = await api.get('/testimonials/admin', { params });
+            if (response.data.success) {
+                setTestimonials(response.data.data || []);
+            }
+        } catch (error) {
+            console.error('Error fetching testimonials:', error);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const handleUpdateStatus = async (id, status) => {
+        setActionLoading(id);
+        try {
+            const response = await api.put(`/testimonials/${id}/status`, { status });
+            if (response.data.success) {
+                fetchTestimonials();
+            }
+        } catch (error) {
+            console.error('Error updating status:', error);
+            alert('Failed to update status');
+        } finally {
+            setActionLoading(null);
+        }
+    };
+
+    const handleDelete = async (id) => {
+        if (!window.confirm('Are you sure you want to delete this review?')) return;
+        setActionLoading(id);
+        try {
+            const response = await api.delete(`/testimonials/${id}`);
+            if (response.data.success) {
+                fetchTestimonials();
+            }
+        } catch (error) {
+            console.error('Error deleting testimonial:', error);
+            alert('Failed to delete review');
+        } finally {
+            setActionLoading(null);
+        }
+    };
+
+    return (
+        <div className="bg-white rounded-lg shadow-sm p-6">
+            <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
+                <div>
+                    <h2 className="text-xl font-bold text-gray-900">Reviews Moderation</h2>
+                    <p className="text-sm text-gray-500">Approve or reject reviews submitted by users</p>
+                </div>
+                <div className="flex bg-gray-100 p-1 rounded-xl">
+                    {['all', 'pending', 'approved', 'rejected'].map((f) => (
+                        <button
+                            key={f}
+                            onClick={() => setFilter(f)}
+                            className={`px-4 py-1.5 rounded-lg text-sm font-bold transition-all ${filter === f ? 'bg-white text-[#2BB673] shadow-sm' : 'text-gray-500 hover:text-gray-700'}`}
+                        >
+                            {f.charAt(0).toUpperCase() + f.slice(1)}
+                        </button>
+                    ))}
+                </div>
+            </div>
+
+            {loading ? (
+                <div className="flex justify-center p-12">
+                    <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#2BB673]"></div>
+                </div>
+            ) : (
+                <div className="grid grid-cols-1 gap-6">
+                    {testimonials.map((t) => (
+                        <div key={t._id} className="border border-gray-100 rounded-2xl p-6 bg-gray-50/30 hover:bg-gray-50 transition-colors">
+                            <div className="flex justify-between items-start mb-4">
+                                <div className="flex gap-4">
+                                    <div className="w-12 h-12 bg-[#2BB673]/10 rounded-full flex items-center justify-center">
+                                        <span className="text-xl font-bold text-[#2BB673]">{t.name.charAt(0)}</span>
+                                    </div>
+                                    <div>
+                                        <h3 className="font-bold text-gray-900">{t.name}</h3>
+                                        <p className="text-xs text-gray-500">{t.role || 'User'} • {new Date(t.createdAt).toLocaleDateString()}</p>
+                                        <div className="flex gap-1 mt-1 text-yellow-400">
+                                            {[...Array(t.rating)].map((_, i) => (
+                                                <svg key={i} className="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" /></svg>
+                                            ))}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className="flex items-center gap-2">
+                                    <span className={`px-3 py-1 rounded-full text-[10px] font-bold uppercase ${t.status === 'approved' ? 'bg-green-100 text-green-600' : t.status === 'pending' ? 'bg-yellow-100 text-yellow-600' : 'bg-red-100 text-red-600'}`}>
+                                        {t.status}
+                                    </span>
+                                </div>
+                            </div>
+                            <p className="text-gray-700 text-sm italic mb-6 leading-relaxed">"{t.review}"</p>
+                            <div className="flex justify-end gap-3 border-t border-gray-100 pt-4">
+                                {t.status !== 'approved' && (
+                                    <button
+                                        onClick={() => handleUpdateStatus(t._id, 'approved')}
+                                        disabled={actionLoading === t._id}
+                                        className="flex items-center gap-1 px-4 py-2 bg-green-500 text-white text-xs font-bold rounded-lg hover:bg-green-600 transition-colors disabled:opacity-50"
+                                    >
+                                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" /></svg>
+                                        Approve
+                                    </button>
+                                )}
+                                {t.status !== 'rejected' && (
+                                    <button
+                                        onClick={() => handleUpdateStatus(t._id, 'rejected')}
+                                        disabled={actionLoading === t._id}
+                                        className="flex items-center gap-1 px-4 py-2 bg-red-50 text-red-600 text-xs font-bold rounded-lg hover:bg-red-100 transition-colors disabled:opacity-50"
+                                    >
+                                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M6 18L18 6M6 6l12 12" /></svg>
+                                        Reject
+                                    </button>
+                                )}
+                                <button
+                                    onClick={() => handleDelete(t._id)}
+                                    disabled={actionLoading === t._id}
+                                    className="p-2 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors disabled:opacity-50"
+                                >
+                                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
+                                </button>
+                            </div>
+                        </div>
+                    ))}
+                    {testimonials.length === 0 && (
+                        <div className="text-center py-20 border-2 border-dashed border-gray-100 rounded-2xl">
+                            <div className="w-16 h-16 bg-gray-50 rounded-full flex items-center justify-center mx-auto mb-4">
+                                <svg className="w-8 h-8 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" /></svg>
+                            </div>
+                            <p className="text-gray-400 font-medium">No reviews found matching your filter.</p>
+                        </div>
+                    )}
+                </div>
+            )}
+        </div>
+    );
+};
+
+// Banner Section Editor Component (Integrated)
+const BannerSectionEditor = ({ type = 'hero', sectionTitle = 'Banners Management' }) => {
+    const [banners, setBanners] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [showModal, setShowModal] = useState(false);
+    const [editingBanner, setEditingBanner] = useState(null);
+    const [actionLoading, setActionLoading] = useState(false);
+    const [formData, setFormData] = useState({
+        title: '',
+        type: type,
+        link: '',
+        isActive: true,
+        image: null,
+    });
+    const [error, setError] = useState('');
+    const [success, setSuccess] = useState('');
+
+    useEffect(() => {
+        fetchBanners();
+    }, [type]);
+
+    const fetchBanners = async () => {
+        try {
+            setLoading(true);
+            const response = await api.get('/admins/banners', { params: { type } });
+            if (response.data.success) {
+                setBanners(response.data.data.banners || []);
+            }
+        } catch (error) {
+            console.error('Error fetching banners:', error);
+            setError('Failed to load banners');
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const handleEdit = (banner) => {
+        setEditingBanner(banner);
+        setFormData({
+            title: banner.title || '',
+            type: banner.type || type,
+            link: banner.link || '',
+            isActive: banner.isActive !== undefined ? banner.isActive : true,
+            image: null,
+        });
+        setShowModal(true);
+        setError('');
+        setSuccess('');
+    };
+
+    const handleCreate = () => {
+        setEditingBanner(null);
+        setFormData({
+            title: '',
+            type: type,
+            link: '',
+            isActive: true,
+            image: null,
+        });
+        setShowModal(true);
+        setError('');
+        setSuccess('');
+    };
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        setActionLoading(true);
+        setError('');
+        setSuccess('');
+
+        try {
+            const formDataToSend = new FormData();
+            formDataToSend.append('title', formData.title);
+            formDataToSend.append('type', formData.type);
+            if (formData.link) formDataToSend.append('link', formData.link);
+            formDataToSend.append('isActive', formData.isActive);
+            if (formData.image) formDataToSend.append('image', formData.image);
+
+            let response;
+            if (editingBanner) {
+                response = await api.put(`/admins/banners/${editingBanner._id}`, formDataToSend, {
+                    headers: { 'Content-Type': 'multipart/form-data' },
+                });
+            } else {
+                response = await api.post('/admins/banners', formDataToSend, {
+                    headers: { 'Content-Type': 'multipart/form-data' },
+                });
+            }
+
+            if (response.data.success) {
+                setSuccess(editingBanner ? 'Banner updated successfully!' : 'Banner created successfully!');
+                setShowModal(false);
+                fetchBanners();
+            }
+        } catch (error) {
+            setError(error.response?.data?.message || 'Failed to save banner');
+        } finally {
+            setActionLoading(false);
+        }
+    };
+
+    const handleDelete = async (id) => {
+        if (!window.confirm('Are you sure you want to delete this banner?')) return;
+        try {
+            const response = await api.delete(`/admins/banners/${id}`);
+            if (response.data.success) {
+                setSuccess('Banner deleted successfully!');
+                fetchBanners();
+            }
+        } catch (error) {
+            setError(error.response?.data?.message || 'Failed to delete banner');
+        }
+    };
+
+    return (
+        <div className="bg-white rounded-lg shadow-sm p-6">
+            <div className="flex justify-between items-center mb-6">
+                <div>
+                    <h2 className="text-xl font-bold text-gray-900">{sectionTitle}</h2>
+                    <p className="text-sm text-gray-500">Manage carousels for this section</p>
+                </div>
+                <button
+                    onClick={handleCreate}
+                    className="bg-[#2BB673] text-white px-4 py-2 rounded-lg font-bold hover:bg-[#239960] transition-colors flex items-center gap-2"
+                >
+                    <span className="material-icons-outlined text-base">add</span>
+                    Add Banner
+                </button>
+            </div>
+
+            {error && <div className="mb-4 p-3 bg-red-50 border border-red-200 text-red-600 rounded-lg text-sm">{error}</div>}
+            {success && <div className="mb-4 p-3 bg-green-50 border border-green-200 text-green-600 rounded-lg text-sm">{success}</div>}
+
+            {loading ? (
+                <div className="flex justify-center p-12">
+                    <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#2BB673]"></div>
+                </div>
+            ) : (
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    {banners.map((banner) => (
+                        <div key={banner._id} className="border border-gray-200 rounded-xl overflow-hidden group hover:shadow-md transition-shadow">
+                            <div className="aspect-[21/9] relative">
+                                <img src={banner.image} alt={banner.title} className="w-full h-full object-cover" />
+                                <div className="absolute top-2 right-2 flex gap-2">
+                                    <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold uppercase ${banner.isActive ? 'bg-green-500 text-white' : 'bg-gray-500 text-white'}`}>
+                                        {banner.isActive ? 'Active' : 'Inactive'}
+                                    </span>
+                                </div>
+                            </div>
+                            <div className="p-4 flex justify-between items-start">
+                                <div>
+                                    <h3 className="font-bold text-gray-900">{banner.title}</h3>
+                                    <p className="text-xs text-gray-500 truncate max-w-[200px]">{banner.link || 'No link'}</p>
+                                </div>
+                                <div className="flex gap-2">
+                                    <button onClick={() => handleEdit(banner)} className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors">
+                                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" /></svg>
+                                    </button>
+                                    <button onClick={() => handleDelete(banner._id)} className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors">
+                                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    ))}
+                    {banners.length === 0 && (
+                        <div className="col-span-2 text-center p-12 border-2 border-dashed border-gray-200 rounded-xl">
+                            <p className="text-gray-500">No banners found. Click "Add Banner" to create one.</p>
+                        </div>
+                    )}
+                </div>
+            )}
+
+            {/* Modal */}
+            {showModal && (
+                <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-[100] p-4">
+                    <div className="bg-white rounded-2xl shadow-2xl p-6 w-full max-w-lg animate-scale-in">
+                        <h2 className="text-xl font-bold text-gray-900 mb-6">{editingBanner ? 'Edit Banner' : 'Add New Banner'}</h2>
+                        <form onSubmit={handleSubmit} className="space-y-4">
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-1">Title</label>
+                                <input
+                                    type="text"
+                                    value={formData.title}
+                                    onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+                                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#2BB673] focus:border-transparent outline-none"
+                                    required
+                                />
+                            </div>
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-1">Redirect Link (Optional)</label>
+                                <input
+                                    type="url"
+                                    value={formData.link}
+                                    onChange={(e) => setFormData({ ...formData, link: e.target.value })}
+                                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#2BB673] focus:border-transparent outline-none"
+                                    placeholder="https://searchmydrivers.com/services"
+                                />
+                            </div>
+                            <div className="grid grid-cols-2 gap-4">
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-700 mb-1">Status</label>
+                                    <select
+                                        value={formData.isActive}
+                                        onChange={(e) => setFormData({ ...formData, isActive: e.target.value === 'true' })}
+                                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#2BB673] focus:border-transparent outline-none"
+                                    >
+                                        <option value={true}>Active</option>
+                                        <option value={false}>Inactive</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-700 mb-1">Banner Image</label>
+                                    <input
+                                        type="file"
+                                        accept="image/*"
+                                        onChange={(e) => setFormData({ ...formData, image: e.target.files[0] })}
+                                        className="w-full text-xs text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-green-50 file:text-[#2BB673] hover:file:bg-green-100"
+                                        required={!editingBanner}
+                                    />
+                                </div>
+                            </div>
+                            <div className="flex gap-4 pt-4">
+                                <button
+                                    type="submit"
+                                    disabled={actionLoading}
+                                    className="flex-1 bg-[#2BB673] text-white py-2 rounded-lg font-bold hover:bg-[#239960] transition-colors disabled:opacity-50"
+                                >
+                                    {actionLoading ? 'Saving...' : 'Save Banner'}
+                                </button>
+                                <button
+                                    type="button"
+                                    onClick={() => setShowModal(false)}
+                                    className="flex-1 bg-gray-100 text-gray-700 py-2 rounded-lg font-bold hover:bg-gray-200 transition-colors"
+                                >
+                                    Cancel
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            )}
         </div>
     );
 };
@@ -986,134 +1388,6 @@ const CitiesSectionEditor = ({ data, onSave, saving }) => {
                                 >
                                     ✕
                                 </button>
-                            </div>
-                        ))}
-                    </div>
-                </div>
-
-                <button
-                    type="submit"
-                    disabled={saving}
-                    className="w-full bg-[#2BB673] text-white py-3 rounded-lg font-bold hover:bg-[#239960] transition-colors disabled:opacity-50"
-                >
-                    {saving ? 'Saving...' : 'Save Changes'}
-                </button>
-            </form>
-        </div>
-    );
-};
-
-// Testimonials Section Editor
-const TestimonialsSectionEditor = ({ data, onSave, saving }) => {
-    const [formData, setFormData] = useState({
-        heading: '',
-        testimonials: []
-    });
-
-    useEffect(() => {
-        if (data) {
-            setFormData(data);
-        }
-    }, [data]);
-
-    const handleChange = (e) => {
-        setFormData({ ...formData, [e.target.name]: e.target.value });
-    };
-
-    const handleTestimonialChange = (index, field, value) => {
-        const newTestimonials = [...formData.testimonials];
-        newTestimonials[index][field] = value;
-        setFormData({ ...formData, testimonials: newTestimonials });
-    };
-
-    const addTestimonial = () => {
-        setFormData({
-            ...formData,
-            testimonials: [...formData.testimonials, { name: '', role: '', text: '', avatar: '' }]
-        });
-    };
-
-    const removeTestimonial = (index) => {
-        const newTestimonials = formData.testimonials.filter((_, i) => i !== index);
-        setFormData({ ...formData, testimonials: newTestimonials });
-    };
-
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        onSave(formData);
-    };
-
-    return (
-        <div className="bg-white rounded-lg shadow-sm p-6">
-            <h2 className="text-xl font-bold text-gray-900 mb-6">Testimonials Section</h2>
-            <form onSubmit={handleSubmit} className="space-y-6">
-                <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">Heading</label>
-                    <input
-                        type="text"
-                        name="heading"
-                        value={formData.heading}
-                        onChange={handleChange}
-                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#2BB673] focus:border-transparent"
-                    />
-                </div>
-
-                <div>
-                    <div className="flex justify-between items-center mb-3">
-                        <label className="block text-sm font-medium text-gray-700">Testimonials</label>
-                        <button
-                            type="button"
-                            onClick={addTestimonial}
-                            className="text-sm bg-[#2BB673] text-white px-3 py-1 rounded-lg hover:bg-[#239960]"
-                        >
-                            + Add Testimonial
-                        </button>
-                    </div>
-                    <div className="space-y-4">
-                        {formData.testimonials?.map((testimonial, index) => (
-                            <div key={index} className="p-4 border border-gray-200 rounded-lg">
-                                <div className="flex justify-between items-start mb-3">
-                                    <h4 className="font-medium text-gray-900">Testimonial {index + 1}</h4>
-                                    <button
-                                        type="button"
-                                        onClick={() => removeTestimonial(index)}
-                                        className="text-red-600 hover:text-red-800"
-                                    >
-                                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                                        </svg>
-                                    </button>
-                                </div>
-                                <div className="grid grid-cols-2 gap-3 mb-3">
-                                    <input
-                                        type="text"
-                                        value={testimonial.name}
-                                        onChange={(e) => handleTestimonialChange(index, 'name', e.target.value)}
-                                        placeholder="Name"
-                                        className="px-3 py-2 border border-gray-300 rounded-lg"
-                                    />
-                                    <input
-                                        type="text"
-                                        value={testimonial.role}
-                                        onChange={(e) => handleTestimonialChange(index, 'role', e.target.value)}
-                                        placeholder="Role"
-                                        className="px-3 py-2 border border-gray-300 rounded-lg"
-                                    />
-                                </div>
-                                <textarea
-                                    value={testimonial.text}
-                                    onChange={(e) => handleTestimonialChange(index, 'text', e.target.value)}
-                                    placeholder="Testimonial text"
-                                    rows="3"
-                                    className="w-full px-3 py-2 border border-gray-300 rounded-lg mb-2 resize-none"
-                                />
-                                <input
-                                    type="text"
-                                    value={testimonial.avatar}
-                                    onChange={(e) => handleTestimonialChange(index, 'avatar', e.target.value)}
-                                    placeholder="Avatar URL (optional)"
-                                    className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm"
-                                />
                             </div>
                         ))}
                     </div>

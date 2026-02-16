@@ -49,6 +49,7 @@ const Sidebar = ({ isOpen, onClose, collapsed, toggleSidebar }) => {
     { path: '/driver-wallet-transactions', label: 'Driver Wallet', icon: 'account_balance_wallet', section: 'management' },
     { path: '/notifications', label: 'Notifications', icon: 'notifications', section: 'management' },
     { path: '/tickets', label: 'Support Tickets', icon: 'support_agent', section: 'management' },
+    { path: '/contact-inquiries', label: 'Contact Inquiries', icon: 'contact_mail', section: 'management' },
     { path: '/admin-profile', label: 'Profile', icon: 'account_circle', section: 'settings' },
 
     // Settings - Hidden for Sub-Admins
