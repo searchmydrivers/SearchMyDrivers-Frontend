@@ -1,7 +1,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import axios from 'axios';
+import api from '../config/api';
 
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
@@ -16,13 +16,13 @@ const LandingPage = () => {
     const [landingPageData, setLandingPageData] = useState(null);
     const [loading, setLoading] = useState(true);
 
-    const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+    // const API_URL = import.meta.env.VITE_API_URL || 'https://api.searchmydrivers.com/api';
 
     // Fetch landing page data
     useEffect(() => {
         const fetchLandingPageData = async () => {
             try {
-                const response = await axios.get(`${API_URL}/landing-page`);
+                const response = await api.get(`/landing-page`);
                 if (response.data.success) {
                     setLandingPageData(response.data.data);
                 }
