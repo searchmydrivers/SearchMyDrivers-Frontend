@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
+import { Helmet } from 'react-helmet-async';
 import axios from 'axios';
 
 const ServicesPage = () => {
@@ -87,6 +88,12 @@ const ServicesPage = () => {
 
     return (
         <div className="font-sans antialiased text-gray-900 bg-white">
+            <Helmet>
+                <title>Professional Driver Services | SearchMyDrivers</title>
+                <meta name="description" content="Explore our wide range of driver services including hourly drivers, outstation trips, monthly commutes, and airport transfers. Verified and professional drivers at your service." />
+                <meta name="keywords" content="hourly driver Mumbai, outstation driver, office commute driver, airport pickup driver, valet parking service" />
+                <link rel="canonical" href="https://searchmydrivers.com/services" />
+            </Helmet>
             <Navbar />
 
             {/* Hero Section */}

@@ -191,11 +191,13 @@ const LandingPage = () => {
             ) : (
                 <main className="font-sans antialiased text-gray-900 bg-white">
                     <Helmet>
-                        <title>Search My Driver | Best Professional Driver Service Mumbai & India</title>
-                        <meta name="description" content="Book professional, police-verified drivers instantly with Search My Driver. We provide safe, reliable driver services for daily commutes, outstation trips, and luxury cars." />
-                        <meta property="og:title" content="Search My Driver - Your Trusted Driving Partner" />
-                        <meta property="og:description" content="Hire professional verified drivers on call. Safe, reliable and affordable driver services." />
-                        <link rel="canonical" href={window.location.origin} />
+                        <title>SearchMyDrivers | Best Professional Driver on Call Service Mumbai & India</title>
+                        <meta name="description" content="SearchMyDrivers (Search My Drivers) offers professional, police-verified drivers on call. Book safe, reliable driver services for daily commute, outstation trips, and luxury cars." />
+                        <meta name="keywords" content="searchmydrivers, search my drivers, professional drivers, verified drivers, driver on call, chauffeur service Mumbai, driver for hire, safe travel, driver for rent Pune, permanent driver" />
+                        <meta property="og:title" content="SearchMyDrivers - Your Trusted Driving Partner" />
+                        <meta property="og:description" content="Hire professional verified drivers on call with SearchMyDrivers. Safe, reliable and affordable driver services for every trip." />
+                        <meta property="og:image" content="https://searchmydrivers.com/logo/logoimage-removebg-preview.png" />
+                        <link rel="canonical" href="https://searchmydrivers.com" />
                     </Helmet>
                     <Navbar />
 
@@ -261,7 +263,7 @@ const LandingPage = () => {
                                     <div className="relative z-10 w-full max-w-[800px]">
                                         <img
                                             src={landingPageData?.hero?.image || "/Gemini_Generated_Image_2jf3zt2jf3zt2jf3-removebg-preview.png"}
-                                            alt="Professional uniform chauffeur with premium luxury car"
+                                            alt="Search My Drivers - Professional uniform chauffeur with premium luxury car"
                                             className="w-full h-auto drop-shadow-2xl filter brightness-105 contrast-105 transform hover:scale-[1.02] transition-transform duration-500"
                                         />
                                         {/* Reflection/Shadow */}

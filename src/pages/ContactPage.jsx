@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
+import { Helmet } from 'react-helmet-async';
 import api from '../config/api';
 
 const ContactPage = () => {
@@ -94,6 +95,11 @@ const ContactPage = () => {
 
     return (
         <div className="font-sans text-gray-900 overflow-x-hidden w-full">
+            <Helmet>
+                <title>Contact Us | Support for SearchMyDrivers</title>
+                <meta name="description" content="Get in touch with SearchMyDrivers for bookings, support, or partnership inquiries. We are here to help you find the best drivers." />
+                <link rel="canonical" href="https://searchmydrivers.com/contact" />
+            </Helmet>
             <Navbar />
 
             {/* Header / Hero Section */}
