@@ -39,11 +39,67 @@
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
-    "@type": "Organization",
+    "@type": "LocalBusiness",
+    "name": "SearchMyDrivers",
+    "image": "https://searchmydrivers.com/logo/logoimage-removebg-preview.png",
+    "@id": "https://searchmydrivers.com",
     "url": "https://searchmydrivers.com",
-    "logo": "https://searchmydrivers.com/logo/logoimage-removebg-preview.png",
-    "name": "Search My Drivers",
-    "description": "Verified Professional Drivers on Call"
+    "telephone": "+91XXXXXXXXXX",
+    "address": {
+      "@type": "PostalAddress",
+      "streetAddress": "Mumbai & Pune Service Areas",
+      "addressLocality": "Mumbai",
+      "addressRegion": "MH",
+      "postalCode": "400001",
+      "addressCountry": "IN"
+    },
+    "geo": {
+      "@type": "GeoCoordinates",
+      "latitude": 19.0760,
+      "longitude": 72.8777
+    },
+    "servesCuisine": "",
+    "priceRange": "$$",
+    "openingHoursSpecification": {
+      "@type": "OpeningHoursSpecification",
+      "dayOfWeek": [
+        "Monday",
+        "Tuesday",
+        "Wednesday",
+        "Thursday",
+        "Friday",
+        "Saturday",
+        "Sunday"
+      ],
+      "opens": "00:00",
+      "closes": "23:59"
+    }
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Service",
+    "serviceType": "Professional Driver on Call",
+    "provider": {
+      "@type": "LocalBusiness",
+      "name": "SearchMyDrivers"
+    },
+    "areaServed": [
+      {
+        "@type": "City",
+        "name": "Mumbai"
+      },
+      {
+        "@type": "City",
+        "name": "Pune"
+      },
+      {
+        "@type": "City",
+        "name": "Navi Mumbai"
+      }
+    ],
+    "description": "Police verified professional drivers for daily commute, outstation trips and luxury cars."
   }
   </script>
 </head>
