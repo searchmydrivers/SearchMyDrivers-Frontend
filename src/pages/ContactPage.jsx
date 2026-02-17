@@ -16,6 +16,7 @@ const ContactPage = () => {
     });
     const [submitting, setSubmitting] = useState(false);
     const [submitResult, setSubmitResult] = useState(null);
+    const [dropdownOpen, setDropdownOpen] = useState(false);
 
     useEffect(() => {
         const fetchContent = async () => {
@@ -33,7 +34,25 @@ const ContactPage = () => {
     }, []);
 
     const handleChange = (e) => {
-        setFormData({ ...formData, [e.target.name]: e.target.value });
+        const { name, value } = e.target;
+
+        // Restriction for Phone Number
+        if (name === 'phone') {
+            if (!/^\d*$/.test(value)) return;
+            if (value.length > 10) return;
+        }
+
+        // Restriction for Names
+        if (name === 'firstName' || name === 'lastName') {
+            if (!/^[a-zA-Z\s]*$/.test(value)) return;
+        }
+
+        // Restriction for Email
+        if (name === 'email') {
+            if (/\s/.test(value)) return;
+        }
+
+        setFormData({ ...formData, [name]: value });
     };
 
     const handleSubmit = async (e) => {
@@ -165,11 +184,45 @@ const ContactPage = () => {
                                     </div>
                                     <div>
                                         <label className="block text-sm font-medium text-gray-700 mb-2">I am a</label>
-                                        <select name="role" value={formData.role} onChange={handleChange} required className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-[#2BB673] focus:border-transparent outline-none transition-all bg-white text-gray-700 cursor-pointer">
-                                            <option value="" disabled>Select your role</option>
-                                            <option value="user">User</option>
-                                            <option value="partner">Partner (Driver)</option>
-                                        </select>
+                                        <div className="relative">
+                                            <button
+                                                type="button"
+                                                onClick={() => setDropdownOpen(!dropdownOpen)}
+                                                className={`w-full px-4 py-3 rounded-lg border flex justify-between items-center bg-white text-gray-700 transition-all outline-none ${dropdownOpen ? 'border-[#2BB673] ring-2 ring-[#2BB673]' : 'border-gray-300 hover:border-gray-400'}`}
+                                            >
+                                                <span className={formData.role ? 'text-gray-900' : 'text-gray-400'}>
+                                                    {formData.role === 'user' ? 'User' : formData.role === 'partner' ? 'Partner (Driver)' : 'Select your role'}
+                                                </span>
+                                                <svg className={`w-5 h-5 transition-transform duration-200 ${dropdownOpen ? 'rotate-180 text-[#2BB673]' : 'text-gray-400'}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                                                </svg>
+                                            </button>
+
+                                            {dropdownOpen && (
+                                                <div className="absolute top-full left-0 right-0 mt-2 bg-white border border-gray-100 rounded-xl shadow-2xl z-50 overflow-hidden animate-fade-in-up">
+                                                    <div
+                                                        onClick={() => {
+                                                            setFormData({ ...formData, role: 'user' });
+                                                            setDropdownOpen(false);
+                                                        }}
+                                                        className={`px-4 py-3 cursor-pointer transition-colors flex items-center justify-between ${formData.role === 'user' ? 'bg-green-50 text-[#2BB673] font-medium' : 'text-gray-700 hover:bg-gray-50 hover:text-[#2BB673]'}`}
+                                                    >
+                                                        <span>User</span>
+                                                        {formData.role === 'user' && <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" /></svg>}
+                                                    </div>
+                                                    <div
+                                                        onClick={() => {
+                                                            setFormData({ ...formData, role: 'partner' });
+                                                            setDropdownOpen(false);
+                                                        }}
+                                                        className={`px-4 py-3 cursor-pointer transition-colors flex items-center justify-between ${formData.role === 'partner' ? 'bg-green-50 text-[#2BB673] font-medium' : 'text-gray-700 hover:bg-gray-50 hover:text-[#2BB673]'}`}
+                                                    >
+                                                        <span>Partner (Driver)</span>
+                                                        {formData.role === 'partner' && <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" /></svg>}
+                                                    </div>
+                                                </div>
+                                            )}
+                                        </div>
                                     </div>
                                 </div>
 
