@@ -253,6 +253,7 @@ const HeroSectionEditor = ({ data, onSave, saving }) => {
         // Let's check schema again: playStoreLink, driverCtaText, driverAppUrl, userAppUrl. 
         // Previously I added userAppUrl. I will use that.
         appStoreLink: '',
+        driverAppStoreLink: '',
         driverCtaText: '',
         driverAppUrl: '',
         image: ''
@@ -266,6 +267,7 @@ const HeroSectionEditor = ({ data, onSave, saving }) => {
                 ctaText: data.ctaText || '',
                 userAppUrl: data.userAppUrl || data.playStoreLink || '', // fallback
                 appStoreLink: data.appStoreLink || '',
+                driverAppStoreLink: data.driverAppStoreLink || '',
                 driverCtaText: data.driverCtaText || '',
                 driverAppUrl: data.driverAppUrl || '',
                 image: data.image || ''
@@ -368,6 +370,17 @@ const HeroSectionEditor = ({ data, onSave, saving }) => {
                         type="text"
                         name="appStoreLink"
                         value={formData.appStoreLink}
+                        onChange={handleChange}
+                        className="w-full px-4 py-2 border border-gray-300 rounded-lg"
+                    />
+                </div>
+
+                <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Driver App Store Link (iOS)</label>
+                    <input
+                        type="text"
+                        name="driverAppStoreLink"
+                        value={formData.driverAppStoreLink}
                         onChange={handleChange}
                         className="w-full px-4 py-2 border border-gray-300 rounded-lg"
                     />
@@ -734,16 +747,7 @@ const BannerSectionEditor = ({ type = 'hero', sectionTitle = 'Banners Management
                                     required
                                 />
                             </div>
-                            <div>
-                                <label className="block text-sm font-medium text-gray-700 mb-1">Redirect Link (Optional)</label>
-                                <input
-                                    type="url"
-                                    value={formData.link}
-                                    onChange={(e) => setFormData({ ...formData, link: e.target.value })}
-                                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#2BB673] focus:border-transparent outline-none"
-                                    placeholder="https://searchmydrivers.com/services"
-                                />
-                            </div>
+
                             <div className="grid grid-cols-2 gap-4">
                                 <div>
                                     <label className="block text-sm font-medium text-gray-700 mb-1">Status</label>
@@ -1021,13 +1025,7 @@ const WhyChooseUsEditor = ({ data, onSave, saving }) => {
                                     rows="2"
                                     className="w-full px-3 py-2 border border-gray-300 rounded-lg mb-2 resize-none"
                                 />
-                                <input
-                                    type="text"
-                                    value={feature.icon}
-                                    onChange={(e) => handleFeatureChange(index, 'icon', e.target.value)}
-                                    placeholder="SVG Path (optional)"
-                                    className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm"
-                                />
+
                             </div>
                         ))}
                     </div>

@@ -24,6 +24,7 @@ const LandingPage = () => {
     const [loading, setLoading] = useState(true);
     const [submittingReview, setSubmittingReview] = useState(false);
     const [rating, setRating] = useState(5);
+    const [aboutContent, setAboutContent] = useState(null);
 
     // const API_URL = import.meta.env.VITE_API_URL || 'https://api.searchmydrivers.com/api';
 
@@ -32,11 +33,12 @@ const LandingPage = () => {
         const fetchData = async () => {
             try {
                 setLoading(true);
-                const [landingRes, heroRes, faqRes, testimonialRes] = await Promise.all([
+                const [landingRes, heroRes, faqRes, testimonialRes, aboutRes] = await Promise.all([
                     api.get(`/landing-page`),
                     api.get(`/banners?type=hero`),
                     api.get(`/banners?type=faq`),
-                    api.get(`/testimonials`)
+                    api.get(`/testimonials`),
+                    api.get(`/content/landing-page-about?appType=user`).catch(() => ({ data: { success: false } }))
                 ]);
 
                 if (landingRes.data.success) {
@@ -50,6 +52,9 @@ const LandingPage = () => {
                 }
                 if (testimonialRes.data.success) {
                     setTestimonials(testimonialRes.data.data || []);
+                }
+                if (aboutRes.data.success) {
+                    setAboutContent(aboutRes.data.data.content);
                 }
             } catch (error) {
                 console.error('Error fetching data:', error);
@@ -202,7 +207,7 @@ const LandingPage = () => {
                     <Navbar />
 
                     {/* Hero Section */}
-                    <section className="relative min-h-[110vh] flex items-start pt-48 pb-32 overflow-hidden bg-gradient-to-br from-[#2BB673] to-[#239960]">
+                    <section className="relative min-h-[110vh] flex items-start pt-32 pb-32 overflow-hidden bg-gradient-to-br from-[#2BB673] to-[#239960]">
                         {/* Background Pattern Overlay */}
                         <div className="absolute inset-0 opacity-10 pointer-events-none" style={{
                             backgroundImage: `radial-gradient(circle at 2px 2px, white 1px, transparent 0)`,
@@ -227,40 +232,52 @@ const LandingPage = () => {
                                             {landingPageData?.hero?.subtitle || 'Experience the safest and most reliable driver service. Whether for daily commutes or special occasions, we connect you with professional drivers instantly.'}
                                         </p>
 
-                                        <div className="flex flex-wrap gap-4">
-                                            <a href={landingPageData?.hero?.userAppUrl || landingPageData?.hero?.playStoreLink || "https://play.google.com/store/apps/details?id=com.searchmydrivers.user"} target="_blank" rel="noopener noreferrer" className="bg-white text-[#2BB673] px-8 py-3.5 rounded-full font-bold text-lg hover:bg-gray-50 transition-all shadow-xl hover:shadow-2xl transform hover:-translate-y-1 flex items-center gap-2">
+                                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 w-full sm:w-auto">
+                                            {/* Android User App */}
+                                            <a href={landingPageData?.hero?.userAppUrl || landingPageData?.hero?.playStoreLink || "https://play.google.com/store/apps/details?id=com.searchmydrivers.user"} target="_blank" rel="noopener noreferrer" className="bg-white text-[#2BB673] px-5 py-2.5 rounded-full font-bold text-sm hover:bg-gray-50 transition-all shadow-xl hover:shadow-2xl flex items-center justify-center gap-2">
                                                 {landingPageData?.hero?.ctaText || 'Get Started'}
-                                                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" /></svg>
+                                                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" /></svg>
                                             </a>
 
-                                            {/* Driver App Button */}
+                                            {/* Android Driver App */}
                                             <a
                                                 href={landingPageData?.hero?.driverAppUrl || "https://play.google.com/store/apps/details?id=com.searchmydrivers.partner"}
                                                 target="_blank"
                                                 rel="noopener noreferrer"
-                                                className="bg-transparent border-2 border-white text-white px-8 py-3.5 rounded-full font-bold text-lg hover:bg-white/10 transition-all shadow-xl hover:shadow-2xl transform hover:-translate-y-1 flex items-center gap-2"
+                                                className="bg-transparent border-2 border-white text-white px-5 py-2.5 rounded-full font-bold text-sm hover:bg-white/10 transition-all shadow-xl hover:shadow-2xl flex items-center justify-center gap-2"
                                             >
                                                 {landingPageData?.hero?.driverCtaText || 'Join as Driver'}
-                                                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" /></svg>
+                                                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" /></svg>
                                             </a>
 
-                                            <a href={landingPageData?.hero?.appStoreLink || '#'} className="bg-black text-white px-6 py-2.5 rounded-full flex items-center gap-3 hover:bg-gray-900 transition-all shadow-xl hover:shadow-2xl transform hover:-translate-y-1">
-                                                <svg className="w-8 h-8" fill="currentColor" viewBox="0 0 24 24">
+                                            {/* iOS User App */}
+                                            <a href={landingPageData?.hero?.appStoreLink || '#'} target="_blank" rel="noopener noreferrer" className="bg-black text-white px-5 py-2 rounded-full flex items-center justify-center gap-2 hover:bg-gray-900 transition-all shadow-xl hover:shadow-2xl">
+                                                <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
                                                     <path d="M17.05 20.28c-.98.95-2.05.8-3.08.35-1.09-.46-2.09-.48-3.24 0-1.44.62-2.2.44-3.06-.35C2.79 15.25 3.51 7.59 9.05 7.31c1.35.07 2.29.74 3.08.74 1.18 0 2.45-1.64 3.98-1.64 1.25.04 2.37.5 3.08 1.48-2.61 1.58-2.18 4.71.69 5.89-.53 1.55-1.25 3.09-2.83 6.5zm-3.27-14.7c.64-1.02.99-2.28.61-3.58 1.09.28 2.37.91 2.94 1.96.17.65.04 1.59-.44 2.54-.7.83-1.87 1.21-2.91 1.05-.17-.67-.2-1.32-.2-1.97z" />
                                                 </svg>
                                                 <div className="flex flex-col items-start leading-none">
-                                                    <span className="text-[10px] font-medium opacity-80">Download on the</span>
-                                                    <span className="text-xl font-bold">App Store</span>
+                                                    <span className="text-[8px] font-medium opacity-80">User App</span>
+                                                    <span className="text-xs font-bold">App Store</span>
                                                 </div>
                                             </a>
 
+                                            {/* iOS Driver App */}
+                                            <a href={landingPageData?.hero?.driverAppStoreLink || '#'} target="_blank" rel="noopener noreferrer" className="bg-black text-white px-5 py-2 rounded-full flex items-center justify-center gap-2 hover:bg-gray-900 transition-all shadow-xl hover:shadow-2xl">
+                                                <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                                                    <path d="M17.05 20.28c-.98.95-2.05.8-3.08.35-1.09-.46-2.09-.48-3.24 0-1.44.62-2.2.44-3.06-.35C2.79 15.25 3.51 7.59 9.05 7.31c1.35.07 2.29.74 3.08.74 1.18 0 2.45-1.64 3.98-1.64 1.25.04 2.37.5 3.08 1.48-2.61 1.58-2.18 4.71.69 5.89-.53 1.55-1.25 3.09-2.83 6.5zm-3.27-14.7c.64-1.02.99-2.28.61-3.58 1.09.28 2.37.91 2.94 1.96.17.65.04 1.59-.44 2.54-.7.83-1.87 1.21-2.91 1.05-.17-.67-.2-1.32-.2-1.97z" />
+                                                </svg>
+                                                <div className="flex flex-col items-start leading-none">
+                                                    <span className="text-[8px] font-medium opacity-80">Driver App</span>
+                                                    <span className="text-xs font-bold">App Store</span>
+                                                </div>
+                                            </a>
                                         </div>
                                     </div>
                                 </div>
 
                                 {/* Left Column: Car Image */}
                                 <div className="relative flex justify-center lg:justify-start lg:order-1 animate-drive-in-left" style={{ animationDelay: '0.3s' }}>
-                                    <div className="relative z-10 w-full max-w-[800px]">
+                                    <div className="relative z-10 w-full max-w-[500px]">
                                         <img
                                             src={landingPageData?.hero?.image || "/Gemini_Generated_Image_2jf3zt2jf3zt2jf3-removebg-preview.png"}
                                             alt="Search My Drivers - Professional uniform chauffeur with premium luxury car"
@@ -290,11 +307,14 @@ const LandingPage = () => {
                         <div className="container mx-auto px-4 md:px-12 max-w-[1440px]">
 
                             {/* Collapsible Text Section */}
-                            {landingPageData?.statsSection?.description && (
+                            {/* Collapsible Text Section */}
+                            {(aboutContent || landingPageData?.statsSection?.description) && (
                                 <div className="mb-12 text-center max-w-4xl mx-auto">
-                                    <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-4">{landingPageData?.statsSection?.heading || "Hassle-Free Commute with #1 Driver Service"}</h2>
+                                    <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-4">
+                                        {aboutContent?.title || landingPageData?.statsSection?.heading || "Hassle-Free Commute with #1 Driver Service"}
+                                    </h2>
                                     <div className={`prose prose-lg mx-auto text-gray-600 transition-all duration-500 overflow-hidden ${isExpanded ? 'max-h-[1000px]' : 'max-h-24'}`}>
-                                        <p dangerouslySetInnerHTML={{ __html: landingPageData.statsSection.description.replace(/\n/g, '<br/>') }}></p>
+                                        <p dangerouslySetInnerHTML={{ __html: (aboutContent?.content || landingPageData.statsSection.description).replace(/\n/g, '<br/>') }}></p>
                                     </div>
                                     <button
                                         onClick={() => setIsExpanded(!isExpanded)}
@@ -304,7 +324,7 @@ const LandingPage = () => {
                                     </button>
                                 </div>
                             )}
-                            {!landingPageData?.statsSection?.description && (
+                            {!(aboutContent || landingPageData?.statsSection?.description) && (
                                 <div className="mb-12 text-center max-w-4xl mx-auto">
                                     <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-4">Hassle-Free Commute with #1 Driver Service – SearchMyDrivers</h2>
                                     <div className={`prose prose-lg mx-auto text-gray-600 transition-all duration-500 overflow-hidden ${isExpanded ? 'max-h-[1000px]' : 'max-h-24'}`}>
