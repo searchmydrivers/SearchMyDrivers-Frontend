@@ -186,6 +186,36 @@ const LandingPage = () => {
         { question: "What if I need to cancel my booking?", answer: "You can cancel your booking through the app. Please refer to our cancellation policy for more details." }
     ];
 
+    const renderFeatureIcon = (icon) => {
+        if (!icon) return <span className="material-icons-outlined text-4xl text-[#2BB673]">apps</span>;
+
+        // If it's an SVG path (legacy)
+        if (icon.length > 50 || icon.includes('M')) {
+            return (
+                <svg className="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d={icon} />
+                </svg>
+            );
+        }
+
+        // Mapping common names to SVGs for consistent look with existing design if possible
+        const svgIcons = {
+            'clock': <svg className="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>,
+            'map': <svg className="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7" /></svg>,
+            'briefcase': <svg className="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" /></svg>,
+            'car': <svg className="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M5 10l7-2 7 2m-14 0l-2 5h18l-2-5m-14 0h14" /></svg>
+        };
+
+        if (svgIcons[icon]) return svgIcons[icon];
+
+        // Fallback to Material Icon
+        return (
+            <span className="material-icons-outlined text-4xl text-[#2BB673]">
+                {icon}
+            </span>
+        );
+    };
+
     return (
         <>
             <RegistrationPopup />
@@ -369,7 +399,19 @@ const LandingPage = () => {
                                                     <svg className="w-5 h-5 text-[#2BB673]" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" /></svg>
                                                 </div>
                                             ) : (
-                                                <svg className="w-16 h-16 text-[#2BB673] opacity-20 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 transform scale-150" fill="currentColor" viewBox="0 0 24 24"><path d={stat.icon} /></svg>
+                                                <div className="relative">
+                                                    {stat.icon && (stat.icon.length > 50 || stat.icon.includes('M')) ? (
+                                                        <svg className="w-16 h-16 text-[#2BB673] opacity-20 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 transform scale-150" fill="currentColor" viewBox="0 0 24 24">
+                                                            <path d={stat.icon} />
+                                                        </svg>
+                                                    ) : (
+                                                        <div className="w-16 h-16 bg-[#2BB673]/10 rounded-full flex items-center justify-center absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 transform scale-125 opacity-40">
+                                                            <span className="material-icons-outlined text-4xl text-[#2BB673]">
+                                                                {stat.icon || 'apps'}
+                                                            </span>
+                                                        </div>
+                                                    )}
+                                                </div>
                                             )}
                                         </div>
                                     </div>
@@ -469,7 +511,7 @@ const LandingPage = () => {
                                         style={{ animationDelay: `${0.2 * (idx + 1)}s` }}
                                     >
                                         <div className="w-14 h-14 rounded-xl flex items-center justify-center mb-6 text-[#2BB673]">
-                                            <svg className="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d={feature.icon} /></svg>
+                                            {renderFeatureIcon(feature.icon)}
                                         </div>
                                         <h3 className="text-xl font-bold text-gray-900 mb-3">{feature.title}</h3>
                                         <p className="text-gray-600 leading-relaxed">{feature.description || feature.desc}</p>
