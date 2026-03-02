@@ -105,14 +105,21 @@ const HiringManagement = () => {
   };
 
   const handleRefund = async (requestId) => {
+    const transactionId = window.prompt("Enter Transaction ID/Reference for this refund (optional):");
+    if (transactionId === null) return; // Cancel if prompt is cancelled
+
     if (!window.confirm("Confirm refund for this request?")) return;
+
     try {
-      await api.put('/hiring/admin/refund', { requestId });
+      setLoading(true);
+      await api.put('/hiring/admin/refund', { requestId, transactionId });
       alert("Refund processed successfully!");
       fetchRequests();
     } catch (error) {
       console.error("Refund error:", error);
-      alert("Failed to process refund.");
+      alert(error.response?.data?.message || "Failed to process refund.");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -321,6 +328,7 @@ const HiringManagement = () => {
                         <td className="px-4 py-3 whitespace-nowrap">
                           <div className="text-xs font-bold text-gray-900">{req.user?.name}</div>
                           <div className="text-[10px] text-gray-500">{req.user?.phone}</div>
+                          <div className="text-[10px] text-gray-400">{req.user?.email}</div>
                         </td>
                         <td className="px-4 py-3 whitespace-nowrap">
                           <div className="text-xs font-bold text-gray-900">{req.driver?.name}</div>
@@ -345,19 +353,28 @@ const HiringManagement = () => {
                           <div className="text-xs font-bold text-green-600">
                             ₹{req.commissionAmount}
                           </div>
-                          <div className="text-[10px] text-gray-500">
-                            (10% of total)
-                          </div>
+                          {req.paymentId && (
+                            <div className="text-[9px] font-mono text-gray-500 truncate max-w-[100px]" title={req.paymentId}>
+                              ID: {req.paymentId}
+                            </div>
+                          )}
                         </td>
                         <td className="px-4 py-3 whitespace-nowrap">
-                          <span className={`px-2 py-0.5 text-[10px] rounded font-bold uppercase tracking-wide ${req.status === 'requested' ? 'bg-yellow-100 text-yellow-800' :
+                          <div className="flex flex-col gap-1">
+                            <span className={`px-2 py-0.5 text-[10px] rounded font-bold uppercase tracking-wide inline-block ${req.status === 'requested' ? 'bg-yellow-100 text-yellow-800' :
                               req.status === 'accepted' ? 'bg-green-100 text-green-800' :
                                 req.status === 'refund_pending' ? 'bg-red-100 text-red-800' :
                                   req.status === 'completed' ? 'bg-blue-100 text-blue-800' :
                                     'bg-gray-100 text-gray-800'
-                            }`}>
-                            {req.status.replace('_', ' ')}
-                          </span>
+                              }`}>
+                              {req.status.replace('_', ' ')}
+                            </span>
+                            {(req.cancellationReason || req.rejectionReason) && (
+                              <div className="text-[9px] text-red-500 max-w-[120px] italic leading-tight" title={req.cancellationReason || req.rejectionReason}>
+                                {req.cancellationReason || req.rejectionReason}
+                              </div>
+                            )}
+                          </div>
                         </td>
                         <td className="px-4 py-3 whitespace-nowrap text-right text-xs font-medium space-x-2">
                           {req.status === 'refund_pending' && (
