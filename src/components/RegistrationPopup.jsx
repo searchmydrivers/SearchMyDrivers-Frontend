@@ -120,7 +120,7 @@ const RegistrationPopup = () => {
                 </button>
 
                 {/* Left Side - Visual/Info - Hidden on Mobile */}
-                <div className="hidden md:flex md:w-2/5 bg-gradient-to-br from-[#2BB673] to-[#239960] p-8 text-white flex-col justify-between relative overflow-hidden h-full">
+                <div className="hidden md:flex md:w-2/5 bg-gradient-to-br from-[#2BB673] to-[#239960] p-8 text-white flex-col justify-between relative overflow-hidden">
                     <div className="relative z-10">
                         <h2 className="text-3xl font-extrabold mb-4 leading-tight">
                             Join Our <br />

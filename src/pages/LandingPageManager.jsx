@@ -253,6 +253,7 @@ const HeroSectionEditor = ({ data, onSave, saving }) => {
         // Let's check schema again: playStoreLink, driverCtaText, driverAppUrl, userAppUrl. 
         // Previously I added userAppUrl. I will use that.
         appStoreLink: '',
+        driverAppStoreLink: '',
         driverCtaText: '',
         driverAppUrl: '',
         image: ''
@@ -266,6 +267,7 @@ const HeroSectionEditor = ({ data, onSave, saving }) => {
                 ctaText: data.ctaText || '',
                 userAppUrl: data.userAppUrl || data.playStoreLink || '', // fallback
                 appStoreLink: data.appStoreLink || '',
+                driverAppStoreLink: data.driverAppStoreLink || '',
                 driverCtaText: data.driverCtaText || '',
                 driverAppUrl: data.driverAppUrl || '',
                 image: data.image || ''
@@ -368,6 +370,17 @@ const HeroSectionEditor = ({ data, onSave, saving }) => {
                         type="text"
                         name="appStoreLink"
                         value={formData.appStoreLink}
+                        onChange={handleChange}
+                        className="w-full px-4 py-2 border border-gray-300 rounded-lg"
+                    />
+                </div>
+
+                <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Driver App Store Link (iOS)</label>
+                    <input
+                        type="text"
+                        name="driverAppStoreLink"
+                        value={formData.driverAppStoreLink}
                         onChange={handleChange}
                         className="w-full px-4 py-2 border border-gray-300 rounded-lg"
                     />
@@ -734,16 +747,7 @@ const BannerSectionEditor = ({ type = 'hero', sectionTitle = 'Banners Management
                                     required
                                 />
                             </div>
-                            <div>
-                                <label className="block text-sm font-medium text-gray-700 mb-1">Redirect Link (Optional)</label>
-                                <input
-                                    type="url"
-                                    value={formData.link}
-                                    onChange={(e) => setFormData({ ...formData, link: e.target.value })}
-                                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#2BB673] focus:border-transparent outline-none"
-                                    placeholder="https://searchmydrivers.com/services"
-                                />
-                            </div>
+
                             <div className="grid grid-cols-2 gap-4">
                                 <div>
                                     <label className="block text-sm font-medium text-gray-700 mb-1">Status</label>
@@ -818,7 +822,7 @@ const StatsSectionEditor = ({ data, onSave, saving }) => {
     const addStat = () => {
         setFormData({
             ...formData,
-            stats: [...formData.stats, { number: '', label: '' }]
+            stats: [...formData.stats, { number: '', label: '', icon: '' }]
         });
     };
 
@@ -885,8 +889,15 @@ const StatsSectionEditor = ({ data, onSave, saving }) => {
                                         value={stat.label}
                                         onChange={(e) => handleStatChange(index, 'label', e.target.value)}
                                         placeholder="Label (e.g., VERIFIED DRIVERS)"
-                                        className="w-full px-3 py-2 border border-gray-300 rounded-lg"
+                                        className="w-full px-3 py-2 border border-gray-300 rounded-lg mb-2"
                                     />
+                                    <div className="mt-1">
+                                        <label className="block text-[10px] font-medium text-gray-400 mb-1">Stat Icon</label>
+                                        <IconSelector
+                                            value={stat.icon}
+                                            onChange={(val) => handleStatChange(index, 'icon', val)}
+                                        />
+                                    </div>
                                 </div>
                                 <button
                                     type="button"
@@ -1019,15 +1030,16 @@ const WhyChooseUsEditor = ({ data, onSave, saving }) => {
                                     onChange={(e) => handleFeatureChange(index, 'description', e.target.value)}
                                     placeholder="Feature Description"
                                     rows="2"
-                                    className="w-full px-3 py-2 border border-gray-300 rounded-lg mb-2 resize-none"
+                                    className="w-full px-3 py-2 border border-gray-300 rounded-lg mb-4 resize-none"
                                 />
-                                <input
-                                    type="text"
-                                    value={feature.icon}
-                                    onChange={(e) => handleFeatureChange(index, 'icon', e.target.value)}
-                                    placeholder="SVG Path (optional)"
-                                    className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm"
-                                />
+                                <div className="mb-2">
+                                    <label className="block text-xs font-medium text-gray-500 mb-1">Feature Icon</label>
+                                    <IconSelector
+                                        value={feature.icon}
+                                        onChange={(val) => handleFeatureChange(index, 'icon', val)}
+                                    />
+                                </div>
+
                             </div>
                         ))}
                     </div>
@@ -1869,12 +1881,10 @@ const ServicesPageEditor = () => {
                                         />
                                     </div>
                                     <div>
-                                        <label className="block text-xs font-medium text-gray-500">Icon (SVG/Name)</label>
-                                        <input
-                                            type="text"
+                                        <label className="block text-xs font-medium text-gray-500 mb-1">Icon (Select or Type)</label>
+                                        <IconSelector
                                             value={service.icon}
-                                            onChange={(e) => handleServiceChange(index, 'icon', e.target.value)}
-                                            className="w-full px-3 py-2 border border-gray-300 rounded-lg"
+                                            onChange={(val) => handleServiceChange(index, 'icon', val)}
                                         />
                                     </div>
                                     <div className="md:col-span-2">
@@ -2253,6 +2263,63 @@ const SocialLinksEditor = ({ data, onSave, saving }) => {
                     {saving ? 'Saving...' : 'Save Changes'}
                 </button>
             </form>
+        </div>
+    );
+};
+
+const IconSelector = ({ value, onChange }) => {
+    const suggestedIcons = [
+        { name: 'clock', icon: '🕒' },
+        { name: 'map', icon: '🗺️' },
+        { name: 'briefcase', icon: '💼' },
+        { name: 'car', icon: '🚗' },
+        { name: 'shield', icon: '🛡️' },
+        { name: 'star', icon: '⭐' },
+        { name: 'phone', icon: '📞' },
+        { name: 'wallet', icon: '👛' },
+        { name: 'users', icon: '👥' },
+        { name: 'check-circle', icon: '✅' },
+        { name: 'location_on', icon: '📍' },
+        { name: 'support_agent', icon: '🎧' },
+        { name: 'currency_rupee', icon: '₹' },
+        { name: 'verified', icon: '✔️' },
+        { name: 'security', icon: '🔒' },
+        { name: 'visibility', icon: '👁️' }
+    ];
+
+    return (
+        <div className="space-y-2">
+            <div className="flex flex-wrap gap-2 mb-2 p-3 bg-gray-50/50 border border-gray-100 rounded-xl">
+                {suggestedIcons.map((item) => (
+                    <button
+                        key={item.name}
+                        type="button"
+                        onClick={() => onChange(item.name)}
+                        className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-[11px] font-bold transition-all ${value === item.name
+                            ? 'bg-[#2BB673] text-white shadow-lg shadow-green-100 ring-2 ring-[#2BB673] ring-offset-1'
+                            : 'bg-white text-gray-600 hover:text-[#2BB673] hover:shadow-md border border-gray-200'
+                            }`}
+                        title={item.name}
+                    >
+                        <span className="text-sm">{item.icon}</span>
+                        <span className="capitalize">{item.name.replace('_', ' ')}</span>
+                    </button>
+                ))}
+            </div>
+            <div className="relative">
+                <input
+                    type="text"
+                    value={value}
+                    onChange={(e) => onChange(e.target.value)}
+                    placeholder="Or type custom icon name (e.g. material icon name or emoji)..."
+                    className="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm focus:ring-2 focus:ring-[#2BB673] focus:border-transparent outline-none transition-all pr-10 bg-white"
+                />
+                <div className="absolute right-3 top-3 text-gray-400">
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+                    </svg>
+                </div>
+            </div>
         </div>
     );
 };
