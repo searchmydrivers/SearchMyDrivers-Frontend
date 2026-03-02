@@ -59,6 +59,7 @@ const Navbar = () => {
                 <div className="absolute top-full left-0 right-0 bg-[#239960] p-4 md:hidden shadow-lg border-t border-white/10">
                     <div className="flex flex-col gap-4">
                         <Link to={getLinkPath('features')} className="text-white font-medium" onClick={() => setIsOpen(false)}>Features</Link>
+                        <Link to="/services" className="text-white font-medium" onClick={() => setIsOpen(false)}>Services</Link>
                         <Link to={getLinkPath('testimonials')} className="text-white font-medium" onClick={() => setIsOpen(false)}>Testimonials</Link>
                         <Link to="/contact" className="text-white font-medium" onClick={() => setIsOpen(false)}>Contact Us</Link>
 
